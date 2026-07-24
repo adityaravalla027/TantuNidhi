@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead | AI Companion for Handloom Weavers</title>
+    <title>WeaveAhead | Nationwide AI Demand Forecasting for Handloom Weavers</title>
     <style>
         /* ==========================================================================
-           1. CORE SYSTEM VARIABLES & DESIGN TOKENS
+           1. CORE SYSTEM VARIABLES & ACCESSIBILITY TOKENS
            ========================================================================== */
         :root {
             --bg-deep: #080c14;
             --bg-surface: #0f172a;
-            --surface-card: rgba(30, 41, 59, 0.7);
-            --surface-card-hover: rgba(51, 65, 85, 0.8);
+            --surface-card: rgba(30, 41, 59, 0.75);
             --surface-border: rgba(255, 255, 255, 0.12);
-            --surface-border-focus: rgba(16, 185, 129, 0.5);
-            
             --accent-emerald: #10b981;
             --accent-emerald-glow: rgba(16, 185, 129, 0.25);
             --accent-cyan: #06b6d4;
             --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
             
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
@@ -34,7 +32,7 @@
         }
 
         /* ==========================================================================
-           2. GLOBAL RESETS & BASE STYLES
+           2. GLOBAL RESETS & TYPOGRAPHY
            ========================================================================== */
         *, *::before, *::after {
             box-sizing: border-box;
@@ -45,20 +43,20 @@
         body {
             background-color: var(--bg-deep);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
             background-attachment: fixed;
             color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             min-height: 100vh;
-            padding: 2rem;
-            max-width: 1350px;
+            padding: 2rem 1.5rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         /* ==========================================================================
-           3. LAYOUT STRUCTURE & NAVIGATION
+           3. HEADER & NAVIGATION
            ========================================================================== */
         header {
             display: flex;
@@ -66,14 +64,16 @@
             align-items: center;
             border-bottom: 1px solid var(--surface-border);
             padding-bottom: 1.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .brand h1 {
-            font-size: 2.25rem;
+            font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -83,7 +83,7 @@
             font-size: 0.95rem;
         }
 
-        .status-badge {
+        .badge-live {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -93,9 +93,10 @@
             border-radius: 20px;
             font-size: 0.85rem;
             color: var(--accent-emerald);
+            font-weight: 600;
         }
 
-        .status-dot {
+        .pulse-dot {
             width: 8px;
             height: 8px;
             background-color: var(--accent-emerald);
@@ -110,23 +111,28 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
+        /* ==========================================================================
+           4. GRID LAYOUT
+           ========================================================================== */
         .grid-dashboard {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
-        .col-4 { grid-column: span 4; }
-        .col-8 { grid-column: span 8; }
         .col-12 { grid-column: span 12; }
+        .col-8  { grid-column: span 8; }
+        .col-6  { grid-column: span 6; }
+        .col-4  { grid-column: span 4; }
+        .col-3  { grid-column: span 3; }
 
         @media (max-width: 1024px) {
-            .col-4, .col-8 { grid-column: span 12; }
+            .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
         }
 
         /* ==========================================================================
-           4. GLASSMORPHISM CARDS
+           5. GLASSMORPHISM CARDS
            ========================================================================== */
         .glass-card {
             background: var(--surface-card);
@@ -157,60 +163,91 @@
         }
 
         /* ==========================================================================
-           5. DATA TABLES & STATS
+           6. PROBLEM & SOLUTION CARDS
            ========================================================================== */
-        .stat-grid {
+        .problem-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
-            margin-bottom: 1rem;
         }
 
-        .stat-box {
+        .problem-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-left: 3px solid var(--accent-rose);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .problem-card h4 {
+            color: var(--accent-rose);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .solution-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .solution-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-num {
+            background: var(--accent-emerald);
+            color: #000;
+            font-weight: 800;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+
+        /* ==========================================================================
+           7. NATIONWIDE METRICS
+           ========================================================================== */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric-box {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid var(--surface-border);
-            padding: 1rem;
+            padding: 1.25rem;
             border-radius: var(--radius-md);
+            text-align: center;
         }
 
-        .stat-box .label {
+        .metric-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-emerald);
+        }
+
+        .metric-lbl {
             font-size: 0.8rem;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-        }
-
-        .stat-box .value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-emerald);
             margin-top: 0.25rem;
         }
 
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        .data-table th, .data-table td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--surface-border);
-        }
-
-        .data-table th {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .data-table td {
-            font-size: 0.9rem;
-        }
-
         /* ==========================================================================
-           6. FORM CONTROLS & INPUTS
+           8. FORM & VOICE DEMO CONTROLS
            ========================================================================== */
         .form-group {
             margin-bottom: 1.25rem;
@@ -259,25 +296,18 @@
             transform: translateY(-1px);
         }
 
-        /* ==========================================================================
-           7. TERMINAL / OUTPUT BOX
-           ========================================================================== */
-        .console-output {
+        .output-box {
             background: #04070d;
-            border: 1px solid var(--surface-border);
+            border: 1px solid var(--accent-emerald-glow);
             border-radius: var(--radius-md);
             padding: 1.25rem;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 0.85rem;
-            color: #34d399;
+            font-size: 0.9rem;
             margin-top: 1.25rem;
             display: none;
-            max-height: 200px;
-            overflow-y: auto;
         }
 
         /* ==========================================================================
-           8. ROADMAP & LIST STYLES
+           9. ROADMAP & BUSINESS MODEL
            ========================================================================== */
         .timeline {
             position: relative;
@@ -298,23 +328,27 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .timeline-item.active::before {
             background: var(--accent-emerald);
             box-shadow: 0 0 10px var(--accent-emerald);
         }
 
         .timeline-item h4 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-primary);
         }
 
         .timeline-item p {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-top: 0.25rem;
         }
 
         /* ==========================================================================
-           9. FOOTER
+           10. FOOTER
            ========================================================================== */
         footer {
             text-align: center;
@@ -331,132 +365,164 @@
     <header>
         <div class="brand">
             <h1>WeaveAhead</h1>
-            <p>AI-Powered Predictive Engine for Handloom Weavers | Team TantuNidhi</p>
+            <p>AI-Powered Demand Forecasting Engine for Handloom Weavers Across India</p>
         </div>
-        <div class="status-badge">
-            <span class="status-dot"></span>
-            FastAPI Live Node
+        <div class="badge-live">
+            <span class="pulse-dot"></span>
+            Nationwide Coverage Active
         </div>
     </header>
 
-    <!-- MAIN DASHBOARD GRID -->
+    <!-- MAIN DASHBOARD -->
     <main class="grid-dashboard">
 
-        <!-- METRICS OVERVIEW -->
+        <!-- NATIONWIDE IMPACT METRICS -->
         <section class="col-12 glass-card">
             <div class="card-header">
-                <h2 class="card-title">National Handloom Ecosystem Overview</h2>
+                <h2 class="card-title">National Handloom Ecosystem Target</h2>
             </div>
-            <div class="stat-grid">
-                <div class="stat-box">
-                    <div class="label">Total Artisans Across India</div>
-                    <div class="value">35 Lakh+</div>
+            <div class="metric-grid">
+                <div class="metric-box">
+                    <div class="metric-val">35 Lakh+</div>
+                    <div class="metric-lbl">Weaver Households (Census)</div>
                 </div>
-                <div class="stat-box">
-                    <div class="label">Women Workforce Representation</div>
-                    <div class="value">72%</div>
+                <div class="metric-box">
+                    <div class="metric-val">72%</div>
+                    <div class="metric-lbl">Women Artisan Base</div>
                 </div>
-                <div class="stat-box">
-                    <div class="label">Artisan Base (&lt; ₹5,000/mo)</div>
-                    <div class="value">~67%</div>
+                <div class="metric-box">
+                    <div class="metric-val">4th</div>
+                    <div class="metric-lbl">Handloom Census Baseline</div>
                 </div>
-                <div class="stat-box">
-                    <div class="label">Active Cluster Operations</div>
-                    <div class="value" style="color: var(--accent-cyan)">1,240</div>
+                <div class="metric-box">
+                    <div class="metric-val" style="color: var(--accent-cyan);">Voice & SMS</div>
+                    <div class="metric-lbl">Low-Literacy First Design</div>
                 </div>
             </div>
         </section>
 
-        <!-- FORECAST CONFIGURATION FORM -->
+        <!-- PROBLEM STATEMENT SECTION -->
+        <section class="col-6 glass-card">
+            <div class="card-header">
+                <h2 class="card-title" style="color: var(--accent-rose);">1. The Core Problem</h2>
+            </div>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h4>Unpredictable Demand</h4>
+                    <p>Seasonal swings, local festivals, and rapid trend shifts leave weavers guessing.</p>
+                </div>
+                <div class="problem-card">
+                    <h4>Delayed Payments</h4>
+                    <p>Zero visibility into order cycles makes steady monthly cash flow impossible.</p>
+                </div>
+                <div class="problem-card">
+                    <h4>Unsold Inventory</h4>
+                    <p>Production without demand signals locks up vital capital in raw yarns.</p>
+                </div>
+                <div class="problem-card">
+                    <h4>Youth Exodus</h4>
+                    <p>Income instability pushes the next generation away from ancestral weaving.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLUTION ENGINE SECTION -->
+        <section class="col-6 glass-card">
+            <div class="card-header">
+                <h2 class="card-title" style="color: var(--accent-emerald);">2. How WeaveAhead Works</h2>
+            </div>
+            <div class="solution-step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong style="color: var(--text-primary);">Collect Data Signals</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Reads local mandi data, wedding calendars, e-commerce trends, and coop records.</p>
+                </div>
+            </div>
+            <div class="solution-step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong style="color: var(--text-primary);">Forecast Demand</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">AI predicts specific demand by category: Sarees, Stoles, or Home Furnishings.</p>
+                </div>
+            </div>
+            <div class="solution-step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong style="color: var(--text-primary);">Simplify for Low-Literacy</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Converts predictions into visual charts, colors, and regional voice prompts.</p>
+                </div>
+            </div>
+            <div class="solution-step">
+                <div class="step-num">4</div>
+                <div>
+                    <strong style="color: var(--text-primary);">WhatsApp & Voice Delivery</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Delivers weekly actionable alerts directly to basic phones or WhatsApp.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE REGIONAL FORECAST DEMO -->
         <section class="col-4 glass-card">
             <div class="card-header">
-                <h2 class="card-title">Demand Forecasting Engine</h2>
+                <h2 class="card-title">Simulate Regional Forecast</h2>
             </div>
-            <form id="forecast-form">
+            <form id="simulator-form">
                 <div class="form-group">
-                    <label class="form-label" for="cluster-id">Weaver / Cluster Identifier</label>
-                    <input type="text" id="cluster-id" class="form-control" value="WB-KOL-089145-01" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="season">Target Production Season</label>
-                    <select id="season" class="form-control">
-                        <option value="autumn">Autumn / Festive (Durga Puja Prep)</option>
-                        <option value="winter">Winter Handloom Expo</option>
-                        <option value="spring">Spring / Summer Export</option>
+                    <label class="form-label" for="region">Target Region / Cluster</label>
+                    <select id="region" class="form-control">
+                        <option value="OD">Odisha (Sambalpuri Ikkat Cluster)</option>
+                        <option value="WB">West Bengal (Shantipur / Fulia)</option>
+                        <option value="TN">Tamil Nadu (Kanchipuram Weaver Society)</option>
+                        <option value="UP">Uttar Pradesh (Varanasi Brocade)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="language">Voice Assistant Local Language</label>
-                    <select id="language" class="form-control">
-                        <option value="bengali">Bengali (বাংলা)</option>
-                        <option value="odia">Odia (ଓଡ଼ିଆ)</option>
-                        <option value="hindi">Hindi (हिंदी)</option>
-                        <option value="english">English</option>
+                    <label class="form-label" for="product">Product Type</label>
+                    <select id="product" class="form-control">
+                        <option value="sarees">Silk & Cotton Sarees</option>
+                        <option value="stoles">Fashion Stoles & Scarves</option>
+                        <option value="furnishing">Home Furnishings & Linens</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn-primary">Generate Predictive Plan</button>
+                <div class="form-group">
+                    <label class="form-label" for="lang">Regional Voice Language</label>
+                    <select id="lang" class="form-control">
+                        <option value="Odia">Odia (ଓଡ଼ିଆ)</option>
+                        <option value="Bengali">Bengali (বাংলা)</option>
+                        <option value="Hindi">Hindi (हिंदी)</option>
+                        <option value="Tamil">Tamil (தமிழ்)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">Generate Forecast Signal</button>
             </form>
 
-            <div id="console-output" class="console-output"></div>
+            <div id="forecast-output" class="output-box"></div>
         </section>
 
-        <!-- LIVE ANALYTICS TABLE -->
+        <!-- ROADMAP & BUSINESS MODEL -->
         <section class="col-8 glass-card">
             <div class="card-header">
-                <h2 class="card-title">Real-Time Yarn Demand & Cluster Insights</h2>
-            </div>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Cluster ID</th>
-                        <th>Fabric Type</th>
-                        <th>Demand Index</th>
-                        <th>Stock Alert</th>
-                    </tr>
-                </thead>
-                <tbody id="cluster-table-body">
-                    <tr>
-                        <td>WB-KOL-089145-01</td>
-                        <td>Tussar Silk</td>
-                        <td><span style="color: var(--accent-emerald)">High (89%)</span></td>
-                        <td>Optimal</td>
-                    </tr>
-                    <tr>
-                        <td>OD-CTC-002134-03</td>
-                        <td>Sambalpuri Ikkat</td>
-                        <td><span style="color: var(--accent-emerald)">Very High (94%)</span></td>
-                        <td>Low Raw Material</td>
-                    </tr>
-                    <tr>
-                        <td>TN-KAN-004312-09</td>
-                        <td>Kanjeevaram Cotton</td>
-                        <td><span style="color: var(--accent-amber)">Moderate (62%)</span></td>
-                        <td>Sufficient</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <!-- ROADMAP SECTION -->
-        <section class="col-12 glass-card">
-            <div class="card-header">
-                <h2 class="card-title">Product Roadmap & Scale-up Vision</h2>
+                <h2 class="card-title">Execution Roadmap & Partnerships</h2>
             </div>
             <div class="timeline">
-                <div class="timeline-item">
-                    <h4>Phase 1: Cluster Field Testing & Pilot Launch</h4>
-                    <p>Conduct direct on-ground deployments with pilot weaver clusters to gather real-time usability feedback and fine-tune language parsing models.</p>
+                <div class="timeline-item active">
+                    <h4 style="color: var(--accent-emerald);">Phase 1: Idea & Concept Validation (Current Stage)</h4>
+                    <p>Forecasting model architecture designed; conducting weaver interviews to confirm zero-literacy interface requirements.</p>
                 </div>
                 <div class="timeline-item">
-                    <h4>Phase 2: Collateral-Free Micro-Financing</h4>
-                    <p>Integrate predictive production metrics with rural bank systems to enable automatic credit scoring for working capital loans.</p>
+                    <h4>Phase 2: MVP Prototype Build</h4>
+                    <p>Build MVP engine for one weaver cluster; validate automated SMS and WhatsApp voice note dispatch.</p>
                 </div>
                 <div class="timeline-item">
-                    <h4>Phase 3: Expanded Product Cataloging</h4>
-                    <p>Transition traditional weaving clusters into high-margin utility items including linen covers, greeting cards, and lifestyle accessories.</p>
+                    <h4>Phase 3: Cooperative Pilot</h4>
+                    <p>Partner with one cooperative society for a full seasonal cycle; measure reduced unsold inventory and cash flow impact.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Phase 4: Scale & Handloom Credit Access</h4>
+                    <p>Expand across clusters; integrate forecast stability scores with government handloom credit schemes.</p>
                 </div>
             </div>
         </section>
@@ -465,34 +531,34 @@
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 TantuNidhi Architecture | Built with FastAPI & Modern CSS</p>
+        <p>&copy; 2026 WeaveAhead Engine | Helping India's handloom weavers see tomorrow's demand today.</p>
     </footer>
 
-    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <!-- INTERACTIVE SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('forecast-form');
-            const consoleOutput = document.getElementById('console-output');
+            const form = document.getElementById('simulator-form');
+            const output = document.getElementById('forecast-output');
 
-            form.addEventListener('submit', (event) => {
-                event.preventDefault();
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const regionText = document.getElementById('region').options[document.getElementById('region').selectedIndex].text;
+                const productText = document.getElementById('product').options[document.getElementById('product').selectedIndex].text;
+                const langText = document.getElementById('lang').options[document.getElementById('lang').selectedIndex].text;
 
-                const clusterId = document.getElementById('cluster-id').value;
-                const season = document.getElementById('season').options[document.getElementById('season').selectedIndex].text;
-                const language = document.getElementById('language').options[document.getElementById('language').selectedIndex].text;
-
-                // Display interactive status output
-                consoleOutput.style.display = 'block';
-                consoleOutput.innerHTML = `
-                    > Connecting to TantuNidhi Predictive Core...<br>
-                    > Analyzing cluster [${clusterId}]...<br>
-                    > Applying seasonal weights for: ${season}<br>
-                    > Language model configured: ${language}<br>
-                    <span style="color: #6ee7b7;">[SUCCESS] Demand vector mapped successfully.</span>
+                output.style.display = 'block';
+                output.innerHTML = `
+                    <div style="color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.5rem;">
+                        📢 Weekly Audio Signal Dispatching...
+                    </div>
+                    <div style="color: var(--text-secondary); font-size: 0.85rem;">
+                        • <strong>Cluster Target:</strong> ${regionText}<br>
+                        • <strong>Product Category:</strong> ${productText}<br>
+                        • <strong>Voice Assistant:</strong> ${langText}<br>
+                        • <strong>Action Recommended:</strong> Prepare 60% Crimson & Amber yarn stock for upcoming festival cycle.
+                    </div>
                 `;
-
-                // Auto-scroll output box
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
             });
         });
     </script>
