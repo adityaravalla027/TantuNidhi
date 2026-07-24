@@ -1,0 +1,273 @@
+:root {
+    --bg-main: #0b0f19;
+    --surface-card: rgba(22, 30, 46, 0.75);
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --accent-terracotta: #ea580c;
+    --accent-terracotta-glow: rgba(234, 88, 12, 0.25);
+    --accent-teal: #14b8a6;
+    --accent-gold: #f59e0b;
+    --text-heading: #f8fafc;
+    --text-body: #94a3b8;
+    --text-muted: #64748b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-body);
+    line-height: 1.6;
+    padding: 1.5rem;
+    min-height: 100vh;
+}
+
+.layout-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* Top Navigation Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.brand-block h1 {
+    color: var(--text-heading);
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.brand-block h1 span {
+    color: var(--accent-terracotta);
+}
+
+.brand-block p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.team-tag {
+    background: rgba(234, 88, 12, 0.12);
+    border: 1px solid var(--accent-terracotta);
+    color: var(--accent-terracotta);
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 1.75rem;
+}
+
+@media (max-width: 960px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cards */
+.card {
+    background: var(--surface-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--surface-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+    color: var(--text-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Problem Stats Banner */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--surface-border);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.stat-box .number {
+    color: var(--accent-terracotta);
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.stat-box .label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+/* Controls */
+.form-control {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-bottom: 0.4rem;
+}
+
+select, input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(11, 15, 25, 0.8);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    color: var(--text-heading);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+select:focus, input:focus {
+    border-color: var(--accent-terracotta);
+    box-shadow: 0 0 0 3px var(--accent-terracotta-glow);
+}
+
+.btn-forecast {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, var(--accent-terracotta), #c2410c);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px var(--accent-terracotta-glow);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-forecast:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+/* Production Recommendation Card */
+.rec-item {
+    background: rgba(11, 15, 25, 0.5);
+    border: 1px solid var(--surface-border);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.rec-item:hover {
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+.rec-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.rec-title-row h3 {
+    color: var(--text-heading);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.qty-badge {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-gold);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.rec-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.btn-voice {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(20, 184, 166, 0.12);
+    border: 1px solid var(--accent-teal);
+    color: var(--accent-teal);
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-voice:hover {
+    background: var(--accent-teal);
+    color: #0b0f19;
+}
+
+/* Opportunities & Future List */
+.list-group {
+    list-style: none;
+}
+
+.list-group li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--text-body);
+}
+
+.list-group li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent-teal);
+    font-weight: 700;
+}
+
+/* Vision Section */
+.quote-box {
+    border-left: 3px solid var(--accent-terracotta);
+    padding-left: 1rem;
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--text-heading);
+    font-size: 0.95rem;
+}
