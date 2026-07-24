@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeaveAhead — Voice-First AI Companion for Handloom Weavers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="layout-wrapper">
+    <!-- Header -->
+    <header>
+        <div class="brand-block">
+            <h1>Weave<span>Ahead</span></h1>
+            <p>AI Companion for Handloom Weavers | Team Tantunidhi</p>
+        </div>
+        <div style="text-align: right;">
+            <span class="team-tag">Team UID: HH26510</span>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">ITER (Siksha 'O' Anusandhan), Bhubaneswar</p>
+        </div>
+    </header>
+
+    <!-- Context / Problem Snapshot -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="number">35 Lakh+</div>
+            <div class="label">Weavers Across India</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">72%</div>
+            <div class="label">Women Artisan Base</div>
+        </div>
+        <div class="stat-box">
+            <div class="number">&lt; ₹5,000</div>
+            <div class="label">Monthly Earnings for ~67%</div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
+        
+        <!-- Left Side Controls & Info -->
+        <div>
+            <!-- Inputs -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Forecast Parameters</span>
+                </div>
+                
+                <div class="form-control">
+                    <label for="weaverId">Weaver / Cluster ID</label>
+                    <input type="text" id="weaverId" value="WVR-HH26510-OD" readonly>
+                </div>
+
+                <div class="form-control">
+                    <label for="targetMonth">Target Production Month</label>
+                    <select id="targetMonth">
+                        <option value="October" selected>October (Festive Season Prep)</option>
+                        <option value="November">November (Wedding Season Peak)</option>
+                        <option value="December">December (Winter Apparel & Corporate Gifting)</option>
+                        <option value="January">January (Harvest Festivals)</option>
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label for="language">Voice Assistant Language</label>
+                    <select id="language">
+                        <option value="Odia" selected>Odia (ଓଡ଼ିଆ)</option>
+                        <option value="Hindi">Hindi (हिंदी)</option>
+                        <option value="English">English</option>
+                    </select>
+                </div>
+
+                <button class="btn-forecast" onclick="generateForecast()">Generate Predictive Plan</button>
+            </div>
+
+            <!-- Solution Core -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Why WeaveAhead Matters</span>
+                </div>
+                <p style="font-size: 0.875rem; margin-bottom: 0.8rem;">
+                    Technology should adapt to the weaver, not the other way around. WeaveAhead eliminates guesswork by converting market trends, festival calendars, and order histories into spoken regional guidance.
+                </p>
+                <div class="quote-box">
+                    "Every loom forecasting its own future — and every weaver finally getting to plan instead of hope."
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side Predictive Output -->
+        <div>
+            <!-- Recommendations Section -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Predictive Demand Guidance</span>
+                    <span id="activeMonthTag" style="font-size: 0.85rem; color: var(--accent-teal); font-weight: 600;">October</span>
+                </div>
+
+                <div id="loading" style="display: none; padding: 1rem; color: var(--text-muted);">
+                    Computing demand multipliers from festival calendars and regional trends...
+                </div>
+
+                <div id="recommendationsList">
+                    <!-- Dynamic Items render here -->
+                </div>
+            </div>
+
+            <!-- Buyer Reach & Future Expansion -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Expanded Market Access & Gifting Channels</span>
+                </div>
+                <ul class="list-group" id="buyerOpportunities">
+                    <!-- Dynamic Buyer Leads -->
+                </ul>
+            </div>
+
+            <!-- Future Roadmap -->
+            <div class="card">
+                <div class="card-header">
+                    <span>What's Next: Roadmap & Vision</span>
+                </div>
+                <ul class="list-group">
+                    <li><strong>Pilot Phase:</strong> Sit with a real cluster of weavers to test, learn, and refine the interface before scaling.</li>
+                    <li><strong>Financial Inclusion:</strong> Provide verifiable demand forecasts to banks and credit agencies for collateral-free planning loans.</li>
+                    <li><strong>Product Scaling:</strong> Expand beyond traditional sarees into everyday handloom items — bags, kitchen towels, fabric covers, and greeting cards.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
