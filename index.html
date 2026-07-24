@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead | Nationwide AI Demand Forecasting for Handloom Weavers</title>
+    <title>WeaveAhead | AI-Powered Handloom Demand Forecasting Engine</title>
     <style>
         /* ==========================================================================
-           1. CORE SYSTEM VARIABLES & ACCESSIBILITY TOKENS
+           1. DESIGN TOKENS & CORE VARIABLES
            ========================================================================== */
         :root {
-            --bg-deep: #080c14;
-            --bg-surface: #0f172a;
-            --surface-card: rgba(30, 41, 59, 0.75);
+            --bg-deep: #030712;
+            --bg-surface: #0b1329;
+            --surface-card: rgba(17, 24, 39, 0.75);
+            --surface-card-hover: rgba(31, 41, 55, 0.85);
             --surface-border: rgba(255, 255, 255, 0.12);
+            --surface-border-active: rgba(16, 185, 129, 0.5);
+            
             --accent-emerald: #10b981;
             --accent-emerald-glow: rgba(16, 185, 129, 0.25);
             --accent-cyan: #06b6d4;
+            --accent-cyan-glow: rgba(6, 182, 212, 0.25);
             --accent-amber: #f59e0b;
             --accent-rose: #f43f5e;
             
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #4b5563;
             
             --radius-sm: 8px;
             --radius-md: 12px;
-            --radius-lg: 18px;
+            --radius-lg: 20px;
             
-            --transition-fast: 0.2s ease;
-            --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ==========================================================================
-           2. GLOBAL RESETS & TYPOGRAPHY
-           ========================================================================== */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
@@ -43,11 +43,11 @@
         body {
             background-color: var(--bg-deep);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 45%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 45%);
             background-attachment: fixed;
             color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
             min-height: 100vh;
             padding: 2rem 1.5rem;
@@ -56,7 +56,7 @@
         }
 
         /* ==========================================================================
-           3. HEADER & NAVIGATION
+           2. HEADER & NAVIGATION TABS
            ========================================================================== */
         header {
             display: flex;
@@ -69,7 +69,7 @@
             gap: 1rem;
         }
 
-        .brand h1 {
+        .brand-title {
             font-size: 2.2rem;
             font-weight: 800;
             letter-spacing: -0.03em;
@@ -78,7 +78,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .brand p {
+        .brand-subtitle {
             color: var(--text-secondary);
             font-size: 0.95rem;
         }
@@ -87,13 +87,13 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.4rem 0.85rem;
+            padding: 0.5rem 1rem;
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid var(--accent-emerald-glow);
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 0.85rem;
             color: var(--accent-emerald);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .pulse-dot {
@@ -101,39 +101,66 @@
             height: 8px;
             background-color: var(--accent-emerald);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 0.3; transform: scale(0.9); }
             100% { opacity: 1; transform: scale(1); }
         }
 
+        .nav-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--surface-border);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 4px 15px var(--accent-cyan-glow);
+        }
+
         /* ==========================================================================
-           4. GRID LAYOUT
+           3. DASHBOARD GRID & CARDS
            ========================================================================== */
-        .grid-dashboard {
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
             gap: 1.5rem;
-            margin-bottom: 2rem;
         }
 
         .col-12 { grid-column: span 12; }
         .col-8  { grid-column: span 8; }
         .col-6  { grid-column: span 6; }
         .col-4  { grid-column: span 4; }
-        .col-3  { grid-column: span 3; }
 
         @media (max-width: 1024px) {
-            .col-8, .col-6, .col-4, .col-3 { grid-column: span 12; }
+            .col-8, .col-6, .col-4 { grid-column: span 12; }
         }
 
-        /* ==========================================================================
-           5. GLASSMORPHISM CARDS
-           ========================================================================== */
         .glass-card {
             background: var(--surface-card);
             backdrop-filter: blur(16px);
@@ -142,90 +169,32 @@
             border-radius: var(--radius-lg);
             padding: 1.75rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            transition: border-color var(--transition-fast), transform var(--transition-fast);
+            transition: all var(--transition-smooth);
         }
 
         .glass-card:hover {
+            background: var(--surface-card-hover);
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.25rem;
-        }
-
         .card-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 700;
+            margin-bottom: 1.25rem;
             color: var(--text-primary);
         }
 
         /* ==========================================================================
-           6. PROBLEM & SOLUTION CARDS
-           ========================================================================== */
-        .problem-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .problem-card {
-            background: rgba(15, 23, 42, 0.6);
-            border-left: 3px solid var(--accent-rose);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-        }
-
-        .problem-card h4 {
-            color: var(--accent-rose);
-            font-size: 0.95rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .problem-card p {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .solution-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--surface-border);
-        }
-
-        .solution-step:last-child {
-            border-bottom: none;
-        }
-
-        .step-num {
-            background: var(--accent-emerald);
-            color: #000;
-            font-weight: 800;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 0.85rem;
-        }
-
-        /* ==========================================================================
-           7. NATIONWIDE METRICS
+           4. DYNAMIC COMPONENTS & METRICS
            ========================================================================== */
         .metric-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
         }
 
-        .metric-box {
-            background: rgba(15, 23, 42, 0.6);
+        .metric-card {
+            background: rgba(11, 19, 41, 0.7);
             border: 1px solid var(--surface-border);
             padding: 1.25rem;
             border-radius: var(--radius-md);
@@ -233,22 +202,44 @@
         }
 
         .metric-val {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: var(--accent-emerald);
         }
 
         .metric-lbl {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             margin-top: 0.25rem;
         }
 
-        /* ==========================================================================
-           8. FORM & VOICE DEMO CONTROLS
-           ========================================================================== */
+        /* Problem Grid */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .problem-box {
+            background: rgba(244, 63, 94, 0.05);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            border-left: 4px solid var(--accent-rose);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+        }
+
+        .problem-box h4 {
+            color: var(--accent-rose);
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .problem-box p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Form Controls */
         .form-group {
             margin-bottom: 1.25rem;
         }
@@ -258,19 +249,17 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
-            font-weight: 500;
         }
 
         .form-control {
             width: 100%;
             padding: 0.8rem 1rem;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(11, 19, 41, 0.9);
             border: 1px solid var(--surface-border);
             border-radius: var(--radius-sm);
             color: var(--text-primary);
             font-size: 0.95rem;
             outline: none;
-            transition: all var(--transition-fast);
         }
 
         .form-control:focus {
@@ -278,82 +267,109 @@
             box-shadow: 0 0 0 3px var(--accent-emerald-glow);
         }
 
-        .btn-primary {
+        .btn-action {
             width: 100%;
-            padding: 0.85rem 1.5rem;
+            padding: 0.9rem;
             background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%);
             color: #000;
             font-weight: 700;
             border: none;
             border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all var(--transition-fast);
-            box-shadow: 0 4px 14px var(--accent-emerald-glow);
+            box-shadow: 0 4px 15px var(--accent-emerald-glow);
+            transition: all var(--transition-smooth);
         }
 
-        .btn-primary:hover {
+        .btn-action:hover {
             opacity: 0.95;
             transform: translateY(-1px);
         }
 
         .output-box {
             background: #04070d;
-            border: 1px solid var(--accent-emerald-glow);
+            border: 1px solid var(--accent-emerald);
             border-radius: var(--radius-md);
             padding: 1.25rem;
-            font-size: 0.9rem;
             margin-top: 1.25rem;
             display: none;
         }
 
-        /* ==========================================================================
-           9. ROADMAP & BUSINESS MODEL
-           ========================================================================== */
+        /* Audio Player Bar */
+        .audio-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-emerald-glow);
+            border-radius: var(--radius-sm);
+        }
+
+        .play-btn {
+            background: var(--accent-emerald);
+            color: #000;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-border);
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            color: var(--text-secondary);
+        }
+
+        /* Roadmap Timeline */
         .timeline {
             position: relative;
-            padding-left: 1.5rem;
+            padding-left: 2rem;
             border-left: 2px solid var(--surface-border);
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -1.95rem;
-            top: 0.25rem;
-            width: 12px;
-            height: 12px;
+            left: -2.55rem;
+            top: 0.2rem;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             background: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan);
         }
 
         .timeline-item.active::before {
             background: var(--accent-emerald);
-            box-shadow: 0 0 10px var(--accent-emerald);
+            box-shadow: 0 0 12px var(--accent-emerald);
         }
 
-        .timeline-item h4 {
-            font-size: 0.95rem;
-            color: var(--text-primary);
-        }
-
-        .timeline-item p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* ==========================================================================
-           10. FOOTER
-           ========================================================================== */
         footer {
             text-align: center;
             border-top: 1px solid var(--surface-border);
             padding-top: 2rem;
+            margin-top: 3rem;
             color: var(--text-muted);
             font-size: 0.85rem;
         }
@@ -361,206 +377,300 @@
 </head>
 <body>
 
-    <!-- HEADER SECTION -->
+    <!-- HEADER -->
     <header>
-        <div class="brand">
-            <h1>WeaveAhead</h1>
-            <p>AI-Powered Demand Forecasting Engine for Handloom Weavers Across India</p>
+        <div>
+            <div class="brand-title">WeaveAhead</div>
+            <div class="brand-subtitle">AI-Powered Demand Forecasting Engine for Handloom Weavers | Business Plan Core</div>
         </div>
         <div class="badge-live">
-            <span class="pulse-dot"></span>
-            Nationwide Coverage Active
+            <span class="pulse-dot"></span> Idea Stage | Voice-First Platform
         </div>
     </header>
 
-    <!-- MAIN DASHBOARD -->
-    <main class="grid-dashboard">
+    <!-- TAB NAVIGATION -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-overview')">1. Problem & Overview</button>
+        <button class="tab-btn" onclick="switchTab('tab-engine')">2. Forecast Engine & Live Audio</button>
+        <button class="tab-btn" onclick="switchTab('tab-market')">3. Target Market (35L+ Weavers)</button>
+        <button class="tab-btn" onclick="switchTab('tab-business')">4. Business Model & Credit Access</button>
+        <button class="tab-btn" onclick="switchTab('tab-roadmap')">5. Roadmap & Asks</button>
+    </nav>
 
-        <!-- NATIONWIDE IMPACT METRICS -->
+    <!-- TAB 1: OVERVIEW & PROBLEM -->
+    <div id="tab-overview" class="tab-content active">
         <section class="col-12 glass-card">
-            <div class="card-header">
-                <h2 class="card-title">National Handloom Ecosystem Target</h2>
-            </div>
-            <div class="metric-grid">
-                <div class="metric-box">
-                    <div class="metric-val">35 Lakh+</div>
-                    <div class="metric-lbl">Weaver Households (Census)</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-val">72%</div>
-                    <div class="metric-lbl">Women Artisan Base</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-val">4th</div>
-                    <div class="metric-lbl">Handloom Census Baseline</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-val" style="color: var(--accent-cyan);">Voice & SMS</div>
-                    <div class="metric-lbl">Low-Literacy First Design</div>
-                </div>
-            </div>
+            <h2 class="card-title">Executive Summary</h2>
+            <p style="color: var(--text-secondary); font-size: 1.05rem;">
+                <strong>WeaveAhead</strong> turns scattered market signals into simple weekly forecasts delivered via WhatsApp and voice calls in regional languages. Visual icons and audio guidance completely bypass app literacy barriers[span_1](start_span)[span_1](end_span).
+            </p>
         </section>
 
-        <!-- PROBLEM STATEMENT SECTION -->
-        <section class="col-6 glass-card">
-            <div class="card-header">
-                <h2 class="card-title" style="color: var(--accent-rose);">1. The Core Problem</h2>
-            </div>
+        <section class="col-12 glass-card">
+            <h2 class="card-title" style="color: var(--accent-rose);">The Core Problem</h2>
             <div class="problem-grid">
-                <div class="problem-card">
-                    <h4>Unpredictable Demand</h4>
-                    <p>Seasonal swings, local festivals, and rapid trend shifts leave weavers guessing.</p>
+                <div class="problem-box">
+                    <h4>1. Unpredictable Demand</h4>
+                    <p>Seasonal swings, festival calendars, and shifting buyer trends leave weavers guessing what to produce[span_2](start_span)[span_2](end_span).</p>
                 </div>
-                <div class="problem-card">
-                    <h4>Delayed Payments</h4>
-                    <p>Zero visibility into order cycles makes steady monthly cash flow impossible.</p>
+                <div class="problem-box">
+                    <h4>2. Delayed Payments</h4>
+                    <p>No visibility into order cycles or cash flow makes monthly household income impossible to plan[span_3](start_span)[span_3](end_span).</p>
                 </div>
-                <div class="problem-card">
-                    <h4>Unsold Inventory</h4>
-                    <p>Production without demand signals locks up vital capital in raw yarns.</p>
+                <div class="problem-box">
+                    <h4>3. Unsold Inventory</h4>
+                    <p>Weaving without demand signals leads directly to wasted yarn materials and locked-up working capital[span_4](start_span)[span_4](end_span).</p>
                 </div>
-                <div class="problem-card">
-                    <h4>Youth Exodus</h4>
-                    <p>Income instability pushes the next generation away from ancestral weaving.</p>
+                <div class="problem-box">
+                    <h4>4. Youth Exodus</h4>
+                    <p>Financial instability pushes the next generation away from ancestral handloom craft entirely[span_5](start_span)[span_5](end_span).</p>
                 </div>
             </div>
         </section>
+    </div>
 
-        <!-- SOLUTION ENGINE SECTION -->
+    <!-- TAB 2: FORECAST ENGINE & LIVE AUDIO SYNTHESIZER -->
+    <div id="tab-engine" class="tab-content">
         <section class="col-6 glass-card">
-            <div class="card-header">
-                <h2 class="card-title" style="color: var(--accent-emerald);">2. How WeaveAhead Works</h2>
-            </div>
-            <div class="solution-step">
-                <div class="step-num">1</div>
-                <div>
-                    <strong style="color: var(--text-primary);">Collect Data Signals</strong>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Reads local mandi data, wedding calendars, e-commerce trends, and coop records.</p>
+            <h2 class="card-title" style="color: var(--accent-emerald);">How It Works</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>1. Collect Market Signals</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Pulls local mandi market data, wedding calendars, e-commerce trends, and coop records[span_6](start_span)[span_6](end_span).</p>
                 </div>
-            </div>
-            <div class="solution-step">
-                <div class="step-num">2</div>
-                <div>
-                    <strong style="color: var(--text-primary);">Forecast Demand</strong>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary);">AI predicts specific demand by category: Sarees, Stoles, or Home Furnishings.</p>
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>2. Forecast Demand</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">AI predicts specific product category demand: Sarees, Stoles, or Home Furnishings[span_7](start_span)[span_7](end_span).</p>
                 </div>
-            </div>
-            <div class="solution-step">
-                <div class="step-num">3</div>
-                <div>
-                    <strong style="color: var(--text-primary);">Simplify for Low-Literacy</strong>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Converts predictions into visual charts, colors, and regional voice prompts.</p>
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>3. Simplify for Low-Literacy</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Converts raw numbers into visual icons, color bars, and regional voice messages[span_8](start_span)[span_8](end_span).</p>
                 </div>
-            </div>
-            <div class="solution-step">
-                <div class="step-num">4</div>
-                <div>
-                    <strong style="color: var(--text-primary);">WhatsApp & Voice Delivery</strong>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Delivers weekly actionable alerts directly to basic phones or WhatsApp.</p>
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>4. Deliver Alerts</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Dispatches weekly SMS and WhatsApp voice messages directly to basic phones[span_9](start_span)[span_9](end_span).</p>
                 </div>
             </div>
         </section>
 
-        <!-- INTERACTIVE REGIONAL FORECAST DEMO -->
-        <section class="col-4 glass-card">
-            <div class="card-header">
-                <h2 class="card-title">Simulate Regional Forecast</h2>
-            </div>
-            <form id="simulator-form">
+        <!-- WORKING SIMULATOR WITH TEXT-TO-SPEECH -->
+        <section class="col-6 glass-card">
+            <h2 class="card-title">Live Voice & Alert Generator</h2>
+            <form id="forecast-sim">
                 <div class="form-group">
-                    <label class="form-label" for="region">Target Region / Cluster</label>
-                    <select id="region" class="form-control">
-                        <option value="OD">Odisha (Sambalpuri Ikkat Cluster)</option>
-                        <option value="WB">West Bengal (Shantipur / Fulia)</option>
-                        <option value="TN">Tamil Nadu (Kanchipuram Weaver Society)</option>
-                        <option value="UP">Uttar Pradesh (Varanasi Brocade)</option>
+                    <label class="form-label">Weaver Cluster</label>
+                    <select id="sim-cluster" class="form-control">
+                        <option value="Odisha Sambalpuri Cluster">Odisha (Sambalpuri Ikkat Cluster)</option>
+                        <option value="West Bengal Fulia Cluster">West Bengal (Fulia / Shantipur)</option>
+                        <option value="Varanasi Weaver Society">Uttar Pradesh (Varanasi Brocade)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="product">Product Type</label>
-                    <select id="product" class="form-control">
-                        <option value="sarees">Silk & Cotton Sarees</option>
-                        <option value="stoles">Fashion Stoles & Scarves</option>
-                        <option value="furnishing">Home Furnishings & Linens</option>
+                    <label class="form-label">Target Product Category</label>
+                    <select id="sim-product" class="form-control">
+                        <option value="Silk Sarees">Silk & Cotton Sarees</option>
+                        <option value="Fashion Stoles">Fashion Stoles & Scarves</option>
+                        <option value="Home Linens">Home Furnishings & Linens</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="lang">Regional Voice Language</label>
-                    <select id="lang" class="form-control">
-                        <option value="Odia">Odia (ଓଡ଼ିଆ)</option>
-                        <option value="Bengali">Bengali (বাংলা)</option>
-                        <option value="Hindi">Hindi (हिंदी)</option>
-                        <option value="Tamil">Tamil (தமிழ்)</option>
+                    <label class="form-label">Voice Assistant Language</label>
+                    <select id="sim-lang" class="form-control">
+                        <option value="en">English (Voice Assistant)</option>
+                        <option value="hi">Hindi (हिंदी)</option>
+                        <option value="bn">Bengali (বাংলা)</option>
                     </select>
                 </div>
 
-                <button type="submit" class="btn-primary">Generate Forecast Signal</button>
+                <button type="submit" class="btn-action">Run AI Forecast & Play Voice Note</button>
             </form>
 
-            <div id="forecast-output" class="output-box"></div>
-        </section>
-
-        <!-- ROADMAP & BUSINESS MODEL -->
-        <section class="col-8 glass-card">
-            <div class="card-header">
-                <h2 class="card-title">Execution Roadmap & Partnerships</h2>
+            <div id="sim-output" class="output-box">
+                <div style="color: var(--accent-emerald); font-weight: 700;">📢 Generated Voice Dispatch:</div>
+                <p id="voice-text-body" style="font-size: 0.9rem; color: var(--text-primary); margin-top: 0.5rem;"></p>
+                
+                <div class="audio-bar">
+                    <button class="play-btn" onclick="playCurrentVoice()">▶</button>
+                    <span style="font-size: 0.85rem; color: var(--text-secondary);">Click to listen to AI voice alert</span>
+                </div>
             </div>
+        </section>
+    </div>
+
+    <!-- TAB 3: TARGET MARKET -->
+    <div id="tab-market" class="tab-content">
+        <section class="col-12 glass-card">
+            <h2 class="card-title">Market Opportunity & Demographics</h2>
+            <div class="metric-grid" style="margin-bottom: 1.5rem;">
+                <div class="metric-card">
+                    <div class="metric-val">35 Lakh+</div>
+                    <div class="metric-lbl">Weaver Households Across India[span_10](start_span)[span_10](end_span)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">72%</div>
+                    <div class="metric-lbl">Women Artisan Workforce[span_11](start_span)[span_11](end_span)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val">4th Census</div>
+                    <div class="metric-lbl">Handloom Sector Baseline Data[span_12](start_span)[span_12](end_span)</div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">Primary User Segments</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Segment</th>
+                        <th>Description</th>
+                        <th>Delivery Channel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Individual Weavers</strong></td>
+                        <td>Producing for local and regional markets; low smartphone literacy[span_13](start_span)[span_13](end_span).</td>
+                        <td>WhatsApp Voice & IVR SMS[span_14](start_span)[span_14](end_span)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Weaver Cooperatives</strong></td>
+                        <td>Coordinating production cycles and yarn orders across multiple members[span_15](start_span)[span_15](end_span).</td>
+                        <td>Group Dashboard & Voice[span_16](start_span)[span_16](end_span)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NGOs & Govt Schemes</strong></td>
+                        <td>Supporting handloom cluster programs and artisan income schemes[span_17](start_span)[span_17](end_span).</td>
+                        <td>Analytics Portal[span_18](start_span)[span_18](end_span)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- TAB 4: BUSINESS MODEL -->
+    <div id="tab-business" class="tab-content">
+        <section class="col-12 glass-card">
+            <h2 class="card-title">Business & Monetization Model</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--surface-border);">
+                    <h3 style="color: var(--accent-emerald);">1. Cooperative Subscriptions</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Small monthly/seasonal fee paid by weaver cooperative societies for group forecasts and centralized dashboards[span_19](start_span)[span_19](end_span).
+                    </p>
+                </div>
+
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--surface-border);">
+                    <h3 style="color: var(--accent-emerald);">2. NGO / Govt Partnerships</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Licensing to handloom cluster programs and NGOs supporting weaver income schemes[span_20](start_span)[span_20](end_span).
+                    </p>
+                </div>
+
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--surface-border);">
+                    <h3 style="color: var(--accent-emerald);">3. Credit Access Scoring</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Forecasted income stability data used to help weavers access government handloom credit schemes[span_21](start_span)[span_21](end_span).
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- TAB 5: ROADMAP & ASKS -->
+    <div id="tab-roadmap" class="tab-content">
+        <section class="col-6 glass-card">
+            <h2 class="card-title">4-Phase Execution Roadmap</h2>
             <div class="timeline">
                 <div class="timeline-item active">
-                    <h4 style="color: var(--accent-emerald);">Phase 1: Idea & Concept Validation (Current Stage)</h4>
-                    <p>Forecasting model architecture designed; conducting weaver interviews to confirm zero-literacy interface requirements.</p>
+                    <h4 style="color: var(--accent-emerald);">Phase 1: Idea Stage (Now)</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Concept validated, forecasting model design, weaver interviews to confirm needs[span_22](start_span)[span_22](end_span).</p>
                 </div>
                 <div class="timeline-item">
-                    <h4>Phase 2: MVP Prototype Build</h4>
-                    <p>Build MVP engine for one weaver cluster; validate automated SMS and WhatsApp voice note dispatch.</p>
+                    <h4>Phase 2: Prototype Build</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Build MVP forecast engine for one weaver cluster; test SMS/voice delivery[span_23](start_span)[span_23](end_span).</p>
                 </div>
                 <div class="timeline-item">
-                    <h4>Phase 3: Cooperative Pilot</h4>
-                    <p>Partner with one cooperative society for a full seasonal cycle; measure reduced unsold inventory and cash flow impact.</p>
+                    <h4>Phase 3: Seasonal Pilot</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Run with one cooperative society for a full season; measure inventory & income impact[span_24](start_span)[span_24](end_span).</p>
                 </div>
                 <div class="timeline-item">
-                    <h4>Phase 4: Scale & Handloom Credit Access</h4>
-                    <p>Expand across clusters; integrate forecast stability scores with government handloom credit schemes.</p>
+                    <h4>Phase 4: Scale & Credit Access</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Expand across clusters; add credit-access integration with handloom schemes[span_25](start_span)[span_25](end_span).</p>
                 </div>
             </div>
         </section>
 
-    </main>
+        <section class="col-6 glass-card">
+            <h2 class="card-title" style="color: var(--accent-cyan);">What We're Looking For</h2>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>1. Mentorship</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Mentorship to validate the forecasting model with real weaver cooperatives[span_26](start_span)[span_26](end_span).</p>
+                </div>
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>2. Introductions</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Introductions to handloom cluster NGOs / government programs for a pilot[span_27](start_span)[span_27](end_span).</p>
+                </div>
+                <div style="background: rgba(11, 19, 41, 0.6); padding: 1rem; border-radius: 8px; border-left: 3px solid var(--accent-cyan);">
+                    <strong>3. Product Feedback</strong>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Early feedback on the low-literacy, voice-first product design[span_28](start_span)[span_28](end_span).</p>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 WeaveAhead Engine | Helping India's handloom weavers see tomorrow's demand today.</p>
+        <p><strong>WeaveAhead</strong> — Helping India's handloom weavers see tomorrow's demand today[span_29](start_span)[span_29](end_span).</p>
     </footer>
 
-    <!-- INTERACTIVE SCRIPT -->
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('simulator-form');
-            const output = document.getElementById('forecast-output');
+        let currentVoiceText = "";
+        let currentLang = "en";
 
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const regionText = document.getElementById('region').options[document.getElementById('region').selectedIndex].text;
-                const productText = document.getElementById('product').options[document.getElementById('product').selectedIndex].text;
-                const langText = document.getElementById('lang').options[document.getElementById('lang').selectedIndex].text;
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
 
-                output.style.display = 'block';
-                output.innerHTML = `
-                    <div style="color: var(--accent-emerald); font-weight: 700; margin-bottom: 0.5rem;">
-                        📢 Weekly Audio Signal Dispatching...
-                    </div>
-                    <div style="color: var(--text-secondary); font-size: 0.85rem;">
-                        • <strong>Cluster Target:</strong> ${regionText}<br>
-                        • <strong>Product Category:</strong> ${productText}<br>
-                        • <strong>Voice Assistant:</strong> ${langText}<br>
-                        • <strong>Action Recommended:</strong> Prepare 60% Crimson & Amber yarn stock for upcoming festival cycle.
-                    </div>
-                `;
-            });
+        document.getElementById('forecast-sim').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const cluster = document.getElementById('sim-cluster').value;
+            const product = document.getElementById('sim-product').value;
+            const lang = document.getElementById('sim-lang').value;
+            
+            currentLang = lang;
+
+            if (lang === 'hi') {
+                currentVoiceText = `नमस्ते! ${cluster} के लिए संदेश। आगामी त्यौहार के कारण ${product} की मांग में 45% की वृद्धि का अनुमान है। कृपया आवश्यक धागा समय पर खरीदें।`;
+            } else if (lang === 'bn') {
+                currentVoiceText = `নমস্কার! ${cluster} এর জন্য পূর্বাভাস। আগামী উৎসবের জন্য ${product} এর চাহিদা ৪৫% বৃদ্ধি পাবে। অনুগ্রহ করে প্রস্তুতি নিন।`;
+            } else {
+                currentVoiceText = `Attention weavers of ${cluster}! Demand for ${product} is predicted to rise by 45% over the next two weeks due to regional festival cycles. Stock raw materials accordingly.`;
+            }
+
+            document.getElementById('voice-text-body').innerText = `"${currentVoiceText}"`;
+            document.getElementById('sim-output').style.display = 'block';
+
+            // Auto play speech
+            playCurrentVoice();
         });
+
+        function playCurrentVoice() {
+            if ('speechSynthesis' in window && currentVoiceText !== "") {
+                window.speechSynthesis.cancel(); // Reset active speech
+                const utterance = new SpeechSynthesisUtterance(currentVoiceText);
+                utterance.lang = currentLang;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
     </script>
 </body>
 </html>
+
