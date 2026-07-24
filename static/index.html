@@ -3,493 +3,498 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead — Voice-First AI Companion for Handloom Weavers</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css">
+    <title>WeaveAhead | AI Companion for Handloom Weavers</title>
+    <style>
+        /* ==========================================================================
+           1. CORE SYSTEM VARIABLES & DESIGN TOKENS
+           ========================================================================== */
+        :root {
+            --bg-deep: #080c14;
+            --bg-surface: #0f172a;
+            --surface-card: rgba(30, 41, 59, 0.7);
+            --surface-card-hover: rgba(51, 65, 85, 0.8);
+            --surface-border: rgba(255, 255, 255, 0.12);
+            --surface-border-focus: rgba(16, 185, 129, 0.5);
+            
+            --accent-emerald: #10b981;
+            --accent-emerald-glow: rgba(16, 185, 129, 0.25);
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            
+            --transition-fast: 0.2s ease;
+            --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESETS & BASE STYLES
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+            max-width: 1350px;
+            margin: 0 auto;
+        }
+
+        /* ==========================================================================
+           3. LAYOUT STRUCTURE & NAVIGATION
+           ========================================================================== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.85rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent-emerald-glow);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--accent-emerald);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .col-4 { grid-column: span 4; }
+        .col-8 { grid-column: span 8; }
+        .col-12 { grid-column: span 12; }
+
+        @media (max-width: 1024px) {
+            .col-4, .col-8 { grid-column: span 12; }
+        }
+
+        /* ==========================================================================
+           4. GLASSMORPHISM CARDS
+           ========================================================================== */
+        .glass-card {
+            background: var(--surface-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: border-color var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           5. DATA TABLES & STATS
+           ========================================================================== */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--surface-border);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+        }
+
+        .stat-box .label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-box .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-emerald);
+            margin-top: 0.25rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .data-table th {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            font-size: 0.9rem;
+        }
+
+        /* ==========================================================================
+           6. FORM CONTROLS & INPUTS
+           ========================================================================== */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-emerald);
+            box-shadow: 0 0 0 3px var(--accent-emerald-glow);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            box-shadow: 0 4px 14px var(--accent-emerald-glow);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================================
+           7. TERMINAL / OUTPUT BOX
+           ========================================================================== */
+        .console-output {
+            background: #04070d;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.85rem;
+            color: #34d399;
+            margin-top: 1.25rem;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* ==========================================================================
+           8. ROADMAP & LIST STYLES
+           ========================================================================== */
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+            border-left: 2px solid var(--surface-border);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.95rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
+        }
+
+        .timeline-item h4 {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* ==========================================================================
+           9. FOOTER
+           ========================================================================== */
+        footer {
+            text-align: center;
+            border-top: 1px solid var(--surface-border);
+            padding-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
 <body>
 
-<div class="layout-wrapper">
-    <!-- Header -->
+    <!-- HEADER SECTION -->
     <header>
-        <div class="brand-block">
-            <h1>Weave<span>Ahead</span></h1>
-            <p>AI Companion for Handloom Weavers | Team Tantunidhi</p>
+        <div class="brand">
+            <h1>WeaveAhead</h1>
+            <p>AI-Powered Predictive Engine for Handloom Weavers | Team TantuNidhi</p>
         </div>
-        <div style="text-align: right;">
-            <span class="team-tag">Team UID: HH26510</span>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.3rem;">ITER (Siksha 'O' Anusandhan), Bhubaneswar</p>
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            FastAPI Live Node
         </div>
     </header>
 
-    <!-- Context / Problem Snapshot -->
-    <div class="stats-grid">
-        <div class="stat-box">
-            <div class="number">35 Lakh+</div>
-            <div class="label">Weavers Across India</div>
-        </div>
-        <div class="stat-box">
-            <div class="number">72%</div>
-            <div class="label">Women Artisan Base</div>
-        </div>
-        <div class="stat-box">
-            <div class="number">&lt; ₹5,000</div>
-            <div class="label">Monthly Earnings for ~67%</div>
-        </div>
-    </div>
+    <!-- MAIN DASHBOARD GRID -->
+    <main class="grid-dashboard">
 
-    <!-- Main Grid -->
-    <div class="dashboard-grid">
-        
-        <!-- Left Side Controls & Info -->
-        <div>
-            <!-- Inputs -->
-            <div class="card">
-                <div class="card-header">
-                    <span>Forecast Parameters</span>
+        <!-- METRICS OVERVIEW -->
+        <section class="col-12 glass-card">
+            <div class="card-header">
+                <h2 class="card-title">National Handloom Ecosystem Overview</h2>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="label">Total Artisans Across India</div>
+                    <div class="value">35 Lakh+</div>
                 </div>
-                
-                <div class="form-control">
-                    <label for="weaverId">Weaver / Cluster ID</label>
-                    <input type="text" id="weaverId" value="WVR-HH26510-OD" readonly>
+                <div class="stat-box">
+                    <div class="label">Women Workforce Representation</div>
+                    <div class="value">72%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Artisan Base (&lt; ₹5,000/mo)</div>
+                    <div class="value">~67%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">Active Cluster Operations</div>
+                    <div class="value" style="color: var(--accent-cyan)">1,240</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FORECAST CONFIGURATION FORM -->
+        <section class="col-4 glass-card">
+            <div class="card-header">
+                <h2 class="card-title">Demand Forecasting Engine</h2>
+            </div>
+            <form id="forecast-form">
+                <div class="form-group">
+                    <label class="form-label" for="cluster-id">Weaver / Cluster Identifier</label>
+                    <input type="text" id="cluster-id" class="form-control" value="WB-KOL-089145-01" required>
                 </div>
 
-                <div class="form-control">
-                    <label for="targetMonth">Target Production Month</label>
-                    <select id="targetMonth">
-                        <option value="October" selected>October (Festive Season Prep)</option>
-                        <option value="November">November (Wedding Season Peak)</option>
-                        <option value="December">December (Winter Apparel & Corporate Gifting)</option>
-                        <option value="January">January (Harvest Festivals)</option>
+                <div class="form-group">
+                    <label class="form-label" for="season">Target Production Season</label>
+                    <select id="season" class="form-control">
+                        <option value="autumn">Autumn / Festive (Durga Puja Prep)</option>
+                        <option value="winter">Winter Handloom Expo</option>
+                        <option value="spring">Spring / Summer Export</option>
                     </select>
                 </div>
 
-                <div class="form-control">
-                    <label for="language">Voice Assistant Language</label>
-                    <select id="language">
-                        <option value="Odia" selected>Odia (ଓଡ଼ିଆ)</option>
-                        <option value="Hindi">Hindi (हिंदी)</option>
-                        <option value="English">English</option>
+                <div class="form-group">
+                    <label class="form-label" for="language">Voice Assistant Local Language</label>
+                    <select id="language" class="form-control">
+                        <option value="bengali">Bengali (বাংলা)</option>
+                        <option value="odia">Odia (ଓଡ଼ିଆ)</option>
+                        <option value="hindi">Hindi (हिंदी)</option>
+                        <option value="english">English</option>
                     </select>
                 </div>
 
-                <button class="btn-forecast" onclick="generateForecast()">Generate Predictive Plan</button>
+                <button type="submit" class="btn-primary">Generate Predictive Plan</button>
+            </form>
+
+            <div id="console-output" class="console-output"></div>
+        </section>
+
+        <!-- LIVE ANALYTICS TABLE -->
+        <section class="col-8 glass-card">
+            <div class="card-header">
+                <h2 class="card-title">Real-Time Yarn Demand & Cluster Insights</h2>
             </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Cluster ID</th>
+                        <th>Fabric Type</th>
+                        <th>Demand Index</th>
+                        <th>Stock Alert</th>
+                    </tr>
+                </thead>
+                <tbody id="cluster-table-body">
+                    <tr>
+                        <td>WB-KOL-089145-01</td>
+                        <td>Tussar Silk</td>
+                        <td><span style="color: var(--accent-emerald)">High (89%)</span></td>
+                        <td>Optimal</td>
+                    </tr>
+                    <tr>
+                        <td>OD-CTC-002134-03</td>
+                        <td>Sambalpuri Ikkat</td>
+                        <td><span style="color: var(--accent-emerald)">Very High (94%)</span></td>
+                        <td>Low Raw Material</td>
+                    </tr>
+                    <tr>
+                        <td>TN-KAN-004312-09</td>
+                        <td>Kanjeevaram Cotton</td>
+                        <td><span style="color: var(--accent-amber)">Moderate (62%)</span></td>
+                        <td>Sufficient</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-            <!-- Solution Core -->
-            <div class="card">
-                <div class="card-header">
-                    <span>Why WeaveAhead Matters</span>
+        <!-- ROADMAP SECTION -->
+        <section class="col-12 glass-card">
+            <div class="card-header">
+                <h2 class="card-title">Product Roadmap & Scale-up Vision</h2>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Phase 1: Cluster Field Testing & Pilot Launch</h4>
+                    <p>Conduct direct on-ground deployments with pilot weaver clusters to gather real-time usability feedback and fine-tune language parsing models.</p>
                 </div>
-                <p style="font-size: 0.875rem; margin-bottom: 0.8rem;">
-                    Technology should adapt to the weaver, not the other way around. WeaveAhead eliminates guesswork by converting market trends, festival calendars, and order histories into spoken regional guidance.
-                </p>
-                <div class="quote-box">
-                    "Every loom forecasting its own future — and every weaver finally getting to plan instead of hope."
+                <div class="timeline-item">
+                    <h4>Phase 2: Collateral-Free Micro-Financing</h4>
+                    <p>Integrate predictive production metrics with rural bank systems to enable automatic credit scoring for working capital loans.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Phase 3: Expanded Product Cataloging</h4>
+                    <p>Transition traditional weaving clusters into high-margin utility items including linen covers, greeting cards, and lifestyle accessories.</p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Right Side Predictive Output -->
-        <div>
-            <!-- Recommendations Section -->
-            <div class="card">
-                <div class="card-header">
-                    <span>Predictive Demand Guidance</span>
-                    <span id="activeMonthTag" style="font-size: 0.85rem; color: var(--accent-teal); font-weight: 600;">October</span>
-                </div>
+    </main>
 
-                <div id="loading" style="display: none; padding: 1rem; color: var(--text-muted);">
-                    Computing demand multipliers from festival calendars and regional trends...
-                </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 TantuNidhi Architecture | Built with FastAPI & Modern CSS</p>
+    </footer>
 
-                <div id="recommendationsList">
-                    <!-- Dynamic Items render here -->
-                </div>
-            </div>
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('forecast-form');
+            const consoleOutput = document.getElementById('console-output');
 
-            <!-- Buyer Reach & Future Expansion -->
-            <div class="card">
-                <div class="card-header">
-                    <span>Expanded Market Access & Gifting Channels</span>
-                </div>
-                <ul class="list-group" id="buyerOpportunities">
-                    <!-- Dynamic Buyer Leads -->
-                </ul>
-            </div>
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
 
-            <!-- Future Roadmap -->
-            <div class="card">
-                <div class="card-header">
-                    <span>What's Next: Roadmap & Vision</span>
-                </div>
-                <ul class="list-group">
-                    <li><strong>Pilot Phase:</strong> Sit with a real cluster of weavers to test, learn, and refine the interface before scaling.</li>
-                    <li><strong>Financial Inclusion:</strong> Provide verifiable demand forecasts to banks and credit agencies for collateral-free planning loans.</li>
-                    <li><strong>Product Scaling:</strong> Expand beyond traditional sarees into everyday handloom items — bags, kitchen towels, fabric covers, and greeting cards.</li>
-                </ul>
-            </div>
-        </div>
+                const clusterId = document.getElementById('cluster-id').value;
+                const season = document.getElementById('season').options[document.getElementById('season').selectedIndex].text;
+                const language = document.getElementById('language').options[document.getElementById('language').selectedIndex].text;
 
-    </div>
-</div>
+                // Display interactive status output
+                consoleOutput.style.display = 'block';
+                consoleOutput.innerHTML = `
+                    > Connecting to TantuNidhi Predictive Core...<br>
+                    > Analyzing cluster [${clusterId}]...<br>
+                    > Applying seasonal weights for: ${season}<br>
+                    > Language model configured: ${language}<br>
+                    <span style="color: #6ee7b7;">[SUCCESS] Demand vector mapped successfully.</span>
+                `;
 
-<script src="/static/app.js"></script>
+                // Auto-scroll output box
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            });
+        });
+    </script>
 </body>
 </html>
-
-:root {
-    --bg-main: #0b0f19;
-    --surface-card: rgba(22, 30, 46, 0.75);
-    --surface-border: rgba(255, 255, 255, 0.08);
-    --accent-terracotta: #ea580c;
-    --accent-terracotta-glow: rgba(234, 88, 12, 0.25);
-    --accent-teal: #14b8a6;
-    --accent-gold: #f59e0b;
-    --text-heading: #f8fafc;
-    --text-body: #94a3b8;
-    --text-muted: #64748b;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-body {
-    background-color: var(--bg-main);
-    color: var(--text-body);
-    line-height: 1.6;
-    padding: 1.5rem;
-    min-height: 100vh;
-}
-
-.layout-wrapper {
-    max-width: 1280px;
-    margin: 0 auto;
-}
-
-/* Top Navigation Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--surface-border);
-}
-
-.brand-block h1 {
-    color: var(--text-heading);
-    font-size: 1.75rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-}
-
-.brand-block h1 span {
-    color: var(--accent-terracotta);
-}
-
-.brand-block p {
-    font-size: 0.875rem;
-    color: var(--text-muted);
-}
-
-.team-tag {
-    background: rgba(234, 88, 12, 0.12);
-    border: 1px solid var(--accent-terracotta);
-    color: var(--accent-terracotta);
-    padding: 0.4rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
-
-/* Grid Layout */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 360px 1fr;
-    gap: 1.75rem;
-}
-
-@media (max-width: 960px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Cards */
-.card {
-    background: var(--surface-card);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--surface-border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
-}
-
-.card-header {
-    color: var(--text-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-/* Problem Stats Banner */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.stat-box {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--surface-border);
-    padding: 1rem;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.stat-box .number {
-    color: var(--accent-terracotta);
-    font-size: 1.4rem;
-    font-weight: 800;
-}
-
-.stat-box .label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-top: 0.2rem;
-}
-
-/* Controls */
-.form-control {
-    margin-bottom: 1.2rem;
-}
-
-label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-heading);
-    margin-bottom: 0.4rem;
-}
-
-select, input {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    background: rgba(11, 15, 25, 0.8);
-    border: 1px solid var(--surface-border);
-    border-radius: 10px;
-    color: var(--text-heading);
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-select:focus, input:focus {
-    border-color: var(--accent-terracotta);
-    box-shadow: 0 0 0 3px var(--accent-terracotta-glow);
-}
-
-.btn-forecast {
-    width: 100%;
-    padding: 0.9rem;
-    background: linear-gradient(135deg, var(--accent-terracotta), #c2410c);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 4px 14px var(--accent-terracotta-glow);
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.btn-forecast:hover {
-    opacity: 0.95;
-    transform: translateY(-1px);
-}
-
-/* Production Recommendation Card */
-.rec-item {
-    background: rgba(11, 15, 25, 0.5);
-    border: 1px solid var(--surface-border);
-    border-left: 4px solid var(--accent-gold);
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    transition: border-color 0.2s ease;
-}
-
-.rec-item:hover {
-    border-color: rgba(245, 158, 11, 0.4);
-}
-
-.rec-title-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-
-.rec-title-row h3 {
-    color: var(--text-heading);
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-.qty-badge {
-    background: rgba(245, 158, 11, 0.15);
-    color: var(--accent-gold);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-weight: 800;
-    font-size: 0.95rem;
-}
-
-.rec-meta {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-}
-
-.btn-voice {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(20, 184, 166, 0.12);
-    border: 1px solid var(--accent-teal);
-    color: var(--accent-teal);
-    padding: 0.45rem 0.9rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-voice:hover {
-    background: var(--accent-teal);
-    color: #0b0f19;
-}
-
-/* Opportunities & Future List */
-.list-group {
-    list-style: none;
-}
-
-.list-group li {
-    position: relative;
-    padding-left: 1.5rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
-    color: var(--text-body);
-}
-
-.list-group li::before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    color: var(--accent-teal);
-    font-weight: 700;
-}
-
-/* Vision Section */
-.quote-box {
-    border-left: 3px solid var(--accent-terracotta);
-    padding-left: 1rem;
-    margin-top: 1rem;
-    font-style: italic;
-    color: var(--text-heading);
-    font-size: 0.95rem;
-}
-
-async function generateForecast() {
-    const weaverId = document.getElementById('weaverId').value;
-    const targetMonth = document.getElementById('targetMonth').value;
-    const language = document.getElementById('language').value;
-
-    const loading = document.getElementById('loading');
-    const recList = document.getElementById('recommendationsList');
-    const buyerList = document.getElementById('buyerOpportunities');
-    const activeMonthTag = document.getElementById('activeMonthTag');
-
-    loading.style.display = 'block';
-    recList.innerHTML = '';
-    buyerList.innerHTML = '';
-    activeMonthTag.innerText = targetMonth;
-
-    try {
-        const res = await fetch('/api/v1/forecast', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                weaver_id: weaverId,
-                target_month: targetMonth,
-                language: language
-            })
-        });
-
-        const data = await res.json();
-        loading.style.display = 'none';
-
-        // Render Recommendations
-        data.recommendations.forEach(rec => {
-            const card = document.createElement('div');
-            card.className = 'rec-item';
-            card.innerHTML = `
-                <div class="rec-title-row">
-                    <h3>${rec.item}</h3>
-                    <span class="qty-badge">${rec.suggested_quantity} Units</span>
-                </div>
-                <div class="rec-meta">Target Completion: ${rec.target_date} | Predictive Confidence: ${Math.round(rec.confidence_score * 100)}%</div>
-                <p style="font-size: 0.9rem; color: var(--text-heading); margin-bottom: 0.8rem;">${rec.rationale}</p>
-                <button class="btn-voice" onclick="playVoicePrompt('${escapeQuotes(rec.voice_transcript)}', '${language}')">
-                    <span>🔊</span> Listen Audio (${language})
-                </button>
-            `;
-            recList.appendChild(card);
-        });
-
-        // Render Buyer Leads
-        data.buyer_opportunities.forEach(opp => {
-            const li = document.createElement('li');
-            li.innerHTML = opp;
-            buyerList.appendChild(li);
-        });
-
-    } catch (err) {
-        loading.style.display = 'none';
-        recList.innerHTML = `<p style="color: #ef4444;">Error connecting to FastAPI engine. Ensure backend is active.</p>`;
-    }
-}
-
-function escapeQuotes(str) {
-    return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
-}
-
-function playVoicePrompt(text, language) {
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        
-        if (language === 'Hindi') utterance.lang = 'hi-IN';
-        else if (language === 'Odia') utterance.lang = 'hi-IN'; // Browser TTS fallback mapping for regional scripts
-        else utterance.lang = 'en-US';
-
-        window.speechSynthesis.speak(utterance);
-    } else {
-        alert("Voice synthesis is not supported on this browser.");
-    }
-}
-
-// Auto-initialize on window load
-window.onload = generateForecast;
