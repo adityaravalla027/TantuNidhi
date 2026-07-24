@@ -3,57 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead | Ultimate Amazon-Scale Enterprise Marketplace</title>
+    <title>WeaveAhead | Massive Enterprise Artisan & Supply Engine</title>
     <style>
         :root {
-            --amazon-dark: #131921;
-            --amazon-darker: #0f1111;
-            --amazon-nav-light: #232f3e;
-            --amazon-orange: #febd69;
-            --amazon-orange-hover: #f3a847;
-            --buy-btn: #ffd814;
-            --buy-btn-hover: #f7ca00;
-            --border-color: #d5d9d9;
-            --bg-light: #eaeded;
-            --text-main: #0f1111;
-            --text-sub: #565959;
-            --link-blue: #007185;
-            --link-blue-hover: #c7511f;
-            --accent-green: #007600;
+            --bg-deep: #090d16;
+            --surface: #131b2e;
+            --surface-card: #18223a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(255, 153, 0, 0.3);
+            --brand-orange: #ff9900;
+            --brand-hover: #e88b00;
+            --emerald: #10b981;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --glow: 0 0 25px rgba(255, 153, 0, 0.15);
             --transition-fluid: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Amazon Ember", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-        body { background: var(--bg-light); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg-deep); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-        /* --- AMAZON TOP NAVBAR --- */
-        header { background: var(--amazon-dark); color: #fff; position: sticky; top: 0; z-index: 1000; transform: translateZ(0); }
-        .nav-main { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; gap: 15px; }
-        
-        .nav-brand { font-size: 1.4rem; font-weight: 700; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 2px; padding: 4px; cursor: pointer; border: 1px solid transparent; }
-        .nav-brand span { color: var(--amazon-orange); }
-        .nav-brand:hover { border: 1px solid #fff; border-radius: 2px; }
+        /* --- MASSIVE HEADER & NAVBAR --- */
+        header { background: rgba(9, 13, 22, 0.95); border-bottom: 1px solid var(--border); padding: 1rem 2.5rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(12px); }
+        .brand { font-size: 1.4rem; font-weight: 800; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .brand span { color: var(--brand-orange); }
 
-        .nav-search { display: flex; flex-grow: 1; max-width: 850px; height: 40px; border-radius: 4px; overflow: hidden; }
-        .nav-search select { background: #f3f3f3; border: none; padding: 0 10px; font-size: 0.85rem; border-right: 1px solid #cdcdcd; cursor: pointer; color: #555; outline: none; }
-        .nav-search input { flex-grow: 1; border: none; padding: 0 12px; font-size: 1rem; outline: none; }
-        .nav-search button { background: var(--amazon-orange); border: none; width: 45px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-        .nav-search button:hover { background: var(--amazon-orange-hover); }
+        .search-container { display: flex; flex-grow: 1; max-width: 650px; margin: 0 2rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+        .search-container select { background: transparent; border: none; padding: 0 12px; font-size: 0.85rem; border-right: 1px solid var(--border); cursor: pointer; color: var(--text-sub); outline: none; }
+        .search-container input { flex-grow: 1; padding: 0.65rem 1rem; border: none; outline: none; background: transparent; color: #fff; font-size: 0.95rem; }
+        .search-container button { background: var(--brand-orange); border: none; padding: 0 1.25rem; cursor: pointer; font-weight: bold; color: #000; transition: background 0.2s; }
+        .search-container button:hover { background: var(--brand-hover); }
 
-        .nav-right { display: flex; align-items: center; gap: 15px; }
-        .nav-item { color: #fff; text-decoration: none; padding: 6px 8px; font-size: 0.85rem; cursor: pointer; background: none; border: 1px solid transparent; display: flex; flex-direction: column; border-radius: 2px; }
-        .nav-item:hover { border: 1px solid #fff; }
-        .nav-item b { font-size: 0.95rem; }
-        .cart-indicator { display: flex; align-items: center; font-weight: 700; color: #fff; font-size: 1rem; gap: 4px; }
-        .cart-indicator span { color: #f08804; font-size: 1.1rem; }
-
-        /* Subnav Bar */
-        .nav-sub { background: var(--amazon-nav-light); padding: 6px 16px; display: flex; gap: 15px; align-items: center; font-size: 0.9rem; }
-        .nav-sub button { background: none; border: 1px solid transparent; color: #fff; cursor: pointer; padding: 4px 10px; font-size: 0.9rem; font-weight: 500; border-radius: 2px; transition: border 0.2s; }
-        .nav-sub button:hover, .nav-sub button.active-tab { border: 1px solid #fff; }
+        .nav-actions { display: flex; gap: 1rem; align-items: center; }
+        .nav-btn { background: transparent; color: var(--text-sub); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; }
+        .nav-btn:hover, .nav-btn.active { color: #fff; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
 
         /* --- CONTAINER & TABS --- */
-        .container { max-width: 1480px; margin: 0 auto; padding: 20px; width: 100%; flex-grow: 1; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2.5rem 2rem; width: 100%; flex-grow: 1; }
         .tab-view { 
             display: none; 
             opacity: 0;
@@ -66,114 +52,87 @@
             transform: translateY(0);
         }
 
-        /* --- PRODUCT GRID --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-        .card { background: #fff; border: 1px solid var(--border-color); border-radius: 4px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; transition: box-shadow 0.2s, transform 0.2s; will-change: transform; transform: translateZ(0); }
-        .card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); transform: translateY(-3px) translateZ(0); }
+        /* --- CATALOG GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--surface-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-4px); border-color: var(--border-glow); box-shadow: var(--glow); }
         
-        .badge { display: inline-block; padding: 2px 6px; font-size: 0.7rem; background: #e0e2e2; color: #333; border-radius: 3px; margin-bottom: 8px; font-weight: bold; text-transform: uppercase; }
-        .product-title { font-size: 0.95rem; color: var(--text-main); font-weight: 500; line-height: 1.4; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-title:hover { color: var(--link-blue-hover); text-decoration: underline; cursor: pointer; }
-        
-        .rating { font-size: 0.8rem; color: var(--link-blue); margin-bottom: 8px; }
-        .price { font-size: 1.25rem; font-weight: 700; color: #0f1111; margin-bottom: 4px; }
-        .price span { font-size: 0.75rem; vertical-align: super; font-weight: normal; }
-        .prime-badge { font-weight: bold; color: #007185; font-size: 0.75rem; margin-bottom: 10px; display: inline-block; }
-        
-        button.amazon-btn { background: var(--buy-btn); border: 1px solid #fcd200; border-radius: 20px; padding: 8px 12px; cursor: pointer; font-weight: 500; width: 100%; font-size: 0.85rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background 0.2s; }
-        button.amazon-btn:hover { background: var(--buy-btn-hover); }
+        .cluster-badge { display: inline-block; padding: 0.25rem 0.6rem; font-size: 0.7rem; background: rgba(255,153,0,0.1); color: var(--brand-orange); border-radius: 4px; margin-bottom: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .primary-btn { background: var(--brand-orange); border: none; border-radius: 8px; padding: 0.65rem 1rem; cursor: pointer; font-weight: 600; width: 100%; color: #000; transition: background 0.2s; }
+        .primary-btn:hover { background: var(--brand-hover); }
 
-        /* --- CART & CHECKOUT LAYOUT --- */
-        .cart-container { display: grid; grid-template-columns: 2.8fr 1fr; gap: 20px; }
-        @media(max-width: 900px) { .cart-container { grid-template-columns: 1fr; } }
+        /* --- CHECKOUT & PANELS --- */
+        .checkout-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        @media(max-width: 900px) { .checkout-layout { grid-template-columns: 1fr; } }
         
-        .cart-box, .checkout-box, .studio-box { background: #fff; border: 1px solid var(--border-color); border-radius: 4px; padding: 20px; }
-        .checkout-box { height: fit-content; }
+        .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; }
+        input, textarea { width: 100%; padding: 0.7rem; background: var(--bg-deep); border: 1px solid var(--border); color: #fff; border-radius: 6px; margin-top: 0.3rem; margin-bottom: 1rem; outline: none; font-size: 0.9rem; }
+        input:focus, textarea:focus { border-color: var(--brand-orange); box-shadow: 0 0 5px rgba(255,153,0,0.3); }
         
-        input[type="text"], textarea { width: 100%; padding: 8px 10px; border: 1px solid #888; border-radius: 4px; margin-top: 4px; margin-bottom: 12px; font-size: 0.9rem; outline: none; }
-        input:focus, textarea:focus { border-color: #e77600; box-shadow: 0 0 3px 2px rgba(228,118,0,0.4); }
-
-        /* --- NEURAL STUDIO WORKSPACE --- */
-        .studio-box { max-width: 900px; margin: 0 auto; }
-        pre { background: #131921; color: var(--amazon-orange); padding: 15px; border-radius: 4px; font-family: monospace; overflow-x: auto; margin-top: 15px; border: 1px solid #333; }
+        pre { background: #05070a; color: var(--brand-orange); padding: 1rem; border-radius: 8px; font-family: monospace; overflow-x: auto; border: 1px solid var(--border); margin-top: 1rem; }
     </style>
 </head>
 <body>
 
-    <!-- AMAZON TOP NAVIGATION BAR -->
     <header>
-        <div class="nav-main">
-            <a class="nav-brand" onclick="switchTab('store', this)">Weave<span>Ahead</span></a>
-            
-            <div class="nav-search">
-                <select id="search-category-filter">
-                    <option>All Departments</option>
-                    <option>Handlooms</option>
-                    <option>Apparel</option>
-                    <option>Logistics</option>
-                </select>
-                <input type="text" id="search-query" placeholder="Search Amazon-style inventory, clusters, or tactical IDs..." oninput="debouncedFetchProducts()">
-                <button onclick="fetchProducts()">🔍</button>
-            </div>
-
-            <div class="nav-right">
-                <div class="nav-item" onclick="switchTab('store', this)">
-                    <span style="font-size: 0.75rem; color:#ccc;">Hello, Guest</span>
-                    <b>Catalog & Store</b>
-                </div>
-                <div class="nav-item" onclick="switchTab('cart', this)" style="flex-direction: row; align-items: flex-end; gap: 6px;">
-                    <div class="cart-indicator">🛒 <span id="cart-count">0</span></div>
-                    <b style="align-self: center;">Cart</b>
-                </div>
-            </div>
+        <a class="brand" onclick="switchTab('store', document.querySelectorAll('.nav-btn')[0])">Weave<span>Ahead</span> Engine</a>
+        
+        <div class="search-container">
+            <select id="search-cluster-filter">
+                <option value="">All Clusters</option>
+                <option value="Handlooms">Handlooms</option>
+                <option value="Apparel">Apparel</option>
+                <option value="Logistics">Logistics</option>
+            </select>
+            <input type="text" id="search-query" placeholder="Search craft catalogs, SKUs, or cluster nodes..." oninput="debouncedFetchProducts()">
+            <button onclick="fetchProducts()">🔍</button>
         </div>
 
-        <div class="nav-sub">
-            <button class="active-tab" onclick="switchTab('store', this)">🌟 All Products</button>
-            <button onclick="switchTab('cart', this)">📦 Secure Checkout</button>
-            <button onclick="switchTab('studio', this)">🔊 Neural SSML Studio</button>
-            <span style="margin-left:auto; font-size:0.8rem; color:#febd69;">● Distributed Node Engine Connected</span>
+        <div class="nav-actions">
+            <button class="nav-btn active" onclick="switchTab('store', this)">Catalog</button>
+            <button class="nav-btn" onclick="switchTab('cart', this)">🛒 Cart (<span id="cart-count">0</span>)</button>
+            <button class="nav-btn" onclick="switchTab('studio', this)">🔊 Neural Studio</button>
         </div>
     </header>
 
     <div class="container">
 
-        <!-- TAB 1: STOREFRONT -->
+        <!-- TAB 1: CATALOG STOREFRONT -->
         <div id="tab-store" class="tab-view active">
             <div id="product-grid" class="grid"></div>
         </div>
 
-        <!-- TAB 2: CART & CHECKOUT -->
+        <!-- TAB 2: CART & SECURE CHECKOUT -->
         <div id="tab-cart" class="tab-view">
-            <h2 style="margin-bottom: 20px; font-weight: 400; font-size: 1.8rem;">Shopping Cart</h2>
-            <div class="cart-container">
-                <div class="cart-box">
+            <h2 style="margin-bottom: 1.5rem; font-weight: 700;">Cooperative Order Fulfillment</h2>
+            <div class="checkout-layout">
+                <div class="panel">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Active Cart Manifest</h3>
                     <div id="cart-items-container"></div>
                 </div>
-                <div class="checkout-box" id="checkout-panel" style="display:none;">
-                    <div id="subtotal-display" style="font-size: 1.1rem; margin-bottom: 15px;"></div>
-                    <hr style="border:0; border-top:1px solid var(--border-color); margin-bottom: 15px;">
-                    <h3 style="font-size: 1rem; margin-bottom: 10px;">Fulfillment Address</h3>
-                    <label style="font-size:0.8rem; color:var(--text-sub);">Street Address</label>
-                    <input type="text" id="ship-addr" value="Sector 4 Hub Node">
-                    <label style="font-size:0.8rem; color:var(--text-sub);">City & Postal Code</label>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="ship-city" value="Bhubaneswar">
-                        <input type="text" id="ship-postal" value="751024">
+                <div class="panel" id="checkout-panel" style="display:none; height:fit-content;">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Transaction Summary</h3>
+                    <div id="cart-summary-text" style="margin-bottom: 1rem; font-size: 0.95rem; color:var(--text-sub);"></div>
+                    <hr style="border:0; border-top:1px solid var(--border); margin-bottom: 1rem;">
+                    <label style="font-size:0.8rem; color:var(--text-sub);">Cluster Delivery Hub</label>
+                    <input type="text" id="ship-addr" value="Sector 4 Distribution Node">
+                    <div style="display:flex; gap:0.5rem;">
+                        <div style="flex:1;"><label style="font-size:0.8rem; color:var(--text-sub);">City</label><input type="text" id="ship-city" value="Bhubaneswar"></div>
+                        <div style="flex:1;"><label style="font-size:0.8rem; color:var(--text-sub);">Postal Code</label><input type="text" id="ship-postal" value="751024"></div>
                     </div>
-                    <button class="amazon-btn" onclick="executeCheckout()" style="background:#ffa41c; border-color:#ff8f00; margin-top:5px;">Proceed to Checkout</button>
+                    <button class="primary-btn" onclick="executeCheckout()" style="margin-top:0.5rem;">Commit Transaction Lock</button>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: NEURAL AUDIO STUDIO -->
+        <!-- TAB 3: NEURAL SSML AUDIO STUDIO -->
         <div id="tab-studio" class="tab-view">
-            <div class="studio-box">
-                <h2 style="margin-bottom: 8px;">Neural SSML Audio Synthesis Studio</h2>
-                <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:20px;">Test automated voice notification payloads and broadcast triggers for cluster distribution networks.</p>
-                <label style="font-size:0.85rem; font-weight:bold;">Payload Text Content</label>
-                <textarea id="ssml-text" rows="3">High-priority supply allocation successfully routed through cluster sector 4.</textarea>
-                <button class="amazon-btn" onclick="compileSSML()" style="width:auto; padding: 8px 20px; background:#febd69; border-color:#f3a847;">Compile Neural Stream</button>
+            <div class="panel" style="max-width:800px; margin:0 auto;">
+                <h2 style="margin-bottom: 0.5rem; font-weight: 700;">Neural SSML Audio Synthesis Studio</h2>
+                <p style="color:var(--text-sub); font-size:0.9rem; margin-bottom:1.5rem;">Simulate automated voice notification payloads and stream broadcasts for regional craft cooperatives.</p>
+                <label style="font-size:0.8rem; color:var(--text-sub);">Payload Text Content</label>
+                <textarea id="ssml-text" rows="4">Attention cooperative hubs! High-priority supply route successfully optimized through sector 4.</textarea>
+                <button class="primary-btn" onclick="compileSSML()" style="width:auto; padding: 0.7rem 1.5rem;">Compile Neural Stream</button>
                 <pre id="studio-output">Awaiting compilation request...</pre>
             </div>
         </div>
@@ -181,7 +140,7 @@
     </div>
 
     <script>
-        const API_BASE = "http://127.0.0.1:8000"; 
+        const API_BASE = "http://127.0.0.1:8000"; // Connects directly to your local FastAPI backend
         let localCart = [];
         let searchDebounceTimer = null;
 
@@ -191,15 +150,12 @@
 
         function switchTab(tabName, btnElement) {
             document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-sub button').forEach(el => el.classList.remove('active-tab'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
-            const targetTab = document.getElementById('tab-' + tabName);
-            targetTab.style.display = 'block';
-            setTimeout(() => targetTab.classList.add('active'), 10);
+            const target = document.getElementById('tab-' + tabName);
+            target.classList.add('active');
+            if(btnElement) btnElement.classList.add('active');
             
-            if(btnElement && btnElement.tagName === 'BUTTON') {
-                btnElement.classList.add('active-tab');
-            }
             if(tabName === 'cart') renderCart();
         }
 
@@ -218,18 +174,16 @@
                 grid.innerHTML = data.products.map(p => `
                     <div class="card">
                         <div>
-                            <span class="badge">${p.cluster} Cluster</span>
-                            <div class="product-title">${p.title}</div>
-                            <div class="rating">★★★★☆ <span style="color:#556575;">1,248</span></div>
-                            <div class="price"><span>₹</span>${p.price.toLocaleString('en-IN')}</div>
-                            <div class="prime-badge">✓prime Free Delivery</div>
-                            <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:12px;">SKU: ${p.sku} | Stock: ${p.stock}</div>
+                            <span class="cluster-badge">${p.cluster} Cluster</span>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 0.4rem; color: #fff;">${p.title}</h3>
+                            <p style="color: var(--text-sub); font-size: 0.8rem; margin-bottom: 1rem;">SKU: ${p.sku} | Stock: ${p.stock}</p>
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--brand-orange);">₹${p.price.toLocaleString('en-IN')}</div>
                         </div>
-                        <button class="amazon-btn" onclick='addItemToCart(${JSON.stringify(p)})'>Add to Cart</button>
+                        <button class="primary-btn" onclick='addItemToCart(${JSON.stringify(p)})' style="margin-top: 1rem;">Add to Cart Session</button>
                     </div>
                 `).join('');
             } catch(e) {
-                document.getElementById('product-grid').innerHTML = '<p style="color:red; grid-column: 1/-1; text-align:center;">Could not reach backend server. Make sure your FastAPI server is running!</p>';
+                document.getElementById('product-grid').innerHTML = '<p style="color:#ef4444; grid-column:1/-1;">Could not reach backend server. Make sure your FastAPI backend is running!</p>';
             }
         }
 
@@ -241,16 +195,16 @@
                 localCart.push({ ...product, quantity: 1 });
             }
             document.getElementById('cart-count').innerText = localCart.reduce((acc, i) => acc + i.quantity, 0);
-            alert(`Added "${product.title}" to cart successfully.`);
+            alert(`Added "${product.title}" to session manifest.`);
         }
 
         function renderCart() {
             const container = document.getElementById('cart-items-container');
             const checkoutPanel = document.getElementById('checkout-panel');
-            const subtotalDisplay = document.getElementById('subtotal-display');
+            const summaryText = document.getElementById('cart-summary-text');
             
             if(localCart.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-sub); padding: 20px 0;">Your Amazon Cart is empty. <a href="#" onclick="switchTab(\'store\')" style="color:var(--link-blue);">Shop catalog items</a></p>';
+                container.innerHTML = '<p style="color:var(--text-sub);">Your cart manifest is currently empty. <a href="#" onclick="switchTab(\'store\', document.querySelectorAll(\'.nav-btn\')[0])" style="color:var(--brand-orange);">Browse catalog items</a></p>';
                 checkoutPanel.style.display = 'none';
                 return;
             }
@@ -258,13 +212,12 @@
             checkoutPanel.style.display = 'block';
 
             container.innerHTML = localCart.map(i => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding: 15px 0; border-bottom: 1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding: 1rem 0; border-bottom: 1px solid var(--border);">
                     <div>
-                        <h4 style="font-size:1rem; font-weight:500; color:var(--text-main); margin-bottom: 4px;">${i.title}</h4>
-                        <span style="font-size:0.85rem; color:var(--accent-green); font-weight:bold;">In Stock</span><br>
-                        <span style="font-size:0.85rem; color:var(--text-sub);">Qty: ${i.quantity} &bull; Unit Price: ₹${i.price.toLocaleString('en-IN')}</span>
+                        <h4 style="font-size:1rem; color:#fff; margin-bottom:0.2rem;">${i.title}</h4>
+                        <span style="font-size:0.85rem; color:var(--text-sub);">Quantity: ${i.quantity} | Unit Price: ₹${i.price.toLocaleString('en-IN')}</span>
                     </div>
-                    <div style="font-size:1.1rem; font-weight:bold; color:#B12704;">₹${(i.price * i.quantity).toLocaleString('en-IN')}</div>
+                    <div style="font-weight:bold; color:var(--brand-orange);">₹${(i.price * i.quantity).toLocaleString('en-IN')}</div>
                 </div>
             `).join('');
 
@@ -272,19 +225,19 @@
             const gst = subtotal * 0.18;
             const grandTotal = subtotal + gst;
 
-            subtotalDisplay.innerHTML = `
-                Subtotal (${localCart.reduce((acc, i) => acc + i.quantity, 0)} items): <b>₹${subtotal.toLocaleString('en-IN')}</b><br>
-                <span style="font-size:0.85rem; color:var(--text-sub);">Estimated GST (18%): ₹${gst.toFixed(2)}</span><br>
-                <div style="margin-top: 8px; font-size:1.2rem;">Grand Total: <b style="color:#B12704;">₹${grandTotal.toFixed(2)}</b></div>
+            summaryText.innerHTML = `
+                Subtotal (${localCart.reduce((acc, i) => acc + i.quantity, 0)} items): ₹${subtotal.toLocaleString('en-IN')}<br>
+                Estimated GST (18%): ₹${gst.toFixed(2)}<br>
+                <div style="margin-top: 0.5rem; font-size: 1.1rem; color:#fff;">Grand Total: <b style="color:var(--brand-orange);">₹${grandTotal.toFixed(2)}</b></div>
             `;
         }
 
         function executeCheckout() {
             if(localCart.length === 0) return;
-            alert('Order placed successfully! Transaction lock committed.');
+            alert('Transaction Lock Committed Successfully! Order placed.');
             localCart = [];
             document.getElementById('cart-count').innerText = '0';
-            switchTab('store');
+            switchTab('store', document.querySelectorAll('.nav-btn')[0]);
         }
 
         async function compileSSML() {
@@ -298,11 +251,12 @@
                 const data = await res.json();
                 document.getElementById('studio-output').innerText = data.compiled_ssml || JSON.stringify(data, null, 2);
             } catch(e) {
-                document.getElementById('studio-output').innerText = "Error connecting to backend neural endpoint. Check server connection.";
+                document.getElementById('studio-output').innerText = "Error connecting to neural synthesis backend endpoint.";
             }
         }
     </script>
 </body>
+</html>
 </html>
 
 
