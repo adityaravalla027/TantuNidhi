@@ -1,1110 +1,1156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>WeaveAhead — Artisan Trade &amp; Demand Portal</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WeaveAhead — Artisan Market Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #F6F2E7;
-  --surface: #FFFFFF;
-  --surface-sub: #EFE7D6;
-  --border: #DED0B4;
-  --text-main: #2B2116;
-  --text-muted: #7A6A50;
-  --primary: #7C2D24;
-  --primary-hover: #611F18;
-  --primary-tint: #F5E6E1;
-  --accent: #B4842A;
-  --accent-tint: #F6ECD5;
-  --success: #2F5D3A;
-  --success-bg: #E7F0E5;
-  --danger: #8C2B24;
-  --danger-bg: #F8E7E4;
-  --warning-bg: #FBF0D6;
-  --warning-text: #7A5A12;
-  --info-bg: #E7EEF3;
-  --info: #2E5878;
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 18px;
-  --shadow-sm: 0 1px 3px rgba(43,33,22,0.08);
-  --shadow-md: 0 8px 22px rgba(43,33,22,0.10);
-  --shadow-lg: 0 20px 46px rgba(43,33,22,0.20);
-  --sidebar-w: 252px;
-  --topbar-h: 72px;
-  --transition: all 0.2s cubic-bezier(.4,0,.2,1);
+  --primary:#c0392b;--primary2:#e74c3c;--accent:#f39c12;--accent2:#f1c40f;
+  --success:#27ae60;--danger:#e74c3c;--warning:#f39c12;
+  --glass:rgba(255,255,255,0.12);--glass-border:rgba(255,255,255,0.25);
+  --glass-hover:rgba(255,255,255,0.2);--glass-strong:rgba(255,255,255,0.18);
+  --text:#fff;--text-sub:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.5);
+  --shadow:0 8px 32px rgba(0,0,0,0.3);--shadow-sm:0 4px 16px rgba(0,0,0,0.2);
+  --radius:18px;--radius-sm:12px;--blur:blur(20px);--blur-sm:blur(12px);
+  --maxw:1280px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;color:var(--text);overflow-x:hidden;
+  background:linear-gradient(135deg,#1a0a0a 0%,#2d1010 20%,#1a0520 40%,#0a1628 60%,#0d2014 80%,#1a0a0a 100%);
+  background-attachment:fixed;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 20% 20%,rgba(192,57,43,0.35) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 80%,rgba(39,65,122,0.35) 0%,transparent 50%),
+             radial-gradient(ellipse at 50% 50%,rgba(39,174,96,0.15) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
 }
 
-[data-theme="dark"] {
-  --bg: #17130E;
-  --surface: #211A13;
-  --surface-sub: #2B2217;
-  --border: #3E3122;
-  --text-main: #F2E9DA;
-  --text-muted: #B0A085;
-  --primary: #C6543F;
-  --primary-hover: #D66B54;
-  --primary-tint: #2E1D18;
-  --accent: #D8AA4D;
-  --accent-tint: #332711;
-  --success: #4A9160;
-  --success-bg: #1C3324;
-  --danger: #D6584E;
-  --danger-bg: #38201D;
-  --warning-bg: #3A2E10;
-  --warning-text: #E7C567;
-  --info-bg: #172633;
-  --info: #7BA6C7;
+/* GLASS MIXIN */
+.glass{
+  background:var(--glass);
+  backdrop-filter:var(--blur);
+  -webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,0.2),inset 0 -1px 0 rgba(0,0,0,0.1);
+  position:relative;overflow:hidden;
+}
+.glass::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  pointer-events:none;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-main); transition: background .3s ease, color .3s ease; }
-::selection { background: var(--accent-tint); color: var(--primary); }
-button, input, select, textarea { font-family: inherit; }
-a { color: inherit; text-decoration: none; }
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,5,5,0.6);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:0 4px 30px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.nav-wrap{max-width:var(--maxw);margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.brand-icon{
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 4px 15px rgba(192,57,43,0.5),inset 0 1px 0 rgba(255,255,255,0.3);
+  border:1px solid rgba(255,255,255,0.2);
+}
+.brand-name{font-family:'Fraunces',serif;font-weight:800;font-size:20px;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,0.8));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:.05em}
+.site-nav{display:flex;align-items:center;gap:3px;flex:1;justify-content:center}
+.nav-link{
+  background:transparent;border:1px solid transparent;padding:9px 16px;border-radius:10px;
+  font-size:12.5px;font-weight:600;color:var(--text-sub);cursor:pointer;transition:all .2s;
+  white-space:nowrap;font-family:inherit;
+}
+.nav-link:hover{background:var(--glass);border-color:var(--glass-border);color:#fff}
+.nav-link.active{
+  background:linear-gradient(135deg,rgba(192,57,43,0.6),rgba(231,76,60,0.4));
+  border-color:rgba(192,57,43,0.5);color:#fff;
+  box-shadow:0 4px 15px rgba(192,57,43,0.3),inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.header-right{display:flex;align-items:center;gap:8px}
+.hbtn{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-sub);font-size:15px;transition:all .2s;position:relative;
+}
+.hbtn:hover{background:var(--glass-hover);color:#fff}
+.hbtn svg{width:17px;height:17px;stroke:currentColor}
+.nbadge{position:absolute;top:4px;right:4px;width:7px;height:7px;background:#e74c3c;border-radius:50%;border:1.5px solid rgba(0,0,0,0.5)}
+.lang-sel{
+  background:var(--glass);border:1px solid var(--glass-border);border-radius:10px;
+  padding:7px 10px;font-size:11.5px;font-weight:600;color:#fff;cursor:pointer;font-family:inherit;
+}
+.lang-sel option{background:#1a0a0a;color:#fff}
+.pchip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--glass-border);
+  border-radius:99px;padding:5px 14px 5px 5px;cursor:pointer;transition:all .2s;
+}
+.pchip:hover{background:var(--glass-hover)}
+.mini-av{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;font-family:'Fraunces',serif;
+}
+.pchip-name{font-size:12px;font-weight:700}
+.notif-drop{
+  position:absolute;top:58px;right:28px;width:300px;
+  background:rgba(15,5,5,0.85);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  box-shadow:var(--shadow);display:none;z-index:200;overflow:hidden;
+}
+.notif-item{padding:14px 18px;cursor:pointer;transition:all .2s;border-bottom:1px solid rgba(255,255,255,0.06)}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--glass)}
+.notif-title{font-weight:600;font-size:13px}
+.notif-time{font-size:10px;color:var(--text-muted);margin-top:3px}
 
-/* ============ LAYOUT ============ */
-.app-shell {
-  display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr;
-  grid-template-rows: var(--topbar-h) 1fr;
-  grid-template-areas: "sidebar topbar" "sidebar main";
-  min-height: 100vh;
+/* MAIN */
+main{max-width:var(--maxw);margin:0 auto;padding:28px;position:relative;z-index:1}
+.view{display:none}
+.view.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(192,57,43,.9);margin-bottom:5px}
+.page-title{font-family:'Fraunces',serif;font-size:28px;font-weight:800;margin-bottom:5px;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.75));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page-desc{font-size:12.5px;color:var(--text-muted);margin-bottom:22px;max-width:620px}
+
+/* HERO */
+.hero{
+  border-radius:22px;padding:34px;margin-bottom:22px;
+  background:linear-gradient(135deg,rgba(192,57,43,0.5) 0%,rgba(124,46,31,0.6) 50%,rgba(39,65,122,0.4) 100%);
+  backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid rgba(255,255,255,0.2);
+  box-shadow:0 20px 60px rgba(192,57,43,0.3),inset 0 1px 0 rgba(255,255,255,0.3),inset 0 -1px 0 rgba(0,0,0,0.2);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,255,255,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.75;margin-bottom:5px}
+.hero-title{font-family:'Fraunces',serif;font-size:22px;font-weight:800}
+.hero-sub{font-size:12px;opacity:.85;margin-top:4px}
+.status-badge{
+  background:linear-gradient(135deg,rgba(39,174,96,.7),rgba(39,174,96,.4));
+  color:#fff;font-size:10px;font-weight:700;padding:7px 14px;
+  border-radius:99px;text-transform:uppercase;letter-spacing:.06em;
+  border:1px solid rgba(39,174,96,0.5);
+  box-shadow:0 4px 15px rgba(39,174,96,0.3),inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.status-ts{font-size:9.5px;opacity:.7;margin-top:4px;text-align:center}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.dash-layout{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start}
+.profile-layout{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+
+/* METRIC CARDS */
+.metric-card{
+  background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:18px;
+  transition:all .25s;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.metric-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
+}
+.metric-card:hover{background:var(--glass-hover);transform:translateY(-3px);box-shadow:var(--shadow)}
+.metric-label{font-size:10.5px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.metric-value{font-family:'Fraunces',serif;font-size:26px;font-weight:800;margin:6px 0;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.8));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.metric-trend{font-size:11px;color:rgba(39,174,96,.9);font-weight:600}
+.metric-bar{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:10px}
+.metric-bar-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--accent));border-radius:99px;transition:width .5s}
+
+/* CARDS */
+.card{
+  background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px;
+  box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+}
+.card:hover{box-shadow:var(--shadow)}
+.card-title{
+  font-family:'Fraunces',serif;font-size:15px;font-weight:800;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  color:#fff;
 }
 
-/* ============ SIDEBAR ============ */
-.sidebar { grid-area: sidebar; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; z-index: 20; }
-.sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 22px 22px; border-bottom: 3px double var(--border); }
-.brand-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; box-shadow: var(--shadow-sm); }
-.brand-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
-.brand-sub { font-size: 10.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 1px; }
-.sidebar-nav { flex: 1; padding: 16px 14px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
-.nav-section-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); padding: 14px 12px 6px; }
-.nav-link { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: var(--radius-sm); color: var(--text-muted); font-weight: 600; font-size: 13.5px; cursor: pointer; border: none; background: none; width: 100%; text-align: left; transition: var(--transition); }
-.nav-link svg { width: 18px; height: 18px; flex-shrink: 0; }
-.nav-link:hover { background: var(--surface-sub); color: var(--text-main); }
-.nav-link.active { background: var(--primary-tint); color: var(--primary); }
-.nav-link .nav-count { margin-left: auto; background: var(--surface-sub); color: var(--text-muted); font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 99px; }
-.nav-link.active .nav-count { background: var(--primary); color: #fff; }
-.sidebar-footer { padding: 16px 18px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-.sidebar-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #2B2116; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-.sidebar-footer-name { font-size: 13px; font-weight: 700; }
-.sidebar-footer-role { font-size: 10.5px; color: var(--text-muted); }
-
-/* ============ TOPBAR ============ */
-.topbar { grid-area: topbar; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 15; }
-.topbar-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; }
-.topbar-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-.topbar-search { position: relative; width: 340px; }
-.topbar-search input { width: 100%; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 10px; padding: 9px 14px 9px 36px; font-size: 13px; color: var(--text-main); outline: none; transition: var(--transition); }
-.topbar-search input:focus { border-color: var(--primary); background: var(--surface); }
-.topbar-search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--text-muted); }
-.topbar-actions { display: flex; align-items: center; gap: 10px; position: relative; }
-.icon-btn { background: var(--surface-sub); border: 1px solid var(--border); border-radius: 9px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: var(--transition); position: relative; }
-.icon-btn:hover { background: var(--border); }
-.icon-btn:focus-visible { outline: 2px solid var(--accent); }
-.icon-btn svg { width: 17px; height: 17px; }
-.notification-badge { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; background: var(--danger); border-radius: 50%; border: 1.5px solid var(--surface-sub); display: none; }
-.lang-select { background: var(--surface-sub); border: 1px solid var(--border); border-radius: 9px; padding: 8px 12px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--text-main); }
-.notification-panel { position: absolute; top: calc(100% + 8px); right: 0; width: 320px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); z-index: 60; opacity: 0; transform: translateY(-8px); pointer-events: none; transition: var(--transition); }
-.notification-panel.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.notification-panel-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 13px; display:flex; justify-content:space-between; align-items:center;}
-.notification-item { padding: 12px 16px; border-bottom: 1px solid var(--surface-sub); cursor: pointer; transition: var(--transition); }
-.notification-item:last-child { border-bottom: none; }
-.notification-item:hover { background: var(--surface-sub); }
-.notification-item-title { font-size: 12.5px; font-weight: 700; }
-.notification-item-desc { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-.notification-item-time { font-size: 10px; color: var(--text-muted); margin-top: 5px; }
-
-/* ============ MAIN ============ */
-main { grid-area: main; padding: 32px 40px 64px; max-width: 1280px; width: 100%; }
-.view { display: none; }
-.view.active { display: block; animation: fadeIn .25s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
-.section-heading { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 14px; }
-.section-heading h1 { font-family: 'Fraunces', serif; font-size: 25px; font-weight: 700; letter-spacing: -0.01em; }
-.section-heading p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
-.grid-2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 22px; align-items: start; }
-.stack { display: flex; flex-direction: column; gap: 22px; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm); transition: var(--transition); }
-.card.hoverable:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.card-title { font-family: 'Fraunces', serif; font-size: 16.5px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-.link-btn { background: none; border: none; color: var(--primary); font-size: 12.5px; font-weight: 700; cursor: pointer; }
-.link-btn:hover { text-decoration: underline; }
-
-/* ============ STATUS BANNER ============ */
-.status-banner { background: linear-gradient(120deg, var(--primary) 0%, var(--primary-hover) 100%); color: #fff; border-radius: var(--radius-lg); padding: 26px 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-md); margin-bottom: 22px; border: 1px solid rgba(255,255,255,0.15); }
-.status-banner-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.85; }
-.status-banner-title { font-family: 'Fraunces', serif; font-size: 21px; font-weight: 700; margin-top: 4px; }
-.status-banner-desc { font-size: 12.5px; opacity: 0.9; margin-top: 6px; max-width: 460px; }
-.status-badge { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.4); color: #fff; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em; }
-.status-banner-right { text-align: right; }
-.status-timestamp { font-size: 10.5px; opacity: 0.75; margin-top: 8px; }
-
-/* ============ METRICS ============ */
-.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
-.metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: var(--transition); }
-.metric-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
-.metric-label { font-size: 10.5px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-.metric-value { font-family: 'Fraunces', serif; font-size: 25px; font-weight: 700; margin-top: 8px; color: var(--primary); }
-.metric-trend { font-size: 11px; color: var(--success); font-weight: 700; margin-top: 5px; display: flex; align-items: center; gap: 4px; }
-.metric-trend.down { color: var(--danger); }
-.metric-progress { width: 100%; height: 4px; background: var(--surface-sub); border-radius: 99px; overflow: hidden; margin-top: 10px; }
-.metric-progress-fill { height: 100%; background: linear-gradient(90deg, var(--success) 0%, var(--accent) 100%); border-radius: 99px; transition: width .5s ease; }
-
-/* ============ PRODUCTION LOG ============ */
-.log-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--surface-sub); gap: 10px; transition: var(--transition); }
-.log-row:last-child { border-bottom: none; padding-bottom: 0; }
-.log-row:first-child { padding-top: 0; }
-.log-row:hover { background: var(--surface-sub); margin: 0 -10px; padding-left: 10px; padding-right: 10px; border-radius: 8px; }
-.stepper { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.step-btn { width: 32px; height: 32px; border-radius: 9px; background: var(--surface-sub); border: 1px solid var(--border); font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-main); transition: var(--transition); }
-.step-btn:hover { background: var(--border); }
-.step-btn:active { transform: scale(0.92); }
-.step-val { font-weight: 700; font-size: 15px; min-width: 22px; text-align: center; font-family: 'Fraunces', serif; }
-.item-name { flex: 1; min-width: 0; }
-.item-name-input { width: 100%; background: transparent; border: 1px solid transparent; border-radius: 8px; padding: 6px 8px; font-size: 13.5px; color: var(--text-main); outline: none; font-weight: 600; transition: var(--transition); }
-.item-name-input:hover { border-color: var(--border); }
-.item-name-input:focus { border-color: var(--primary); background: var(--surface-sub); }
-.delete-row-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 15px; padding: 6px; border-radius: 6px; flex-shrink: 0; }
-.delete-row-btn:hover { color: var(--danger); background: var(--danger-bg); }
-
-/* ============ MARKETPLACE ============ */
-.search-filter-row { display: flex; gap: 12px; margin-bottom: 18px; }
-.search-box { position: relative; flex: 1; }
-.search-input { width: 100%; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px 12px 38px; font-size: 13.5px; color: var(--text-main); outline: none; font-weight: 500; transition: var(--transition); }
-.search-input:focus { border-color: var(--primary); background: var(--surface); }
-.search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 15px; height: 15px; }
-.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chip { background: var(--surface-sub); border: 1px solid var(--border); border-radius: 99px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: var(--transition); }
-.chip:hover { border-color: var(--primary); color: var(--text-main); }
-.chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.material-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 18px; }
-.material-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: var(--transition); }
-.material-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.material-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.material-name { font-weight: 700; font-size: 14.5px; }
-.material-supplier { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-.pill { font-size: 10.5px; font-weight: 700; padding: 5px 11px; border-radius: 99px; white-space: nowrap; }
-.pill-success { background: var(--success-bg); color: var(--success); }
-.pill-danger { background: var(--danger-bg); color: var(--danger); }
-.pill-warning { background: var(--warning-bg); color: var(--warning-text); }
-.pill-info { background: var(--info-bg); color: var(--info); }
-.ministry-price-box { background: var(--info-bg); border: 1px dashed var(--info); border-radius: 10px; padding: 12px 14px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; }
-.ministry-price-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--info); }
-.ministry-price-value { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 700; color: var(--info); margin-top: 3px; }
-.ministry-source { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
-.material-actions { display: flex; gap: 10px; margin-top: 14px; }
-.btn-secondary { flex: 1; background: var(--surface-sub); color: var(--text-main); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: var(--transition); }
-.btn-secondary:hover { background: var(--border); }
-.btn-accent { flex: 1; background: var(--accent); color: #2B2116; border: none; border-radius: 10px; padding: 10px 14px; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: var(--transition); }
-.btn-accent:hover { filter: brightness(0.95); }
-
-/* ============ ANALYTICS ============ */
-.chart-mock { height: 200px; display: flex; align-items: flex-end; justify-content: space-between; padding-top: 20px; border-bottom: 1px solid var(--border); margin-bottom: 14px; gap: 10px; }
-.chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 8px; }
-.chart-bar { width: 100%; background: var(--surface-sub); border-radius: 4px 4px 0 0; transition: height .6s ease; min-height: 6px; cursor: pointer; }
-.chart-bar.active { background: var(--primary); }
-.chart-bar:hover { background: var(--accent); }
-.chart-label { font-size: 10.5px; color: var(--text-muted); font-weight: 600; }
-.chart-value { font-weight: 700; font-size: 11.5px; color: var(--primary); }
-.data-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
-.data-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); padding: 10px 8px; border-bottom: 2px solid var(--border); }
-.data-table td { padding: 12px 8px; font-size: 13px; border-bottom: 1px solid var(--surface-sub); }
-.data-table tr:last-child td { border-bottom: none; }
-
-/* ============ PROFILE ============ */
-.profile-hero { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 30px; display: flex; align-items: center; gap: 22px; margin-bottom: 22px; flex-wrap: wrap; }
-.profile-avatar-lg { width: 84px; height: 84px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: 'Fraunces', serif; font-weight: 700; flex-shrink: 0; box-shadow: var(--shadow-md); position: relative; }
-.avatar-edit-badge { position: absolute; bottom: -2px; right: -2px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); border: 2px solid var(--surface); display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; color: #2B2116; }
-.profile-hero-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; }
-.profile-hero-id { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-.profile-hero-tags { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.profile-hero-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
-.auto-save-indicator { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--success-bg); color: var(--success); border-radius: 8px; font-size: 10.5px; font-weight: 700; opacity: 0; transition: var(--transition); }
-.auto-save-indicator.show { opacity: 1; }
-.auto-save-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form-field { display: flex; flex-direction: column; gap: 6px; }
-.form-field.full { grid-column: 1 / -1; }
-.form-label { font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
-.form-input, .form-select, .form-textarea { border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; font-size: 13.5px; color: var(--text-main); background: var(--surface-sub); outline: none; transition: var(--transition); font-weight: 500; width: 100%; }
-.form-input:disabled, .form-select:disabled, .form-textarea:disabled { color: var(--text-main); opacity: 0.85; cursor: default; background: transparent; border-color: transparent; padding-left: 0; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); background: var(--surface); }
-.form-textarea { resize: vertical; min-height: 70px; font-family: inherit; }
-.priority-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
-.priority-option { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--border); border-radius: 12px; padding: 13px 14px; cursor: pointer; transition: var(--transition); background: var(--surface); }
-.priority-option:hover { border-color: var(--primary); }
-.priority-option.selected { border-color: var(--primary); background: var(--primary-tint); }
-.priority-checkbox { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition); font-size: 12px; color: #fff; }
-.priority-option.selected .priority-checkbox { background: var(--primary); border-color: var(--primary); }
-.priority-option-title { font-size: 12.5px; font-weight: 700; }
-.priority-option-desc { font-size: 10.5px; color: var(--text-muted); margin-top: 1px; }
-.settings-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--surface-sub); gap: 12px; }
-.settings-row:last-child { border-bottom: none; }
-.settings-row-title { font-size: 13px; font-weight: 700; }
-.settings-row-desc { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-.toggle-switch { position: relative; width: 44px; height: 24px; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: var(--transition); flex-shrink: 0; }
-.toggle-switch.active { background: var(--success); border-color: var(--success); }
-.toggle-slider { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: var(--transition); }
-.toggle-switch.active .toggle-slider { transform: translateX(20px); }
-
-/* ============ BUTTONS ============ */
-.btn-primary { background: var(--primary); color: #fff; border: none; border-radius: 10px; padding: 11px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-primary:hover { background: var(--primary-hover); }
-.btn-primary:active { transform: scale(0.98); }
-.btn-ghost { background: none; border: 1px solid var(--border); color: var(--text-main); border-radius: 10px; padding: 11px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: var(--transition); }
-.btn-ghost:hover { background: var(--surface-sub); }
-
-/* ============ MODAL ============ */
-.modal-overlay { position: fixed; inset: 0; background: rgba(20,16,12,0.5); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
-.modal-overlay.open { opacity: 1; pointer-events: auto; }
-.modal-sheet { width: 100%; max-width: 460px; background: var(--surface); border-radius: var(--radius-lg); padding: 26px; transform: translateY(16px) scale(0.98); transition: transform .25s cubic-bezier(.1,.9,.2,1); max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-lg); margin: 20px; }
-.modal-overlay.open .modal-sheet { transform: translateY(0) scale(1); }
-.modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
-.modal-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; }
-.modal-close { background: var(--surface-sub); border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 15px; color: var(--text-muted); }
-
-/* ============ TOAST ============ */
-.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(15px); background: var(--text-main); color: var(--bg); padding: 13px 22px; border-radius: 12px; font-size: 12.5px; font-weight: 700; opacity: 0; pointer-events: none; transition: all .25s cubic-bezier(.4,0,.2,1); z-index: 200; box-shadow: var(--shadow-lg); text-align: center; }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast.success { background: var(--success); color: #fff; }
-.toast.error { background: var(--danger); color: #fff; }
-.toast.info { background: var(--primary); color: #fff; }
-
-/* ============ RESPONSIVE ============ */
-@media (max-width: 980px) {
-  .grid-2 { grid-template-columns: 1fr; }
-  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
-  .material-grid { grid-template-columns: 1fr; }
-  .form-grid { grid-template-columns: 1fr; }
-  .priority-grid { grid-template-columns: 1fr; }
+/* LOG */
+.log-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.06);gap:10px;flex-wrap:wrap}
+.log-row:last-child{border-bottom:none;padding-bottom:0}
+.log-row:first-child{padding-top:0}
+.item-name{flex:1;min-width:130px}
+.name-input{
+  width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:9px;padding:6px 10px;font-size:13px;color:#fff;outline:none;font-family:inherit;font-weight:500;
 }
-@media (max-width: 760px) {
-  .app-shell { grid-template-columns: 1fr; grid-template-areas: "topbar" "main"; }
-  .sidebar { position: fixed; left: -260px; top: 0; width: 240px; transition: left .25s ease; }
-  .sidebar.open { left: 0; }
-  main { padding: 20px 16px 48px; }
-  .topbar-search { display: none; }
-  .metrics-grid { grid-template-columns: 1fr 1fr; }
-  .profile-hero-actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+.name-input:focus{border-color:rgba(192,57,43,0.7);background:rgba(255,255,255,0.1)}
+.item-meta{font-size:9.5px;color:var(--text-muted);margin-top:3px}
+.live-dot{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;background:rgba(39,174,96,0.35);border:1px solid rgba(39,174,96,0.4);color:rgba(39,174,96,1);border-radius:99px;font-size:7.5px;font-weight:700;margin-left:6px}
+.live-dot::before{content:'';width:4px;height:4px;background:#27ae60;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.stepper{display:flex;align-items:center;gap:8px}
+.step-btn{
+  width:32px;height:32px;border-radius:9px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+  font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:#fff;transition:all .2s;font-family:inherit;
 }
+.step-btn:hover{background:rgba(192,57,43,0.4);border-color:rgba(192,57,43,0.5)}
+.step-btn:active{transform:scale(.9)}
+.step-val{font-weight:800;font-size:16px;min-width:24px;text-align:center;font-family:'Fraunces',serif}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:12px}
+.s-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px;pointer-events:none}
+.s-input{
+  width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px;padding:11px 14px 11px 38px;font-size:13px;color:#fff;outline:none;font-family:inherit;
+}
+.s-input:focus{border-color:rgba(192,57,43,0.6);background:rgba(255,255,255,0.1)}
+.s-input::placeholder{color:var(--text-muted)}
+.s-results{
+  position:absolute;top:100%;left:0;right:0;margin-top:4px;
+  background:rgba(15,5,5,0.9);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  border:1px solid var(--glass-border);border-radius:14px;
+  max-height:240px;overflow-y:auto;opacity:0;transform:translateY(-8px);
+  transition:all .2s;z-index:30;box-shadow:var(--shadow);pointer-events:none;
+}
+.s-results.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.s-result-item{padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.s-result-item:last-child{border-bottom:none}
+.s-result-item:hover{background:rgba(255,255,255,0.08)}
+
+/* CHIPS */
+.chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:5px;margin-bottom:12px}
+.chip{
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:99px;padding:6px 14px;font-size:11px;font-weight:600;color:var(--text-muted);
+  cursor:pointer;white-space:nowrap;transition:all .2s;font-family:inherit;
+}
+.chip.active{background:linear-gradient(135deg,rgba(192,57,43,0.6),rgba(231,76,60,0.4));color:#fff;border-color:rgba(192,57,43,0.5)}
+.chip:hover:not(.active){background:rgba(255,255,255,0.12);color:#fff}
+
+/* DIRECTORY GRID */
+.dir-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.dir-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:13px;padding:14px;transition:all .2s;
+}
+.dir-item:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);transform:translateY(-2px)}
+
+/* PILLS */
+.pill{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:99px;text-align:center;white-space:nowrap}
+.pill-ok{background:rgba(39,174,96,0.25);color:#2ecc71;border:1px solid rgba(39,174,96,0.35)}
+.pill-no{background:rgba(231,76,60,0.25);color:#e74c3c;border:1px solid rgba(231,76,60,0.35)}
+.pill-warn{background:rgba(243,156,18,0.25);color:#f1c40f;border:1px solid rgba(243,156,18,0.35)}
+.pill-ref{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2)}
+
+/* CHART */
+.chart{height:160px;display:flex;align-items:flex-end;justify-content:space-between;padding-top:20px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:12px;gap:8px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;gap:5px}
+.chart-bar{width:100%;background:rgba(255,255,255,0.08);border-radius:6px 6px 0 0;transition:height .5s;min-height:16px;border-top:1px solid rgba(255,255,255,0.1)}
+.chart-bar.active{background:linear-gradient(180deg,rgba(192,57,43,0.8),rgba(192,57,43,0.4));border-top-color:rgba(231,76,60,0.6);box-shadow:0 0 12px rgba(192,57,43,0.4)}
+.chart-bar:hover{background:linear-gradient(180deg,rgba(243,156,18,0.8),rgba(243,156,18,0.4))}
+.chart-lbl{font-size:9.5px;color:var(--text-muted);font-weight:600}
+.chart-val{font-weight:700;font-size:10px;color:rgba(255,255,255,0.7)}
+.progress-bg{width:100%;height:7px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--accent));border-radius:99px}
+
+/* PAYMENTS */
+.pay-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.pay-card{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:16px;transition:all .2s;
+}
+.pay-card:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.18)}
+
+/* MINISTRY PRICES */
+.ministry-banner{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(39,65,122,0.25);border:1px solid rgba(39,65,122,0.4);
+  border-radius:14px;padding:14px 18px;margin-bottom:18px;
+}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.price-card{
+  background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:18px;
+  transition:all .25s;position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm),inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.price-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent)}
+.price-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.price-name{font-family:'Fraunces',serif;font-weight:800;font-size:14.5px;margin-bottom:3px}
+.price-meta{font-size:10.5px;color:var(--text-muted);margin-bottom:10px}
+.price-rate-label{font-size:9.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
+.price-rate{font-family:'Fraunces',serif;font-size:22px;font-weight:800;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.75));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.price-actions{display:flex;gap:8px;margin-top:12px}
+
+/* BUTTONS */
+.btn{
+  border:none;border-radius:11px;padding:10px 16px;font-size:12.5px;font-weight:700;cursor:pointer;
+  transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
+}
+.btn-primary{
+  background:linear-gradient(135deg,rgba(192,57,43,0.8),rgba(231,76,60,0.6));
+  color:#fff;border:1px solid rgba(192,57,43,0.5);
+  box-shadow:0 4px 15px rgba(192,57,43,0.35),inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary:hover{background:linear-gradient(135deg,rgba(192,57,43,1),rgba(231,76,60,0.8));box-shadow:0 6px 20px rgba(192,57,43,0.5)}
+.btn-primary:active{transform:scale(.97)}
+.btn-primary.full{width:100%;padding:12px}
+.btn-glass{
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-glass:hover{background:rgba(255,255,255,0.15)}
+.btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,0.25)}
+.btn-outline:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.4)}
+.btn-ghost{background:none;border:none;color:rgba(192,57,43,.9);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;padding:4px 8px}
+.btn-ghost:hover{color:#e74c3c}
+
+/* PROFILE */
+.profile-card-inner{text-align:center;padding:10px 0}
+.prof-avatar{
+  width:86px;height:86px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-family:'Fraunces',serif;font-weight:800;
+  margin:0 auto 14px;
+  box-shadow:0 8px 25px rgba(192,57,43,0.5),0 0 0 4px rgba(255,255,255,0.1),0 0 0 1px rgba(192,57,43,0.3);
+}
+.prof-name{font-family:'Fraunces',serif;font-size:19px;font-weight:800}
+.prof-id{font-size:11px;color:var(--text-muted);margin-top:3px}
+.auto-save{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;background:rgba(39,174,96,0.3);border:1px solid rgba(39,174,96,0.4);color:#2ecc71;border-radius:8px;font-size:8.5px;font-weight:700;margin-top:10px}
+
+/* FIELD */
+.field-group{margin-bottom:13px}
+.field-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.field-val{font-size:13.5px;font-weight:600;padding:8px 0;color:#fff}
+.field-input,.field-textarea,.field-select{
+  width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:10px;padding:9px 12px;font-size:13px;color:#fff;outline:none;font-family:inherit;
+}
+.field-input:focus,.field-textarea:focus,.field-select:focus{border-color:rgba(192,57,43,0.6);background:rgba(255,255,255,0.1)}
+.field-input::placeholder,.field-textarea::placeholder{color:var(--text-muted)}
+.field-textarea{min-height:70px;resize:vertical}
+.field-select option{background:#1a0a0a;color:#fff}
+
+/* PRIORITIES */
+.priority-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:12px}
+.pchip2{
+  background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:12px 13px;cursor:pointer;transition:all .2s;
+  display:flex;align-items:flex-start;gap:9px;
+}
+.pchip2:hover{border-color:rgba(192,57,43,0.5);background:rgba(192,57,43,0.08)}
+.pchip2.sel{border-color:rgba(192,57,43,0.6);background:rgba(192,57,43,0.15);box-shadow:0 0 15px rgba(192,57,43,0.15)}
+.pcheck{width:18px;height:18px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:rgba(255,255,255,0.05);margin-top:1px}
+.pchip2.sel .pcheck{background:linear-gradient(135deg,var(--primary),var(--primary2));border-color:var(--primary);color:#fff}
+.pchip2 strong{font-size:12px;display:block;color:#fff}
+.pchip2 span{font-size:10.5px;color:var(--text-muted)}
+.ptags{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.ptag{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:99px;padding:5px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.85)}
+
+/* SETTINGS */
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.06);gap:12px}
+.settings-row:last-child{border-bottom:none}
+.toggle{position:relative;width:46px;height:24px;background:rgba(255,255,255,0.1);border-radius:12px;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,0.15);flex-shrink:0}
+.toggle.on{background:linear-gradient(135deg,rgba(39,174,96,0.7),rgba(39,174,96,0.4));border-color:rgba(39,174,96,0.5)}
+.toggle-knob{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:all .2s;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.toggle.on .toggle-knob{transform:translateX(22px)}
+
+/* BARGAIN LOG */
+.bargain-log{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;margin-top:10px;max-height:140px;overflow-y:auto}
+.b-entry{padding:5px 0;border-bottom:1px dashed rgba(255,255,255,0.07);font-size:11.5px}
+.b-entry:last-child{border-bottom:none}
+.b-entry.you{color:#e74c3c;font-weight:700}
+.b-entry.ministry{color:var(--text-muted)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:300;opacity:0;pointer-events:none;transition:opacity .25s;padding:20px}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal{
+  width:100%;max-width:460px;
+  background:rgba(20,8,8,0.85);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
+  border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:26px;
+  transform:translateY(20px) scale(.97);transition:transform .25s;
+  max-height:85vh;overflow-y:auto;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-title{font-family:'Fraunces',serif;font-size:18px;font-weight:800;margin-bottom:16px}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:rgba(20,8,8,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;padding:12px 22px;border-radius:12px;font-size:12.5px;font-weight:600;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:400;box-shadow:var(--shadow);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:rgba(39,174,96,0.7);border-color:rgba(39,174,96,0.5)}
+.toast.error{background:rgba(231,76,60,0.7);border-color:rgba(231,76,60,0.5)}
+.toast.info{background:rgba(192,57,43,0.7);border-color:rgba(192,57,43,0.5)}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,0.08);margin-top:40px;padding:20px 28px;text-align:center;font-size:11.5px;color:var(--text-muted);position:relative;z-index:1}
+
+/* RESPONSIVE */
+@media(max-width:1000px){.dash-layout,.profile-layout{grid-template-columns:1fr}.price-grid{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.g2,.g3,.dir-grid,.pay-grid,.priority-grid{grid-template-columns:1fr}.price-grid{grid-template-columns:1fr}.site-nav{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(15,5,5,0.95);border-bottom:1px solid rgba(255,255,255,0.1);flex-direction:column;align-items:stretch;padding:8px;box-shadow:var(--shadow)}.site-nav.open{display:flex}.nav-toggle{display:flex}.nav-wrap{flex-wrap:wrap}main{padding:16px}}
+.nav-toggle{display:none}
 </style>
 </head>
 <body>
 
-<div class="app-shell">
+<!-- FLOATING ORBS -->
+<div style="position:fixed;top:10%;left:5%;width:300px;height:300px;background:radial-gradient(circle,rgba(192,57,43,0.18),transparent 70%);pointer-events:none;z-index:0;animation:float 8s ease-in-out infinite"></div>
+<div style="position:fixed;bottom:15%;right:8%;width:250px;height:250px;background:radial-gradient(circle,rgba(39,65,122,0.2),transparent 70%);pointer-events:none;z-index:0;animation:float 10s ease-in-out infinite reverse"></div>
+<style>@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}</style>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-icon"></div>
-      <div>
-        <div class="brand-title">WeaveAhead</div>
-        <div class="brand-sub">Artisan Trade Portal</div>
-      </div>
-    </div>
+<header>
+  <div class="nav-wrap">
+    <div class="brand">
+      <div class="brand-icon">🧵</div>
+      <div>
+        <div class="brand-name" id="txtBrandTitle">WeaveAhead</div>
+        <div class="brand-sub" id="txtBrandSub">Artisan Market Portal</div>
+      </div>
+    </div>
+    <button class="hbtn nav-toggle" id="navToggle" aria-label="Menu" style="display:none">☰</button>
+    <nav class="site-nav" id="siteNav">
+      <button class="nav-link active" data-t="home" id="navHome">Home</button>
+      <button class="nav-link" data-t="demand" id="navDemand">Demand</button>
+      <button class="nav-link" data-t="analytics" id="navAnalytics">Analytics</button>
+      <button class="nav-link" data-t="payments" id="navPayments">Payments</button>
+      <button class="nav-link" data-t="ministry" id="navMinistry">Ministry Prices</button>
+      <button class="nav-link" data-t="profile" id="navProfile">Profile</button>
+    </nav>
+    <div class="header-right">
+      <button class="hbtn" id="themeBtn" aria-label="Theme">🌙</button>
+      <div style="position:relative">
+        <button class="hbtn" id="notifBtn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="nbadge" id="nbadge"></span>
+        </button>
+        <div class="notif-drop" id="notifDrop"></div>
+      </div>
+      <select class="lang-sel" id="langSel">
+        <option value="en">English</option>
+        <option value="ta">தமிழ்</option>
+        <option value="hi">हिंदी</option>
+        <option value="bn">বাংলা</option>
+      </select>
+      <div class="pchip" onclick="goView('profile')" tabindex="0" role="button">
+        <div class="mini-av" id="miniAv">RK</div>
+        <span id="miniName">Ramesh</span>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Overview</div>
-      <button class="nav-link active" data-view="home">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 21V12h6v9"/></svg>
-        Dashboard
-      </button>
-      <button class="nav-link" data-view="production">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Production Log
-        <span class="nav-count" id="navProdCount">4</span>
-      </button>
+<main>
 
-      <div class="nav-section-label">Trade</div>
-      <button class="nav-link" data-view="market">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v4H3z"/><path d="M5 7v13h14V7"/><path d="M9 12h6"/></svg>
-        Ministry Marketplace
-      </button>
-      <button class="nav-link" data-view="analytics">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 4 5-8"/></svg>
-        Analytics
-      </button>
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <div class="hero">
+      <div>
+        <div class="hero-eyebrow" id="txtGovtActive">Govt Window Active</div>
+        <div class="hero-title" id="txtFestivalDir">Festival & Handloom Directives</div>
+        <div class="hero-sub" id="txtHeroSub">Track production, demand and payments from one dashboard.</div>
+      </div>
+      <div style="text-align:center">
+        <span class="status-badge" id="txtOpenBadge">Open</span>
+        <div class="status-ts" id="statusTs">Updated just now</div>
+      </div>
+    </div>
 
-      <div class="nav-section-label">Account</div>
-      <button class="nav-link" data-view="profile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
-        My Profile
-      </button>
-    </nav>
+    <div class="g4" style="margin-bottom:18px">
+      <div class="metric-card">
+        <div class="metric-label" id="txtPendingPay">Pending Payments</div>
+        <div class="metric-value" id="metricDue">₹11,600</div>
+        <div class="metric-trend">↑ 12% vs last month</div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:65%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label" id="txtActiveOrders">Active Orders</div>
+        <div class="metric-value">24 pcs</div>
+        <div class="metric-trend">4 due this week</div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:92%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Today's Production</div>
+        <div class="metric-value">9 pcs</div>
+        <div class="metric-trend">↑ 3 more than yesterday</div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:60%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Monthly Revenue</div>
+        <div class="metric-value">₹48k</div>
+        <div class="metric-trend">On track for target</div>
+        <div class="metric-bar"><div class="metric-bar-fill" style="width:78%"></div></div>
+      </div>
+    </div>
 
-    <div class="sidebar-footer">
-      <div class="sidebar-avatar" id="sidebarAvatarInitial">M</div>
-      <div>
-        <div class="sidebar-footer-name" id="sidebarFooterName">Meena Kumari</div>
-        <div class="sidebar-footer-role">Handloom Weaver</div>
-      </div>
-    </div>
-  </aside>
+    <div class="dash-layout">
+      <div class="card">
+        <div class="card-title">
+          <span id="txtDailyLogTitle">Daily Production Log</span>
+          <button class="btn-ghost" onclick="openBatchModal()">+ Add Batch</button>
+        </div>
+        <div id="prodLog"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" id="txtActionTitle">Immediate Action Required</div>
+        <div class="dir-item" style="margin-bottom:8px">
+          <div>
+            <div style="font-weight:700;font-size:13px" id="txtYarnTitle">Cotton Yarn (40s Count)</div>
+            <div style="font-size:11px;color:var(--text-muted)" id="txtYarnSub">Subsidized quota expires in 3 days</div>
+          </div>
+          <button class="pill pill-no" style="cursor:pointer" onclick="showToast('Restock request sent!','success')" id="txtRestockBtn">Restock</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <header class="topbar">
-    <div>
-      <div class="topbar-title" id="topbarTitle">Dashboard</div>
-      <div class="topbar-subtitle" id="topbarSubtitle">Welcome back — here's what's happening today</div>
-    </div>
+  <!-- DEMAND -->
+  <div class="view" id="view-demand">
+    <div class="page-eyebrow" id="txtDemandEyebrow">Market Directory</div>
+    <div class="page-title" id="txtIndexTitle">Nationwide Weave Index</div>
+    <div class="page-desc" id="txtDemandDesc">Search live demand and order status across weave clusters.</div>
+    <div class="card">
+      <div class="search-wrap">
+        <span class="s-icon">🔍</span>
+        <input type="text" class="s-input" id="searchInput" placeholder="Search weave type..." />
+        <div class="s-results" id="searchResults"></div>
+      </div>
+      <div class="chips" id="filterChips">
+        <button class="chip active" data-region="All">All Regions</button>
+        <button class="chip" data-region="North">North</button>
+        <button class="chip" data-region="South">South</button>
+        <button class="chip" data-region="East">East</button>
+        <button class="chip" data-region="West">West</button>
+      </div>
+      <div class="dir-grid" id="dirList" role="region" aria-live="polite"></div>
+    </div>
+  </div>
 
-    <div class="topbar-search">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" placeholder="Search yarn, orders, schemes..." id="globalSearch" />
-    </div>
+  <!-- ANALYTICS -->
+  <div class="view" id="view-analytics">
+    <div class="page-eyebrow" id="txtAnalyticsEyebrow">Forecasting</div>
+    <div class="page-title" id="txtForecastTitle">6-Week Demand Projection</div>
+    <div class="page-desc" id="txtForecastSub">Predicted market absorption units based on upcoming festival calendars.</div>
+    <div class="g2">
+      <div class="card">
+        <div class="card-title" id="txtChartTitle">Weekly Projection</div>
+        <div class="chart" id="demandChart"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" id="txtTargetTitle">Monthly Production Quota</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600">
+          <span id="txtCompletedUnits">18 of 25 Units Completed</span>
+          <span style="color:rgba(192,57,43,.9)">72%</span>
+        </div>
+        <div class="progress-bg"><div class="progress-fill" style="width:72%"></div></div>
+        <div style="margin-top:20px;font-size:12px;color:var(--text-muted)" id="txtForecastSub2">Strong demand expected for W3–W4 due to Diwali season. Increase silk saree output by 15%.</div>
+      </div>
+    </div>
+  </div>
 
-    <div class="topbar-actions">
-      <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle theme">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-      <button class="icon-btn" id="notificationBtn" aria-label="Notifications">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18zm-1 5l-2 2-4-4"/></svg>
-        <span class="notification-badge" id="notifBadge"></span>
-      </button>
-      <div class="notification-panel" id="notificationPanel">
-        <div class="notification-panel-header">Notifications <span class="link-btn" onclick="clearNotifications()">Clear all</span></div>
-        <div id="notificationList"></div>
-      </div>
-      <select class="lang-select" id="langSelector">
-        <option value="en">English</option>
-        <option value="ta">தமிழ்</option>
-        <option value="hi">हिंदी</option>
-        <option value="bn">বাংলা</option>
-      </select>
-    </div>
-  </header>
+  <!-- PAYMENTS -->
+  <div class="view" id="view-payments">
+    <div class="page-eyebrow" id="txtPaymentsEyebrow">Finance</div>
+    <div class="page-title" id="txtLedgerTitle">Payment Ledger</div>
+    <div class="page-desc" id="txtVerifiedDirect">Direct DBT Active — payments reflected within 24 hrs</div>
+    <div class="card">
+      <div class="pay-grid" id="payList" role="region" aria-live="polite"></div>
+    </div>
+  </div>
 
-  <main>
+  <!-- MINISTRY PRICES -->
+  <div class="view" id="view-ministry">
+    <div class="page-eyebrow" id="txtMinistryEyebrow">Reference Rates</div>
+    <div class="page-title" id="txtMinistryTitle">Ministry of Textiles — Price Reference</div>
+    <div class="page-desc" id="txtMinistryDesc">Official reference rates for handloom categories. Accept the listed rate or open a bargain within the approved support band.</div>
+    <div class="ministry-banner">
+      <span style="font-size:22px">🏛️</span>
+      <div>
+        <strong style="font-size:13px;display:block" id="txtMinBannerTitle">Demo reference data</strong>
+        <span style="font-size:11.5px;color:var(--text-muted)" id="txtMinBannerSub">Rates simulate a Ministry of Textiles price-support feed. Connect a live API to replace with real data.</span>
+      </div>
+    </div>
+    <div class="price-grid" id="priceGrid"></div>
+  </div>
 
-    <section class="view active" id="view-home">
-      <div class="status-banner">
-        <div>
-          <div class="status-banner-eyebrow">Govt Window Active</div>
-          <div class="status-banner-title">Festival &amp; Handloom Directives — Rabi Season 2026</div>
-          <div class="status-banner-desc">Subsidized cotton yarn quota and export incentive window is currently open for registered artisans in your cluster.</div>
-        </div>
-        <div class="status-banner-right">
-          <span class="status-badge">Open</span>
-          <div class="status-timestamp" id="statusTimestamp">Updated just now</div>
-        </div>
-      </div>
+  <!-- PROFILE -->
+  <div class="view" id="view-profile">
+    <div class="page-eyebrow" id="txtProfileEyebrow">Account</div>
+    <div class="page-title" id="txtProfileTitle">Your Profile</div>
+    <div class="page-desc" id="txtProfileDesc">Keep your details current so buyers and cooperatives can reach you.</div>
+    <div class="profile-layout">
+      <div class="card">
+        <div class="profile-card-inner">
+          <div class="prof-avatar" id="profAvatar">RK</div>
+          <div class="prof-name" id="profNameDisplay">Ramesh Kumar</div>
+          <div class="prof-id" id="profIdDisplay">Master Artisan ID: ART-8842-OD</div>
+          <span class="pill pill-ok" style="display:inline-block;margin-top:10px" id="txtVerifiedArtisan">Govt Certified Artisan</span><br/>
+          <span class="auto-save" id="autoSaveIndicator" style="display:none">✓ Auto-saved</span>
+        </div>
+        <div style="margin-top:18px">
+          <div class="card-title" id="txtSettingsTitle">Preferences</div>
+          <div class="settings-row">
+            <div>
+              <div style="font-weight:600;font-size:13px" id="txtCoopLabel">Assigned Cooperative</div>
+              <div style="font-size:11px;color:var(--text-muted)" id="txtCoopName">Utkal Handloom Weavers Hub</div>
+            </div>
+            <button class="pill pill-warn" style="cursor:pointer" onclick="showToast('Switch request sent','info')">Switch</button>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div style="font-weight:600;font-size:13px" id="txtNotifLabel">WhatsApp Alerts</div>
+              <div style="font-size:11px;color:var(--text-muted)" id="txtNotifSub">Order routing & price updates</div>
+            </div>
+            <div class="toggle on" id="notifToggle" onclick="toggleSwitch(this)" role="switch" aria-checked="true" tabindex="0"><div class="toggle-knob"></div></div>
+          </div>
+          <div class="settings-row">
+            <div>
+              <div style="font-weight:600;font-size:13px" id="txtSyncLabel">Cloud Sync</div>
+              <div style="font-size:11px;color:var(--text-muted)" id="txtSyncSub">Last synced 2 mins ago</div>
+            </div>
+            <button class="pill pill-ok" style="cursor:pointer" onclick="showToast('Sync complete!','success')">Sync Now</button>
+          </div>
+        </div>
+      </div>
 
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Pending Payments</div>
-          <div class="metric-value">₹11,600</div>
-          <div class="metric-trend">↑ 12% vs last month</div>
-          <div class="metric-progress"><div class="metric-progress-fill" style="width:65%"></div></div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Active Orders</div>
-          <div class="metric-value">24 pcs</div>
-          <div class="metric-trend">4 due this week</div>
-          <div class="metric-progress"><div class="metric-progress-fill" style="width:92%"></div></div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Quota Utilised</div>
-          <div class="metric-value">78%</div>
-          <div class="metric-trend down">↓ 3% slower uptake</div>
-          <div class="metric-progress"><div class="metric-progress-fill" style="width:78%"></div></div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Avg. Ministry Price Index</div>
-          <div class="metric-value">₹412</div>
-          <div class="metric-trend">↑ 2.1% this week</div>
-          <div class="metric-progress"><div class="metric-progress-fill" style="width:54%"></div></div>
-        </div>
-      </div>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="card">
+          <div class="card-title">
+            <span id="txtDetailsTitle">Profile Details</span>
+            <button class="btn-ghost" id="editBtn" onclick="toggleEdit()">Edit Profile</button>
+          </div>
+          <div id="profileFields"></div>
+          <div id="saveWrap" style="display:none;margin-top:8px">
+            <button class="btn btn-primary full" onclick="saveProfile()" id="txtSaveProfileBtn">Save Changes</button>
+          </div>
+        </div>
 
-      <div class="grid-2">
-        <div class="stack">
-          <div class="card">
-            <div class="card-title">
-              <span>Daily Production Log</span>
-              <button class="link-btn" onclick="openAddProductionModal()">+ Add Batch</button>
-            </div>
-            <div id="productionLogContainer"></div>
-          </div>
-        </div>
+        <div class="card">
+          <div class="card-title" id="txtPrioritiesTitle">What are you looking for?</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px" id="txtPrioritiesDesc">Select your priorities. This routes the right opportunities to you.</div>
+          <div class="priority-grid" id="priorityGrid"></div>
+          <div class="ptags" id="priorityTags"></div>
+          <button class="btn btn-primary full" style="margin-top:14px" onclick="savePriorities()" id="txtSavePriorities">Save Priorities</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="stack">
-          <div class="card">
-            <div class="card-title">Immediate Action Required</div>
-            <div class="log-row">
-              <div>
-                <div style="font-weight:700; font-size:13.5px;">Cotton Yarn (40s Count)</div>
-                <div style="font-size:11px; color:var(--text-muted);">Subsidized quota expires in 3 days</div>
-              </div>
-              <span class="pill pill-danger">Act Now</span>
-            </div>
-            <div class="log-row">
-              <div>
-                <div style="font-weight:700; font-size:13.5px;">Export Order #WA-2291</div>
-                <div style="font-size:11px; color:var(--text-muted);">Awaiting dispatch confirmation</div>
-              </div>
-              <span class="pill pill-warning">Pending</span>
-            </div>
-            <div class="log-row">
-              <div>
-                <div style="font-weight:700; font-size:13.5px;">Design Registration</div>
-                <div style="font-size:11px; color:var(--text-muted);">Verified by cluster office</div>
-              </div>
-              <span class="pill pill-success">Done</span>
-            </div>
-          </div>
+</main>
 
-          <div class="card">
-            <div class="card-title">Your Priorities</div>
-            <div id="homePrioritySummary" style="font-size:12.5px; color:var(--text-muted); line-height:1.7;"></div>
-            <button class="btn-ghost" style="width:100%; margin-top:14px;" onclick="switchView('profile')">Update in Profile →</button>
-          </div>
-        </div>
-      </div>
-    </section>
+<footer><span id="txtFooter">WeaveAhead — supporting India's handloom artisans with real-time demand intelligence.</span></footer>
 
-    <section class="view" id="view-production">
-      <div class="section-heading">
-        <div>
-          <h1>Production Log</h1>
-          <p>Track daily output across looms and batches</p>
-        </div>
-        <button class="btn-primary" onclick="openAddProductionModal()">+ Add Batch</button>
-      </div>
-      <div class="card">
-        <div id="productionLogContainerFull"></div>
-      </div>
-    </section>
-
-    <section class="view" id="view-market">
-      <div class="section-heading">
-        <div>
-          <h1>Ministry of Textiles Marketplace</h1>
-          <p>Official reference prices from the Ministry procurement feed. Buy at listed price or place a bargain offer.</p>
-        </div>
-      </div>
-
-      <div class="search-filter-row">
-        <div class="search-box">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input class="search-input" id="marketSearch" placeholder="Search cotton, silk, jute, dyes..." />
-        </div>
-      </div>
-      <div class="filter-chips" id="marketFilters">
-        <div class="chip active" data-filter="all">All Materials</div>
-        <div class="chip" data-filter="cotton">Cotton</div>
-        <div class="chip" data-filter="silk">Silk</div>
-        <div class="chip" data-filter="jute">Jute</div>
-        <div class="chip" data-filter="dye">Natural Dyes</div>
-      </div>
-
-      <div class="material-grid" id="materialGrid"></div>
-    </section>
-
-    <section class="view" id="view-analytics">
-      <div class="section-heading">
-        <div>
-          <h1>Analytics</h1>
-          <p>Output, earnings and price trends over the last 6 weeks</p>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">Weekly Output (pieces)</div>
-          <div class="chart-mock" id="outputChart"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Ministry Price Trend — Cotton 40s</div>
-          <div class="chart-mock" id="priceChart"></div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:22px;">
-        <div class="card-title">Order Summary</div>
-        <table class="data-table">
-          <thead><tr><th>Buyer</th><th>Item</th><th>Qty</th><th>Value</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>Tamil Nadu Handloom Corp</td><td>Cotton Saree</td><td>12</td><td>₹18,400</td><td><span class="pill pill-success">Paid</span></td></tr>
-            <tr><td>Export House — Coimbatore</td><td>Silk Stole</td><td>30</td><td>₹42,000</td><td><span class="pill pill-warning">Pending</span></td></tr>
-            <tr><td>Local Retailer</td><td>Jute Bag</td><td>50</td><td>₹9,500</td><td><span class="pill pill-success">Paid</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="view" id="view-profile">
-      <div class="section-heading">
-        <div>
-          <h1>My Profile</h1>
-          <p>Manage your details, and tell us what you're prioritising so we can match schemes and offers</p>
-        </div>
-      </div>
-
-      <div class="profile-hero">
-        <div class="profile-avatar-lg">
-          <span id="profileAvatarInitial">M</span>
-          <div class="avatar-edit-badge" title="Change photo">✎</div>
-        </div>
-        <div>
-          <div class="profile-hero-name" id="profileHeroName">Meena Kumari</div>
-          <div class="profile-hero-id">Artisan ID: WA-TN-00457 · Member since 2021</div>
-          <div class="profile-hero-tags" id="profileHeroTags"></div>
-        </div>
-        <div class="profile-hero-actions">
-          <span class="auto-save-indicator" id="autoSaveIndicator"><span class="auto-save-dot"></span>Saved</span>
-          <button class="btn-ghost" id="editProfileBtn" onclick="toggleEditMode()">Edit Profile</button>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="stack">
-          <div class="card">
-            <div class="card-title">Personal Details</div>
-            <div class="form-grid">
-              <div class="form-field">
-                <label class="form-label">Full Name</label>
-                <input class="form-input" id="fldName" value="Meena Kumari" disabled />
-              </div>
-              <div class="form-field">
-                <label class="form-label">Phone Number</label>
-                <input class="form-input" id="fldPhone" value="+91 98765 43210" disabled />
-              </div>
-              <div class="form-field">
-                <label class="form-label">Cluster / District</label>
-                <input class="form-input" id="fldDistrict" value="Kanchipuram, Tamil Nadu" disabled />
-              </div>
-              <div class="form-field">
-                <label class="form-label">Primary Craft</label>
-                <select class="form-select" id="fldCraft" disabled>
-                  <option>Handloom Weaving</option>
-                  <option>Block Printing</option>
-                  <option>Natural Dyeing</option>
-                  <option>Embroidery</option>
-                </select>
-              </div>
-              <div class="form-field full">
-                <label class="form-label">Address</label>
-                <textarea class="form-textarea" id="fldAddress" disabled>12, Weavers Colony, Kanchipuram, Tamil Nadu — 631502</textarea>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">What are you looking for?</div>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:4px;">Select your priorities. We'll use this to surface the right Ministry schemes and marketplace offers.</p>
-            <div class="priority-grid" id="priorityGrid"></div>
-          </div>
-        </div>
-
-        <div class="stack">
-          <div class="card">
-            <div class="card-title">Preferences</div>
-            <div class="settings-row">
-              <div>
-                <div class="settings-row-title">SMS alerts for quota windows</div>
-                <div class="settings-row-desc">Get notified when a subsidy window opens</div>
-              </div>
-              <div class="toggle-switch active" id="toggleSms" onclick="toggleSwitch(this)"><div class="toggle-slider"></div></div>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="settings-row-title">Auto-accept Ministry price</div>
-                <div class="settings-row-desc">Skip bargaining and buy instantly at listed rate</div>
-              </div>
-              <div class="toggle-switch" id="toggleAutoAccept" onclick="toggleSwitch(this)"><div class="toggle-slider"></div></div>
-            </div>
-            <div class="settings-row">
-              <div>
-                <div class="settings-row-title">Share data with cluster office</div>
-                <div class="settings-row-desc">Helps with scheme eligibility matching</div>
-              </div>
-              <div class="toggle-switch active" id="toggleShare" onclick="toggleSwitch(this)"><div class="toggle-slider"></div></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">Bank &amp; Payout</div>
-            <div class="form-field" style="margin-bottom:14px;">
-              <label class="form-label">Bank Account (masked)</label>
-              <input class="form-input" value="XXXX XXXX 4471" disabled />
-            </div>
-            <div class="form-field">
-              <label class="form-label">UPI ID</label>
-              <input class="form-input" id="fldUpi" value="meena.weaves@upi" disabled />
-            </div>
-          </div>
-
-          <button class="btn-primary" id="saveProfileBtn" style="width:100%; display:none;" onclick="saveProfile()">Save Changes</button>
-        </div>
-      </div>
-    </section>
-
-  </main>
+<!-- BATCH MODAL -->
+<div class="modal-overlay" id="batchModal">
+  <div class="modal">
+    <div class="modal-title">Add New Production Batch</div>
+    <div class="field-group"><label class="field-label">Weave / Item Name</label><input type="text" class="field-input" id="newBatchName" value="Custom Weave" placeholder="e.g., Tussar Silk Stole"/></div>
+    <div class="field-group"><label class="field-label">Daily Target Count</label><input type="number" class="field-input" id="newBatchTarget" value="5"/></div>
+    <div class="field-group"><label class="field-label">Notes (Optional)</label><textarea class="field-textarea" id="batchNotes" placeholder="Any specific requirements..."></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-glass full" onclick="closeBatchModal()">Cancel</button>
+      <button class="btn btn-primary full" onclick="addBatch()">Confirm & Start</button>
+    </div>
+  </div>
 </div>
 
-<div class="modal-overlay" id="addProdModal">
-  <div class="modal-sheet">
-    <div class="modal-header">
-      <div class="modal-title">Add Production Batch</div>
-      <button class="modal-close" onclick="closeModal('addProdModal')">✕</button>
-    </div>
-    <div class="form-field" style="margin-bottom:14px;">
-      <label class="form-label">Item Name</label>
-      <input class="form-input" id="newBatchName" placeholder="e.g. Silk Saree — Kanchi Border" />
-    </div>
-    <div class="form-field" style="margin-bottom:18px;">
-      <label class="form-label">Quantity</label>
-      <input class="form-input" id="newBatchQty" type="number" min="1" value="1" />
-    </div>
-    <button class="btn-primary" style="width:100%;" onclick="addProductionBatch()">Add Batch</button>
-  </div>
-</div>
-
+<!-- BARGAIN MODAL -->
 <div class="modal-overlay" id="bargainModal">
-  <div class="modal-sheet">
-    <div class="modal-header">
-      <div class="modal-title">Place a Bargain Offer</div>
-      <button class="modal-close" onclick="closeModal('bargainModal')">✕</button>
-    </div>
-    <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:16px;" id="bargainMaterialLabel"></p>
-    <div class="ministry-price-box" style="margin-top:0; margin-bottom:18px;">
-      <div>
-        <div class="ministry-price-label">Ministry Listed Price</div>
-        <div class="ministry-price-value" id="bargainListedPrice">₹0</div>
-      </div>
-      <span class="pill pill-info">Official</span>
-    </div>
-    <div class="form-field" style="margin-bottom:18px;">
-      <label class="form-label">Your Offer (per kg)</label>
-      <input class="form-input" id="bargainOfferInput" type="number" placeholder="Enter your offer price" />
-    </div>
-    <button class="btn-primary" style="width:100%;" onclick="submitBargain()">Submit Offer</button>
-    <div id="bargainResult" style="margin-top:14px; font-size:12.5px;"></div>
-  </div>
+  <div class="modal">
+    <div class="modal-title" id="bargainTitle">Negotiate Price</div>
+    <div id="bargainBody"></div>
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
 
 <script>
-const state = {
-  theme: localStorage.getItem('wa_theme') || 'light',
-  production: JSON.parse(localStorage.getItem('wa_production') || 'null') || [
-    { id: 1, name: 'Cotton Saree — Plain Border', qty: 6 },
-    { id: 2, name: 'Silk Stole — Temple Motif', qty: 3 },
-    { id: 3, name: 'Jute Tote Bag', qty: 12 },
-    { id: 4, name: 'Block Print Dupatta', qty: 5 },
-  ],
-  profile: JSON.parse(localStorage.getItem('wa_profile') || 'null') || {
-    name: 'Meena Kumari',
-    phone: '+91 98765 43210',
-    district: 'Kanchipuram, Tamil Nadu',
-    craft: 'Handloom Weaving',
-    address: '12, Weavers Colony, Kanchipuram, Tamil Nadu — 631502',
-    upi: 'meena.weaves@upi',
-    priorities: ['subsidy', 'export']
-  },
-  notifications: [
-    { title: 'Quota window closing soon', desc: 'Cotton yarn subsidy expires in 3 days', time: '2h ago' },
-    { title: 'New export order', desc: 'Order #WA-2291 requires dispatch confirmation', time: '5h ago' },
-    { title: 'Price update', desc: 'Ministry cotton price revised to ₹412/kg', time: '1d ago' },
-  ]
+const S = {
+  lang:'en', theme:'light', editingProfile:false, activeBargainId:null,
+  regionFilter:'All', searchQuery:'', autoSaveTimer:null,
+
+  profile:{
+    name:'Ramesh Kumar', artisanId:'ART-8842-OD',
+    cooperative:'Utkal Handloom Weavers Hub, Cluster 4',
+    phone:'+91 98765 43210',
+    bio:'Third-generation Sambalpuri Ikat weaver specializing in traditional bandha dyeing.',
+    priorities:['direct-market','credit-access']
+  },
+
+  priorities:[
+    {id:'higher-price',title:'Higher price realization',desc:'Better returns per piece'},
+    {id:'raw-material',title:'Raw material subsidy',desc:'Subsidized yarn & dye access'},
+    {id:'export-linkage',title:'Export market linkage',desc:'Connect with overseas buyers'},
+    {id:'credit-access',title:'Working capital / credit',desc:'Loans and advance payments'},
+    {id:'skill-training',title:'Skill upgradation',desc:'Design & technique workshops'},
+    {id:'direct-market',title:'Direct market access',desc:'Sell without middlemen'},
+    {id:'digital-visibility',title:'Digital marketplace listing',desc:'Online storefront visibility'},
+    {id:'gi-cert',title:'GI tag certification',desc:'Geographic indication support'}
+  ],
+
+  prodItems:[
+    {id:'saree',label:'Silk Sarees',count:4,target:6,updated:new Date()},
+    {id:'stole',label:'Cotton Stoles',count:3,target:4,updated:new Date()},
+    {id:'home',label:'Home Textiles',count:2,target:3,updated:new Date()}
+  ],
+
+  directory:[
+    {name:'Kanchipuram Silk',region:'South',demand:'High',status:'Accepting'},
+    {name:'Banarasi Silk',region:'North',demand:'Very High',status:'Accepting'},
+    {name:'Sambalpuri Ikat',region:'East',demand:'High',status:'Accepting'},
+    {name:'Paithani',region:'West',demand:'Moderate',status:'Closing'},
+    {name:'Chanderi Cotton',region:'North',demand:'High',status:'Accepting'},
+    {name:'Muga Silk',region:'East',demand:'Very High',status:'Accepting'}
+  ],
+
+  payments:[
+    {id:1,buyer:'Kanchi Cooperative',amount:8400,status:'Pending'},
+    {id:2,buyer:'Meera Textiles',amount:12500,status:'Paid'},
+    {id:3,buyer:'Village Haat Order',amount:3200,status:'Overdue'}
+  ],
+
+  forecast:[
+    {week:'W1',val:45,active:false},{week:'W2',val:65,active:false},
+    {week:'W3',val:85,active:true},{week:'W4',val:95,active:true},
+    {week:'W5',val:70,active:false},{week:'W6',val:60,active:false}
+  ],
+
+  ministry:[
+    {id:'m1',item:'Kanchipuram Silk Saree',unit:'per piece',region:'South',price:18500,floor:.88,rounds:0,status:'open',log:[]},
+    {id:'m2',item:'Banarasi Silk Saree',unit:'per piece',region:'North',price:22000,floor:.88,rounds:0,status:'open',log:[]},
+    {id:'m3',item:'Sambalpuri Ikat Saree',unit:'per piece',region:'East',price:9800,floor:.88,rounds:0,status:'open',log:[]},
+    {id:'m4',item:'Chanderi Cotton Saree',unit:'per piece',region:'North',price:4200,floor:.9,rounds:0,status:'open',log:[]},
+    {id:'m5',item:'Muga Silk Stole',unit:'per piece',region:'East',price:6500,floor:.88,rounds:0,status:'open',log:[]},
+    {id:'m6',item:'Paithani Saree',unit:'per piece',region:'West',price:15000,floor:.88,rounds:0,status:'open',log:[]}
+  ],
+
+  notifications:[
+    {id:1,msg:'New order received',time:'2 min ago'},
+    {id:2,msg:'Payment verified',time:'15 min ago'},
+    {id:3,msg:'System update available',time:'1 hour ago'}
+  ]
 };
 
-const PRIORITY_OPTIONS = [
-  { id: 'subsidy', title: 'Raw Material Subsidy', desc: 'Discounted yarn & dye quotas' },
-  { id: 'export', title: 'Export Orders', desc: 'Bulk orders from export houses' },
-  { id: 'training', title: 'Design & Skill Training', desc: 'Govt-run craft workshops' },
-  { id: 'loans', title: 'Loans & Credit', desc: 'Low-interest artisan loans' },
-  { id: 'marketing', title: 'Marketing Support', desc: 'Help selling on marketplaces' },
-  { id: 'digital', title: 'Digital Literacy', desc: 'Training on this portal & apps' },
-];
-
-const MATERIALS = [
-  { id: 1, name: 'Cotton Yarn — 40s Count', supplier: 'Ministry Regional Depot, Coimbatore', category: 'cotton', price: 412, unit: 'kg', trend: 'up', stock: 'In Stock' },
-  { id: 2, name: 'Cotton Yarn — 60s Count', supplier: 'Ministry Regional Depot, Erode', category: 'cotton', price: 468, unit: 'kg', trend: 'up', stock: 'In Stock' },
-  { id: 3, name: 'Mulberry Silk Thread', supplier: 'Sericulture Board, Kanchipuram', category: 'silk', price: 2340, unit: 'kg', trend: 'down', stock: 'Limited' },
-  { id: 4, name: 'Tussar Silk Yarn', supplier: 'Sericulture Board, Bhagalpur', category: 'silk', price: 1980, unit: 'kg', trend: 'up', stock: 'In Stock' },
-  { id: 5, name: 'Raw Jute Fibre — Grade A', supplier: 'National Jute Board, Kolkata', category: 'jute', price: 58, unit: 'kg', trend: 'down', stock: 'In Stock' },
-  { id: 6, name: 'Indigo Natural Dye', supplier: 'Craft Dev. Commission, Jaipur', category: 'dye', price: 890, unit: 'kg', trend: 'up', stock: 'Limited' },
-];
-
-document.addEventListener('DOMContentLoaded', () => {
-  applyTheme(state.theme);
-  renderProductionLog();
-  renderMaterialGrid();
-  renderNotifications();
-  renderCharts();
-  hydrateProfileForm();
-  renderPriorityGrid();
-  renderHomePrioritySummary();
-  updateSidebarNames();
-  bindNav();
-  bindTopbar();
-  bindMarketFilters();
-});
-
-function bindNav() {
-  document.querySelectorAll('.nav-link').forEach(btn => {
-    btn.addEventListener('click', () => switchView(btn.dataset.view));
-  });
-}
-
-const VIEW_META = {
-  home: { title: 'Dashboard', sub: "Welcome back — here's what's happening today" },
-  production: { title: 'Production Log', sub: 'Track daily output across looms and batches' },
-  market: { title: 'Ministry Marketplace', sub: 'Official prices, live from the procurement feed' },
-  analytics: { title: 'Analytics', sub: 'Output, earnings and price trends' },
-  profile: { title: 'My Profile', sub: 'Manage your details and preferences' },
+const T = {
+  en:{
+    brandTitle:'WeaveAhead',brandSub:'Artisan Market Portal',
+    govtActive:'Govt Window Active',festivalDir:'Festival & Handloom Directives',
+    heroSub:'Track production, demand and payments from one dashboard.',
+    openBadge:'Open',pendingPay:'Pending Payments',activeOrders:'Active Orders',
+    dailyLogTitle:'Daily Production Log',actionTitle:'Immediate Action Required',
+    yarnTitle:'Cotton Yarn (40s Count)',yarnSub:'Subsidized quota expires in 3 days',restockBtn:'Restock',
+    demandEyebrow:'Market Directory',indexTitle:'Nationwide Weave Index',
+    demandDesc:'Search live demand and order status across weave clusters.',
+    analyticsEyebrow:'Forecasting',forecastTitle:'6-Week Demand Projection',
+    forecastSub:'Predicted market absorption based on upcoming festival calendars.',
+    chartTitle:'Weekly Projection',targetTitle:'Monthly Production Quota',completedUnits:'18 of 25 Units Completed',
+    paymentsEyebrow:'Finance',ledgerTitle:'Payment Ledger',verifiedDirect:'Direct DBT Active — payments reflected within 24 hrs',
+    ministryEyebrow:'Reference Rates',ministryTitle:'Ministry of Textiles — Price Reference',
+    ministryDesc:'Official reference rates for handloom categories. Accept or open a bargain within the approved support band.',
+    minBannerTitle:'Demo reference data',minBannerSub:'Rates simulate a Ministry of Textiles feed. Connect a live API to replace.',
+    profileEyebrow:'Account',profileTitle:'Your Profile',profileDesc:'Keep your details current so buyers and cooperatives can reach you.',
+    detailsTitle:'Profile Details',verifiedArtisan:'Govt Certified Artisan',
+    coopLabel:'Assigned Cooperative',coopName:'Utkal Handloom Weavers Hub',
+    notifLabel:'WhatsApp Alerts',notifSub:'Order routing & price updates',
+    syncLabel:'Cloud Sync',syncSub:'Last synced 2 mins ago',
+    prioritiesTitle:"What are you looking for?",
+    prioritiesDesc:'Select your priorities. This routes the right opportunities to you.',
+    savePriorities:'Save Priorities',saveProfile:'Save Changes',settingsTitle:'Preferences',
+    footer:"WeaveAhead — supporting India's handloom artisans with real-time demand intelligence.",
+    navHome:'Home',navDemand:'Demand',navAnalytics:'Analytics',navPayments:'Payments',navMinistry:'Ministry Prices',navProfile:'Profile'
+  },
+  ta:{
+    brandTitle:'வீவ் அஹெட்',brandSub:'கைவினைஞர் தளம்',
+    govtActive:'அரசு சாளரம் செயலில்',festivalDir:'திருவிழா & கைத்தறி வழிகாட்டுதல்கள்',
+    openBadge:'திறந்துள்ளது',pendingPay:'நிலுவைக் கட்டணம்',activeOrders:'செயலில் உள்ள ஆர்டர்கள்',
+    dailyLogTitle:'தினசரி உற்பத்தி பதிவு',actionTitle:'உடனடி நடவடிக்கை தேவை',
+    yarnTitle:'பருத்தி நூல் (40s)',yarnSub:'மானியம் 3 நாட்களில் முடிவடைகிறது',restockBtn:'மறு நிரப்பு',
+    indexTitle:'தேசிய நெசவு குறியீடு',forecastTitle:'6 வார தேவை கணிப்பு',
+    targetTitle:'மாதாந்திர உற்பத்தி ஒதுக்கீடு',completedUnits:'25 இல் 18 அலகுகள் நிறைவு',
+    ledgerTitle:'கட்டணப் பதிவேடு',verifiedDirect:'நேரடி DBT செயலில் உள்ளது',
+    ministryTitle:'ஜவுளி அமைச்சகம் — விலை குறிப்பு',
+    profileTitle:'உங்கள் சுயவிவரம்',verifiedArtisan:'அரசு சான்றளிக்கப்பட்ட கைவினைஞர்',
+    prioritiesTitle:'நீங்கள் என்ன தேடுகிறீர்கள்?',
+    navHome:'முகப்பு',navDemand:'தேவை',navAnalytics:'பகுப்பாய்வு',navPayments:'கட்டணம்',navMinistry:'அமைச்சக விலைகள்',navProfile:'சுயவிவரம்'
+  },
+  hi:{
+    brandTitle:'वीवअहेड',brandSub:'कारीगर बाज़ार पोर्टल',
+    govtActive:'सरकारी विंडो सक्रिय',festivalDir:'त्योहार और हथकरघा निर्देश',
+    openBadge:'खुला है',pendingPay:'लंबित भुगतान',activeOrders:'सक्रिय ऑर्डर',
+    dailyLogTitle:'दैनिक उत्पादन लॉग',actionTitle:'तत्काल कार्रवाई आवश्यक',
+    yarnTitle:'कपास सूत (40s)',yarnSub:'सब्सिडी कोटा 3 दिनों में समाप्त',restockBtn:'रीस्टॉक',
+    indexTitle:'राष्ट्रव्यापी बुनाई सूचकांक',forecastTitle:'6-सप्ताह की मांग अनुमान',
+    targetTitle:'मासिक उत्पादन कोटा',completedUnits:'25 में से 18 इकाइयां पूर्ण',
+    ledgerTitle:'भुगतान खाता बही',verifiedDirect:'प्रत्यक्ष डीबीटी सक्रिय',
+    ministryTitle:'वस्त्र मंत्रालय — मूल्य संदर्भ',
+    profileTitle:'आपकी प्रोफ़ाइल',verifiedArtisan:'सरकार द्वारा प्रमाणित कारीगर',
+    prioritiesTitle:'आप क्या ढूंढ रहे हैं?',
+    navHome:'होम',navDemand:'मांग',navAnalytics:'विश्लेषण',navPayments:'भुगतान',navMinistry:'मंत्रालय मूल्य',navProfile:'प्रोफ़ाइल'
+  },
+  bn:{
+    brandTitle:'উইভ এহেড',brandSub:'কারিগর বাজার পোর্টাল',
+    govtActive:'সরকারি উইন্ডো সক্রিয়',festivalDir:'উৎসব ও তাঁত নির্দেশিকা',
+    openBadge:'উন্মুক্ত',pendingPay:'বকেয়া পেমেন্ট',activeOrders:'সক্রিয় অর্ডার',
+    dailyLogTitle:'দৈনিক উৎপাদন লগ',actionTitle:'জরুরী পদক্ষেপ প্রয়োজন',
+    yarnTitle:'সুতির সুতা (৪০ এস)',yarnSub:'ভর্তুকি কোটা ৩ দিনে শেষ',restockBtn:'পুনরায় সংগ্রহ',
+    indexTitle:'দেশব্যাপী তাঁত সূচক',forecastTitle:'৬-সপ্তাহের চাহিদা পূর্বাভাস',
+    targetTitle:'মাসিক উৎপাদন কোটা',completedUnits:'২৫টির মধ্যে ১৮টি সম্পন্ন',
+    ledgerTitle:'পেমেন্ট লেজার',verifiedDirect:'সরাসরি ডিবিটি সক্রিয়',
+    ministryTitle:'বস্ত্র মন্ত্রণালয় — মূল্য রেফারেন্স',
+    profileTitle:'আপনার প্রোফাইল',verifiedArtisan:'সরকারিভাবে প্রত্যয়িত কারিগর',
+    prioritiesTitle:'আপনি কী খুঁজছেন?',
+    navHome:'হোম',navDemand:'চাহিদা',navAnalytics:'বিশ্লেষণ',navPayments:'পেমেন্ট',navMinistry:'মন্ত্রণালয় মূল্য',navProfile:'প্রোফাইল'
+  }
 };
 
-function switchView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(b => b.classList.toggle('active', b.dataset.view === name));
-  document.getElementById('topbarTitle').textContent = VIEW_META[name].title;
-  document.getElementById('topbarSubtitle').textContent = VIEW_META[name].sub;
-  if (name === 'production') renderProductionLog();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+function t(k){return(T[S.lang]&&T[S.lang][k])||T.en[k]||''}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function fmtTime(d){const n=new Date(),diff=n-d;if(diff<60000)return'Just now';if(diff<3600000)return Math.floor(diff/60000)+' min ago';return Math.floor(diff/3600000)+' hours ago'}
+
+/* ---- RENDER PROD LOG ---- */
+function renderProdLog(){
+  document.getElementById('prodLog').innerHTML=S.prodItems.map(i=>`
+    <div class="log-row">
+      <div class="item-name">
+        <input class="name-input" value="${esc(i.label)}" oninput="updateItemName('${i.id}',this.value)" />
+        <span class="live-dot">LIVE</span>
+        <div class="item-meta">Target: ${i.target} pcs/day · ${fmtTime(i.updated)}</div>
+      </div>
+      <div class="stepper">
+        <button class="step-btn" onclick="updateCount('${i.id}',-1)">-</button>
+        <span class="step-val" id="cv-${i.id}">${i.count}</span>
+        <button class="step-btn" onclick="updateCount('${i.id}',1)">+</button>
+      </div>
+    </div>`).join('');
+}
+function updateItemName(id,v){const i=S.prodItems.find(x=>x.id===id);if(i){i.label=v;i.updated=new Date();autoSave()}}
+function updateCount(id,d){const i=S.prodItems.find(x=>x.id===id);if(!i)return;i.count=Math.max(0,i.count+d);i.updated=new Date();document.getElementById('cv-'+id).textContent=i.count;autoSave();showToast('Updated '+i.label,'success')}
+
+/* ---- RENDER DIRECTORY ---- */
+function renderDir(){
+  const c=document.getElementById('dirList');
+  const f=S.directory.filter(w=>w.name.toLowerCase().includes(S.searchQuery.toLowerCase())&&(S.regionFilter==='All'||w.region===S.regionFilter));
+  if(!f.length){c.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);font-size:13px">No matching weaves found.</div>';return}
+  c.innerHTML=f.map(w=>`
+    <div class="dir-item">
+      <div>
+        <div style="font-weight:700;font-size:13px">${esc(w.name)}</div>
+        <div style="font-size:11px;color:var(--text-muted)">Region: ${w.region} · Demand: ${w.demand}</div>
+      </div>
+      <span class="pill ${w.status==='Accepting'?'pill-ok':'pill-no'}">${w.status}</span>
+    </div>`).join('');
 }
 
-function bindTopbar() {
-  document.getElementById('themeToggleBtn').addEventListener('click', () => {
-    state.theme = state.theme === 'light' ? 'dark' : 'light';
-    localStorage.setItem('wa_theme', state.theme);
-    applyTheme(state.theme);
-  });
+/* ---- RENDER PAYMENTS ---- */
+function renderPayments(){
+  const n=new Date();
+  document.getElementById('payList').innerHTML=S.payments.map(p=>`
+    <div class="pay-card">
+      <div style="font-weight:700;font-size:13.5px">${esc(p.buyer)}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin:3px 0">Status: ${p.status} · ${fmtTime(p.updated||n)}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+        <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:800">₹${p.amount.toLocaleString('en-IN')}</div>
+        ${p.status!=='Paid'?`<button class="btn btn-glass" style="font-size:11px;padding:7px 12px" onclick="markPaid(${p.id})">Mark Paid</button>`:'<span style="font-size:10px;color:#2ecc71;font-weight:700">✓ Verified DBT</span>'}
+      </div>
+    </div>`).join('');
+}
+function markPaid(id){const p=S.payments.find(x=>x.id===id);p.status='Paid';p.updated=new Date();renderPayments();autoSave();showToast('₹'+p.amount.toLocaleString('en-IN')+' settled','success')}
 
-  document.getElementById('notificationBtn').addEventListener('click', (e) => {
-    e.stopPropagation();
-    document.getElementById('notificationPanel').classList.toggle('open');
-  });
-  document.addEventListener('click', () => {
-    document.getElementById('notificationPanel').classList.remove('open');
-  });
-
-  document.getElementById('globalSearch').addEventListener('input', (e) => {
-    const q = e.target.value;
-    if (q.length > 1) {
-      switchView('market');
-      document.getElementById('marketSearch').value = q;
-      filterMaterials();
-    }
-  });
+/* ---- RENDER CHART ---- */
+function renderChart(){
+  const max=Math.max(...S.forecast.map(d=>d.val));
+  document.getElementById('demandChart').innerHTML=S.forecast.map(d=>`
+    <div class="chart-col">
+      <div class="chart-val">${d.val}k</div>
+      <div class="chart-bar${d.active?' active':''}" style="height:${(d.val/max)*100}%"></div>
+      <div class="chart-lbl">${d.week}</div>
+    </div>`).join('');
 }
 
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : '');
-  document.getElementById('themeToggleBtn').innerHTML = theme === 'dark'
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>'
-    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+/* ---- RENDER MINISTRY PRICES ---- */
+function renderMinistry(){
+  document.getElementById('priceGrid').innerHTML=S.ministry.map(p=>`
+    <div class="price-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div class="price-name">${esc(p.item)}</div>
+          <div class="price-meta">${p.region} · ${p.unit}</div>
+        </div>
+        <span class="pill ${p.status==='open'?'pill-ref':p.status==='accepted'?'pill-ok':'pill-warn'}">
+          ${p.status==='open'?'Reference':p.status==='accepted'?'Accepted':'Negotiated'}
+        </span>
+      </div>
+      <div class="price-rate-label">Ministry Reference Rate</div>
+      <div class="price-rate">₹${p.price.toLocaleString('en-IN')}</div>
+      <div class="price-actions">
+        <button class="btn btn-glass" style="flex:1;font-size:11.5px" onclick="acceptPrice('${p.id}')">Accept Rate</button>
+        <button class="btn btn-outline" style="flex:1;font-size:11.5px" onclick="openBargain('${p.id}')">Bargain</button>
+      </div>
+    </div>`).join('');
+}
+function acceptPrice(id){const p=S.ministry.find(x=>x.id===id);p.status='accepted';renderMinistry();autoSave();showToast('Accepted ₹'+p.price.toLocaleString('en-IN')+' for '+p.item,'success')}
+function openBargain(id){S.activeBargainId=id;renderBargainModal();document.getElementById('bargainModal').classList.add('open')}
+function closeBargain(){document.getElementById('bargainModal').classList.remove('open');S.activeBargainId=null}
+function renderBargainModal(){
+  const p=S.ministry.find(x=>x.id===S.activeBargainId);if(!p)return;
+  const floor=Math.round(p.price*p.floor);
+  document.getElementById('bargainTitle').textContent='Bargain — '+p.item;
+  document.getElementById('bargainBody').innerHTML=`
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">
+      Reference rate: <strong style="color:#fff">₹${p.price.toLocaleString('en-IN')}</strong> · Min support: <strong style="color:#fff">₹${floor.toLocaleString('en-IN')}</strong>
+    </div>
+    <div class="field-group"><label class="field-label">Your Offer (₹)</label><input type="number" class="field-input" id="bargainOffer" placeholder="${floor}"/></div>
+    <div class="bargain-log" id="bargainLog">${p.log.length?p.log.map(e=>`<div class="b-entry ${e.from}">${esc(e.text)}</div>`).join(''):'<div style="color:var(--text-muted)">No offers made yet.</div>'}</div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btn btn-glass full" onclick="closeBargain()">Cancel</button>
+      <button class="btn btn-primary full" onclick="submitOffer()">Submit Offer</button>
+    </div>`;
+}
+function submitOffer(){
+  const p=S.ministry.find(x=>x.id===S.activeBargainId);
+  const offer=parseFloat(document.getElementById('bargainOffer').value);
+  if(isNaN(offer)||offer<=0){showToast('Enter a valid amount','error');return}
+  const floor=Math.round(p.price*p.floor);
+  p.rounds++;
+  p.log.push({from:'you',text:'You offered ₹'+offer.toLocaleString('en-IN')});
+  if(offer>=p.price){
+    p.log.push({from:'ministry',text:'Offer meets reference rate. Confirmed at ₹'+offer.toLocaleString('en-IN')+'.'});
+    p.status='accepted';p.price=Math.round(offer);showToast('Offer accepted!','success');
+  } else if(offer>=floor){
+    if(p.rounds>=3){const s=Math.round((offer+p.price)/2);p.log.push({from:'ministry',text:'Final counter: ₹'+s.toLocaleString('en-IN')+' settled.'});p.status='settled';p.price=s;showToast('Settled at ₹'+s.toLocaleString('en-IN'),'success')}
+    else{const c=Math.round((offer+p.price)/2);p.log.push({from:'ministry',text:'Counter-offer: ₹'+c.toLocaleString('en-IN')+'. Round '+p.rounds+' of 3.'});showToast('Ministry counter-offered','info')}
+  } else {
+    p.log.push({from:'ministry',text:'Below minimum of ₹'+floor.toLocaleString('en-IN')+'. Try again.'});showToast('Below minimum threshold','error');
+  }
+  renderBargainModal();renderMinistry();autoSave();
 }
 
-function renderNotifications() {
-  const list = document.getElementById('notificationList');
-  const badge = document.getElementById('notifBadge');
-  badge.style.display = state.notifications.length ? 'block' : 'none';
-  list.innerHTML = state.notifications.map(n => `
-    <div class="notification-item">
-      <div class="notification-item-title">${n.title}</div>
-      <div class="notification-item-desc">${n.desc}</div>
-      <div class="notification-item-time">${n.time}</div>
-    </div>
-  `).join('') || `<div style="padding:20px; text-align:center; font-size:12px; color:var(--text-muted);">No notifications</div>`;
+/* ---- PROFILE ---- */
+function renderProfile(){
+  const {name,artisanId}=S.profile;
+  const initials=name.split(' ').filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('profAvatar').textContent=initials||'RK';
+  document.getElementById('profNameDisplay').textContent=name;
+  document.getElementById('profIdDisplay').textContent='Master Artisan ID: '+artisanId;
+  document.getElementById('miniAv').textContent=initials||'RK';
+  document.getElementById('miniName').textContent=name.split(' ')[0];
+  const c=document.getElementById('profileFields');
+  if(S.editingProfile){
+    c.innerHTML=`
+      <div class="field-group"><label class="field-label">Full Name</label><input type="text" class="field-input" id="fName" value="${esc(S.profile.name)}"/></div>
+      <div class="field-group"><label class="field-label">Artisan ID</label><input type="text" class="field-input" id="fId" value="${esc(S.profile.artisanId)}"/></div>
+      <div class="field-group"><label class="field-label">Cooperative</label><input type="text" class="field-input" id="fCoop" value="${esc(S.profile.cooperative)}"/></div>
+      <div class="field-group"><label class="field-label">Phone / WhatsApp</label><input type="text" class="field-input" id="fPhone" value="${esc(S.profile.phone)}"/></div>
+      <div class="field-group"><label class="field-label">About / Specialization</label><textarea class="field-textarea" id="fBio">${esc(S.profile.bio)}</textarea></div>`;
+    document.getElementById('saveWrap').style.display='block';
+    document.getElementById('editBtn').textContent='Cancel';
+  } else {
+    c.innerHTML=`
+      <div class="field-group"><span class="field-label">Full Name</span><div class="field-val">${esc(S.profile.name)}</div></div>
+      <div class="field-group"><span class="field-label">Artisan ID</span><div class="field-val">${esc(S.profile.artisanId)}</div></div>
+      <div class="field-group"><span class="field-label">Cooperative</span><div class="field-val">${esc(S.profile.cooperative)}</div></div>
+      <div class="field-group"><span class="field-label">Phone / WhatsApp</span><div class="field-val">${esc(S.profile.phone)}</div></div>
+      <div class="field-group"><span class="field-label">About</span><div class="field-val" style="font-weight:500">${esc(S.profile.bio)}</div></div>`;
+    document.getElementById('saveWrap').style.display='none';
+    document.getElementById('editBtn').textContent='Edit Profile';
+  }
 }
-function clearNotifications() {
-  state.notifications = [];
-  renderNotifications();
-  showToast('Notifications cleared', 'info');
-}
-
-function renderProductionLog() {
-  const html = state.production.map(item => `
-    <div class="log-row" data-id="${item.id}">
-      <div class="item-name">
-        <input class="item-name-input" value="${item.name}" onchange="renameBatch(${item.id}, this.value)" />
-      </div>
-      <div class="stepper">
-        <button class="step-btn" onclick="changeQty(${item.id}, -1)" aria-label="Decrease quantity">−</button>
-        <span class="step-val">${item.qty}</span>
-        <button class="step-btn" onclick="changeQty(${item.id}, 1)" aria-label="Increase quantity">+</button>
-      </div>
-      <button class="delete-row-btn" onclick="deleteBatch(${item.id})" aria-label="Delete batch"></button>
-    </div>
-  `).join('') || `<div style="text-align:center; padding:30px 0; color:var(--text-muted); font-size:13px;">No batches logged yet. Add your first one.</div>`;
-
-  document.getElementById('productionLogContainer').innerHTML = html;
-  const full = document.getElementById('productionLogContainerFull');
-  if (full) full.innerHTML = html;
-  document.getElementById('navProdCount').textContent = state.production.length;
-  persistProduction();
-}
-
-function changeQty(id, delta) {
-  const item = state.production.find(p => p.id === id);
-  if (!item) return;
-  item.qty = Math.max(0, item.qty + delta);
-  renderProductionLog();
-}
-function renameBatch(id, name) {
-  const item = state.production.find(p => p.id === id);
-  if (!item) return;
-  item.name = name || item.name;
-  persistProduction();
-  showToast('Batch renamed', 'success');
-}
-function deleteBatch(id) {
-  state.production = state.production.filter(p => p.id !== id);
-  renderProductionLog();
-  showToast('Batch removed', 'info');
-}
-function persistProduction() {
-  localStorage.setItem('wa_production', JSON.stringify(state.production));
+function toggleEdit(){S.editingProfile=!S.editingProfile;renderProfile()}
+function saveProfile(){
+  S.profile.name=document.getElementById('fName').value.trim()||S.profile.name;
+  S.profile.artisanId=document.getElementById('fId').value.trim()||S.profile.artisanId;
+  S.profile.cooperative=document.getElementById('fCoop').value.trim()||S.profile.cooperative;
+  S.profile.phone=document.getElementById('fPhone').value.trim()||S.profile.phone;
+  S.profile.bio=document.getElementById('fBio').value.trim();
+  S.editingProfile=false;renderProfile();autoSave();showToast('Profile updated','success');
 }
 
-function openAddProductionModal() {
-  document.getElementById('newBatchName').value = '';
-  document.getElementById('newBatchQty').value = 1;
-  openModal('addProdModal');
+/* ---- PRIORITIES ---- */
+function renderPriorities(){
+  document.getElementById('priorityGrid').innerHTML=S.priorities.map(o=>{
+    const sel=S.profile.priorities.includes(o.id);
+    return`<div class="pchip2${sel?' sel':''}" onclick="togglePriority('${o.id}')"><div class="pcheck">${sel?'✓':''}</div><div><strong>${esc(o.title)}</strong><span>${esc(o.desc)}</span></div></div>`;
+  }).join('');
+  const sel=S.priorities.filter(o=>S.profile.priorities.includes(o.id));
+  document.getElementById('priorityTags').innerHTML=sel.length?sel.map(o=>`<span class="ptag">${esc(o.title)}</span>`).join(''):'<span style="font-size:11.5px;color:var(--text-muted)">No priorities selected yet.</span>';
 }
-function addProductionBatch() {
-  const name = document.getElementById('newBatchName').value.trim();
-  const qty = parseInt(document.getElementById('newBatchQty').value) || 1;
-  if (!name) { showToast('Please enter an item name', 'error'); return; }
-  const id = Date.now();
-  state.production.unshift({ id, name, qty });
-  renderProductionLog();
-  closeModal('addProdModal');
-  showToast('Batch added to production log', 'success');
+function togglePriority(id){const i=S.profile.priorities.indexOf(id);if(i===-1)S.profile.priorities.push(id);else S.profile.priorities.splice(i,1);renderPriorities()}
+function savePriorities(){autoSave();showToast('Priorities saved','success')}
+
+/* ---- NOTIFICATIONS ---- */
+function renderNotifications(){
+  const d=document.getElementById('notifDrop');
+  d.innerHTML=S.notifications.length?S.notifications.map(n=>`
+    <div class="notif-item" onclick="markNotifRead(${n.id})">
+      <div class="notif-title">${esc(n.msg)}</div>
+      <div class="notif-time">${n.time}</div>
+    </div>`).join(''):'<div class="notif-item">No notifications</div>';
+  document.getElementById('nbadge').style.display=S.notifications.length?'block':'none';
 }
+function markNotifRead(id){S.notifications=S.notifications.filter(n=>n.id!==id);renderNotifications();showToast('Notification dismissed','info')}
 
-let activeFilter = 'all';
-
-function renderMaterialGrid() {
-  const query = (document.getElementById('marketSearch')?.value || '').toLowerCase();
-  const filtered = MATERIALS.filter(m => {
-    const matchesFilter = activeFilter === 'all' || m.category === activeFilter;
-    const matchesQuery = !query || m.name.toLowerCase().includes(query) || m.supplier.toLowerCase().includes(query);
-    return matchesFilter && matchesQuery;
-  });
-
-  document.getElementById('materialGrid').innerHTML = filtered.map(m => `
-    <div class="material-card">
-      <div class="material-card-top">
-        <div>
-          <div class="material-name">${m.name}</div>
-          <div class="material-supplier">${m.supplier}</div>
-        </div>
-        <span class="pill ${m.stock === 'In Stock' ? 'pill-success' : 'pill-danger'}">${m.stock}</span>
-      </div>
-      <div class="ministry-price-box">
-        <div>
-          <div class="ministry-price-label">Ministry Listed Price</div>
-          <div class="ministry-price-value">₹${m.price.toLocaleString('en-IN')} <span style="font-size:11px; font-weight:600;">/${m.unit}</span></div>
-          <div class="ministry-source">${m.trend === 'up' ? '↑' : '↓'} vs last week · Ministry of Textiles feed</div>
-        </div>
-        <span class="pill pill-info">Official</span>
-      </div>
-      <div class="material-actions">
-        <button class="btn-secondary" onclick="openBargainModal(${m.id})">Bargain</button>
-        <button class="btn-accent" onclick="buyAtListedPrice(${m.id})">Buy at ₹${m.price}</button>
-      </div>
-    </div>
-  `).join('') || `<div style="grid-column:1/-1; text-align:center; padding:40px 0; color:var(--text-muted); font-size:13px;">No materials match your search.</div>`;
+/* ---- BATCH MODAL ---- */
+function openBatchModal(){document.getElementById('batchModal').classList.add('open')}
+function closeBatchModal(){document.getElementById('batchModal').classList.remove('open')}
+function addBatch(){
+  const name=document.getElementById('newBatchName').value.trim();
+  const target=parseInt(document.getElementById('newBatchTarget').value,10);
+  if(!name||isNaN(target)){showToast('Please enter valid parameters','error');return}
+  S.prodItems.push({id:'b'+Date.now(),label:name,count:0,target,updated:new Date()});
+  renderProdLog();closeBatchModal();autoSave();showToast('Added: '+name,'success');
+  document.getElementById('newBatchName').value='Custom Weave';
+  document.getElementById('newBatchTarget').value='5';
+  document.getElementById('batchNotes').value='';
 }
 
-function bindMarketFilters() {
-  document.getElementById('marketFilters').addEventListener('click', (e) => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    document.querySelectorAll('#marketFilters .chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeFilter = chip.dataset.filter;
-    renderMaterialGrid();
-  });
-  document.getElementById('marketSearch').addEventListener('input', filterMaterials);
-}
-function filterMaterials() { renderMaterialGrid(); }
-
-function buyAtListedPrice(id) {
-  const m = MATERIALS.find(x => x.id === id);
-  showToast(`Order placed for ${m.name} at ₹${m.price}/${m.unit}`, 'success');
+/* ---- AUTO-SAVE ---- */
+function autoSave(){
+  clearTimeout(S.autoSaveTimer);
+  S.autoSaveTimer=setTimeout(()=>{
+    const el=document.getElementById('autoSaveIndicator');
+    if(el){el.style.display='inline-flex';setTimeout(()=>{el.style.display='none'},3000)}
+  },1200);
 }
 
-let currentBargainId = null;
-function openBargainModal(id) {
-  currentBargainId = id;
-  const m = MATERIALS.find(x => x.id === id);
-  document.getElementById('bargainMaterialLabel').textContent = `${m.name} — ${m.supplier}`;
-  document.getElementById('bargainListedPrice').textContent = `₹${m.price.toLocaleString('en-IN')}/${m.unit}`;
-  document.getElementById('bargainOfferInput').value = '';
-  document.getElementById('bargainResult').innerHTML = '';
-  openModal('bargainModal');
-}
-function submitBargain() {
-  const m = MATERIALS.find(x => x.id === currentBargainId);
-  const offer = parseFloat(document.getElementById('bargainOfferInput').value);
-  const resultEl = document.getElementById('bargainResult');
-  if (!offer || offer <= 0) {
-    resultEl.innerHTML = `<span style="color:var(--danger); font-weight:700;">Enter a valid offer amount.</span>`;
-    return;
-  }
-  const minAcceptable = m.price * 0.9;
-  if (offer >= m.price) {
-    resultEl.innerHTML = `<span style="color:var(--success); font-weight:700;">✓ Offer accepted instantly — at or above listed price.</span>`;
-    showToast('Bargain accepted at your offer', 'success');
-  } else if (offer >= minAcceptable) {
-    resultEl.innerHTML = `<span style="color:var(--success); font-weight:700;">✓ Ministry counter-accepted your offer of ₹${offer}/${m.unit}.</span>`;
-    showToast('Bargain accepted', 'success');
-  } else {
-    const counter = Math.round(minAcceptable);
-    resultEl.innerHTML = `<span style="color:var(--accent); font-weight:700;">Counter-offer: ₹${counter}/${m.unit} — the lowest the depot can go this week.</span>`;
-    showToast('Counter-offer received', 'info');
-  }
+/* ---- TOAST ---- */
+let _tt;
+function showToast(msg,type='info'){
+  const el=document.getElementById('toast');el.textContent=msg;el.className='toast show '+type;
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-function renderCharts() {
-  const output = [ ['W1', 40], ['W2', 55], ['W3', 48], ['W4', 62], ['W5', 58], ['W6', 71] ];
-  const price = [ ['W1', 398], ['W2', 402], ['W3', 405], ['W4', 399], ['W5', 408], ['W6', 412] ];
-  buildChart('outputChart', output, v => v);
-  buildChart('priceChart', price, v => '₹' + v);
-}
-function buildChart(containerId, data, formatter) {
-  const max = Math.max(...data.map(d => d[1]));
-  document.getElementById(containerId).innerHTML = data.map(([label, val], i) => `
-    <div class="chart-col">
-      <div class="chart-value">${formatter(val)}</div>
-      <div class="chart-bar ${i === data.length - 1 ? 'active' : ''}" style="height:${(val / max) * 100}%;"></div>
-      <div class="chart-label">${label}</div>
-    </div>
-  `).join('');
-}
-
-let isEditMode = false;
-
-function hydrateProfileForm() {
-  const p = state.profile;
-  document.getElementById('fldName').value = p.name;
-  document.getElementById('fldPhone').value = p.phone;
-  document.getElementById('fldDistrict').value = p.district;
-  document.getElementById('fldCraft').value = p.craft;
-  document.getElementById('fldAddress').value = p.address;
-  document.getElementById('fldUpi').value = p.upi;
-  document.getElementById('profileHeroName').textContent = p.name;
-  document.getElementById('profileAvatarInitial').textContent = p.name.trim().charAt(0).toUpperCase() || 'A';
+/* ---- LOCALIZATION ---- */
+function applyLang(){
+  const map={
+    txtBrandTitle:'brandTitle',txtBrandSub:'brandSub',txtGovtActive:'govtActive',txtFestivalDir:'festivalDir',
+    txtHeroSub:'heroSub',txtOpenBadge:'openBadge',txtPendingPay:'pendingPay',txtActiveOrders:'activeOrders',
+    txtDailyLogTitle:'dailyLogTitle',txtActionTitle:'actionTitle',txtYarnTitle:'yarnTitle',txtYarnSub:'yarnSub',
+    txtRestockBtn:'restockBtn',txtDemandEyebrow:'demandEyebrow',txtIndexTitle:'indexTitle',txtDemandDesc:'demandDesc',
+    txtAnalyticsEyebrow:'analyticsEyebrow',txtForecastTitle:'forecastTitle',txtForecastSub:'forecastSub',
+    txtChartTitle:'chartTitle',txtTargetTitle:'targetTitle',txtCompletedUnits:'completedUnits',
+    txtPaymentsEyebrow:'paymentsEyebrow',txtLedgerTitle:'ledgerTitle',txtVerifiedDirect:'verifiedDirect',
+    txtMinistryEyebrow:'ministryEyebrow',txtMinistryTitle:'ministryTitle',txtMinistryDesc:'ministryDesc',
+    txtMinBannerTitle:'minBannerTitle',txtMinBannerSub:'minBannerSub',
+    txtProfileEyebrow:'profileEyebrow',txtProfileTitle:'profileTitle',txtProfileDesc:'profileDesc',
+    txtDetailsTitle:'detailsTitle',txtVerifiedArtisan:'verifiedArtisan',
+    txtCoopLabel:'coopLabel',txtCoopName:'coopName',txtNotifLabel:'notifLabel',txtNotifSub:'notifSub',
+    txtSyncLabel:'syncLabel',txtSyncSub:'syncSub',
+    txtPrioritiesTitle:'prioritiesTitle',txtPrioritiesDesc:'prioritiesDesc',
+    txtSavePriorities:'savePriorities',txtSaveProfileBtn:'saveProfile',txtSettingsTitle:'settingsTitle',
+    txtFooter:'footer',
+    navHome:'navHome',navDemand:'navDemand',navAnalytics:'navAnalytics',navPayments:'navPayments',navMinistry:'navMinistry',navProfile:'navProfile'
+  };
+  Object.entries(map).forEach(([id,key])=>{const el=document.getElementById(id);if(el&&t(key))el.textContent=t(key)});
 }
 
-function updateSidebarNames() {
-  const p = state.profile;
-  document.getElementById('sidebarFooterName').textContent = p.name;
-  document.getElementById('sidebarAvatarInitial').textContent = p.name.trim().charAt(0).toUpperCase() || 'A';
+/* ---- NAVIGATION ---- */
+function goView(target){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});
+  const v=document.getElementById('view-'+target);if(v)v.classList.add('active');
+  const b=document.querySelector('.nav-link[data-t="'+target+'"]');if(b){b.classList.add('active');b.setAttribute('aria-pressed','true')}
+  document.getElementById('siteNav').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+document.querySelectorAll('.nav-link').forEach(b=>b.addEventListener('click',()=>goView(b.dataset.t)));
+document.getElementById('navToggle').addEventListener('click',()=>document.getElementById('siteNav').classList.toggle('open'));
 
-function toggleEditMode() {
-  isEditMode = !isEditMode;
-  const fields = ['fldName', 'fldPhone', 'fldDistrict', 'fldCraft', 'fldAddress', 'fldUpi'];
-  fields.forEach(id => document.getElementById(id).disabled = !isEditMode);
-  document.getElementById('editProfileBtn').textContent = isEditMode ? 'Cancel' : 'Edit Profile';
-  document.getElementById('saveProfileBtn').style.display = isEditMode ? 'flex' : 'none';
-  if (!isEditMode) hydrateProfileForm();
-}
+/* ---- SEARCH ---- */
+document.getElementById('searchInput').addEventListener('input',e=>{S.searchQuery=e.target.value;renderDir()});
+document.getElementById('searchInput').addEventListener('focus',()=>{
+  const r=document.getElementById('searchResults');
+  const s=S.directory.filter(w=>w.name.toLowerCase().includes(S.searchQuery.toLowerCase())).slice(0,5)
+    .map(w=>`<div class="s-result-item" onclick="selectSug('${esc(w.name)}')">`+
+      `<div style="font-weight:600">${esc(w.name)}</div>`+
+      `<div style="font-size:11px;color:var(--text-muted)">Region: ${w.region}</div></div>`).join('');
+  r.innerHTML=s;r.classList.toggle('visible',!!s);
+});
+function selectSug(name){document.getElementById('searchInput').value=name;S.searchQuery=name;renderDir();document.getElementById('searchResults').classList.remove('visible')}
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('searchResults').classList.remove('visible')});
 
-function saveProfile() {
-  state.profile.name = document.getElementById('fldName').value.trim() || state.profile.name;
-  state.profile.phone = document.getElementById('fldPhone').value.trim();
-  state.profile.district = document.getElementById('fldDistrict').value.trim();
-  state.profile.craft = document.getElementById('fldCraft').value;
-  state.profile.address = document.getElementById('fldAddress').value.trim();
-  state.profile.upi = document.getElementById('fldUpi').value.trim();
+document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+  document.querySelectorAll('.chip').forEach(x=>{x.classList.remove('active');x.setAttribute('aria-pressed','false')});
+  c.classList.add('active');c.setAttribute('aria-pressed','true');
+  S.regionFilter=c.dataset.region;renderDir();
+}));
 
-  localStorage.setItem('wa_profile', JSON.stringify(state.profile));
-
-  isEditMode = false;
-  ['fldName','fldPhone','fldDistrict','fldCraft','fldAddress','fldUpi'].forEach(id => document.getElementById(id).disabled = true);
-  document.getElementById('editProfileBtn').textContent = 'Edit Profile';
-  document.getElementById('saveProfileBtn').style.display = 'none';
-
-  hydrateProfileForm();
-  updateSidebarNames();
-  renderHomePrioritySummary();
-
-  const indicator = document.getElementById('autoSaveIndicator');
-  indicator.classList.add('show');
-  setTimeout(() => indicator.classList.remove('show'), 2200);
-
-  showToast('Profile saved successfully', 'success');
-}
-
-function renderPriorityGrid() {
-  const grid = document.getElementById('priorityGrid');
-  grid.innerHTML = PRIORITY_OPTIONS.map(opt => {
-    const selected = state.profile.priorities.includes(opt.id);
-    return `
-      <div class="priority-option ${selected ? 'selected' : ''}" onclick="togglePriority('${opt.id}')" data-id="${opt.id}">
-        <div class="priority-checkbox">${selected ? '✓' : ''}</div>
-        <div>
-          <div class="priority-option-title">${opt.title}</div>
-          <div class="priority-option-desc">${opt.desc}</div>
-        </div>
-      </div>
-    `;
-  }).join('');
-  updateHeroTags();
-}
-
-function togglePriority(id) {
-  const idx = state.profile.priorities.indexOf(id);
-  if (idx === -1) state.profile.priorities.push(id);
-  else state.profile.priorities.splice(idx, 1);
-  localStorage.setItem('wa_profile', JSON.stringify(state.profile));
-  renderPriorityGrid();
-  renderHomePrioritySummary();
-  showToast('Priorities updated', 'success');
-}
-
-function updateHeroTags() {
-  const tagsEl = document.getElementById('profileHeroTags');
-  tagsEl.innerHTML = state.profile.priorities.map(id => {
-    const opt = PRIORITY_OPTIONS.find(o => o.id === id);
-    return opt ? `<span class="pill pill-info">${opt.title}</span>` : '';
-  }).join('');
-}
-
-function renderHomePrioritySummary() {
-  const el = document.getElementById('homePrioritySummary');
-  if (!state.profile.priorities.length) {
-    el.innerHTML = 'No priorities selected yet. Tell us what you\'re looking for to get matched offers.';
-    return;
-  }
-  el.innerHTML = state.profile.priorities.map(id => {
-    const opt = PRIORITY_OPTIONS.find(o => o.id === id);
-    return opt ? `• ${opt.title}` : '';
-  }).join('<br>');
-}
-
-function toggleSwitch(el) {
-  el.classList.toggle('active');
-}
-
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+/* ---- THEME ---- */
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  S.theme=S.theme==='light'?'dark':'light';
+  document.getElementById('themeBtn').textContent=S.theme==='light'?'🌙':'☀️';
+  showToast('Theme toggled','info');
 });
 
-let toastTimer;
-function showToast(message, type = 'info') {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.className = `toast show ${type}`;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
-}
+/* ---- LANG ---- */
+document.getElementById('langSel').addEventListener('change',e=>{S.lang=e.target.value;applyLang();showToast('Language changed','info')});
+
+/* ---- NOTIFICATIONS ---- */
+document.getElementById('notifBtn').addEventListener('click',()=>{
+  const d=document.getElementById('notifDrop');d.style.display=d.style.display==='block'?'none':'block';
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#notifBtn')&&!e.target.closest('#notifDrop'))document.getElementById('notifDrop').style.display='none'});
+
+/* ---- TOGGLE SWITCH ---- */
+function toggleSwitch(el){el.classList.toggle('on');showToast('Setting updated','info');autoSave()}
+
+/* ---- MODALS BACKDROP CLOSE ---- */
+document.getElementById('batchModal').addEventListener('click',e=>{if(e.target.id==='batchModal')closeBatchModal()});
+document.getElementById('bargainModal').addEventListener('click',e=>{if(e.target.id==='bargainModal')closeBargain()});
+
+/* ---- CLOCK ---- */
+setInterval(()=>{const el=document.getElementById('statusTs');if(el)el.textContent='Updated '+fmtTime(new Date())},60000);
+
+/* ---- INIT ---- */
+renderProdLog();renderDir();renderPayments();renderChart();renderMinistry();
+renderProfile();renderPriorities();renderNotifications();applyLang();
 </script>
 </body>
 </html>
