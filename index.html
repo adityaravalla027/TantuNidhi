@@ -1,328 +1,284 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WeaveAhead | Global Connectivity Architecture</title>
-    <!-- Tailwind CSS -->
+    <title>WeaveAhead | The National Fabric</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'Roboto', 'Helvetica', 'sans-serif'],
-                        mono: ['"SF Mono"', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
-                    },
+                    fontFamily: { sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'Roboto', 'sans-serif'] },
                     colors: {
-                        weave: {
-                            dark: '#0f172a',
-                            light: '#f8fafc',
-                            primary: '#4f46e5',
-                            secondary: '#0ea5e9',
-                            glass: 'rgba(255, 255, 255, 0.75)',
-                            glassDark: 'rgba(15, 23, 42, 0.85)'
-                        }
-                    }
+                        wa: { saffron: '#ff9933', navy: '#0f172a', green: '#138808', glass: 'rgba(255, 255, 255, 0.65)' }
+                    },
+                    animation: { 'spin-slow': 'spin 8s linear infinite', 'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
                 }
             }
         }
     </script>
     <style>
-        /* High-End Apple-Style Fluidity & Glassmorphism */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
-        
-        body { background: #f8fafc; overflow-x: hidden; }
-        
-        .glass-nav {
-            background: var(--tw-colors-weave-glass);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.8);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .mesh-bg {
+        body { 
             background-color: #f8fafc;
-            background-image: radial-gradient(at 40% 20%, hsla(228,100%,74%,0.15) 0px, transparent 50%),
-                              radial-gradient(at 80% 0%, hsla(189,100%,56%,0.15) 0px, transparent 50%),
-                              radial-gradient(at 0% 50%, hsla(228,100%,74%,0.15) 0px, transparent 50%);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(28, 100%, 74%, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(116, 100%, 74%, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, hsla(215, 100%, 74%, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
         }
+        
+        .glass-ultra {
+            background: var(--tw-colors-wa-glass);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .view-section { display: none; opacity: 0; transform: translateY(15px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* Voice Visualizer Bars */
+        .bar { width: 4px; background: #ff9933; border-radius: 4px; display: inline-block; margin: 0 2px; height: 10px; transition: height 0.1s ease; }
+        .listening .bar:nth-child(1) { animation: bounce 1s infinite 0.1s; }
+        .listening .bar:nth-child(2) { animation: bounce 1s infinite 0.2s; }
+        .listening .bar:nth-child(3) { animation: bounce 1s infinite 0.3s; }
+        .listening .bar:nth-child(4) { animation: bounce 1s infinite 0.4s; }
+        .listening .bar:nth-child(5) { animation: bounce 1s infinite 0.5s; }
+        
+        @keyframes bounce { 0%, 100% { height: 10px; } 50% { height: 35px; } }
     </style>
 </head>
-<body class="text-slate-900 mesh-bg min-h-screen flex flex-col selection:bg-weave-primary selection:text-white">
+<body class="text-slate-900 min-h-screen flex flex-col selection:bg-wa-saffron selection:text-white">
 
-    <!-- GLOBAL NAVIGATION -->
-    <header class="glass-nav fixed top-0 w-full z-50 transition-all duration-300">
+    <!-- NATIONAL NAVIGATION -->
+    <header class="glass-ultra fixed top-0 w-full z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <!-- Brand -->
-            <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('corporate')">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#blue-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <defs>
-                        <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#4f46e5" />
-                            <stop offset="100%" stop-color="#0ea5e9" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M12 2L2 22h20L12 2z"/>
-                    <path d="M12 2v20"/>
-                    <path d="M2 12h20"/>
-                </svg>
-                <span class="text-xl font-bold tracking-tight text-slate-900">weave<span class="font-light">Ahead</span></span>
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-wa-saffron to-orange-400 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M4 19a2 2 0 1 0 4 0a2 2 0 0 0-4 0"/><path d="M16 5a2 2 0 1 0 4 0a2 2 0 0 0-4 0"/><path d="M6 5h10"/><path d="M6 19h10"/><path d="M6 12h10"/><path d="M8 5v14"/><path d="M16 5v14"/></svg>
+                </div>
+                <span class="text-2xl font-bold tracking-tight">Weave<span class="font-light">Ahead</span></span>
+            </div>
+            
+            <!-- Live Ticker -->
+            <div class="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-white/50 rounded-full border border-white text-xs font-semibold text-slate-500">
+                <span class="w-2 h-2 rounded-full bg-wa-green animate-pulse-fast"></span>
+                LIVE CLUSTERS: 142 | ACTIVE WEAVERS: 12,450
             </div>
 
-            <!-- Main Menu -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-                <button onclick="switchView('corporate')" class="hover:text-weave-primary transition-colors">Corporate Overview</button>
-                <a href="#architecture" class="hover:text-weave-primary transition-colors corporate-link">Architecture</a>
-                <a href="#global-scale" class="hover:text-weave-primary transition-colors corporate-link">Global Scale</a>
-                
-                <!-- Full Stack Portal Access -->
-                <button onclick="switchView('portal')" class="ml-4 bg-weave-dark text-white px-5 py-2 rounded-full hover:bg-slate-800 transition-all shadow-lg flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    Enterprise Portal
+            <nav class="hidden md:flex gap-2">
+                <button onclick="switchView('catalogue')" class="px-5 py-2 rounded-full text-sm font-semibold hover:bg-white/60 transition">Global Catalogue</button>
+                <button onclick="switchView('weaver')" class="ml-2 bg-wa-navy text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl hover:bg-slate-800 transition transform hover:scale-105">
+                    Weaver Portal
                 </button>
             </nav>
         </div>
     </header>
 
-    <!-- VIEW 1: MULTINATIONAL CORPORATE WEBSITE (The "PPT" Flow) -->
-    <main id="view-corporate" class="flex-1 pt-24 pb-16">
+    <main class="flex-1 w-full max-w-7xl mx-auto px-6 pt-32 pb-20">
         
-        <!-- Hero Section (PPT Slide 1: Introduction) -->
-        <section class="max-w-7xl mx-auto px-6 py-20 lg:py-32 flex flex-col items-center text-center">
-            <div class="inline-block px-4 py-1.5 rounded-full glass-card text-xs font-semibold tracking-wide text-weave-primary mb-6 border border-indigo-100">
-                THE NEXT GENERATION OF CONNECTIVITY
+        <!-- MODULE 1: THE NATIONAL PLATFORM (HOME) -->
+        <section id="view-home" class="view-section active text-center">
+            <div class="inline-block px-5 py-1.5 rounded-full bg-orange-100 text-wa-saffron text-xs font-bold tracking-widest mb-8 border border-orange-200">
+                GOVERNMENT & ENTERPRISE INTEGRATED
             </div>
-            <h1 class="text-5xl lg:text-7xl font-bold tracking-tighter mb-8 leading-tight">
-                Weaving the Future of <br> <span class="gradient-text">Global Enterprise.</span>
+            <h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight">
+                The Digital Loom <br>of <span class="text-transparent bg-clip-text bg-gradient-to-r from-wa-saffron to-wa-green">Modern India.</span>
             </h1>
-            <p class="text-lg text-slate-500 max-w-2xl mb-10 leading-relaxed">
-                WeaveAhead provides the definitive architectural framework for multinational data synthesis. Unifying disparate systems into one continuous, intelligent thread.
+            <p class="text-xl text-slate-500 max-w-2xl mx-auto mb-12">
+                An intelligent, voice-first network connecting regional handloom cooperatives directly to global buyers and B2B corporate streams.
             </p>
-            <div class="flex gap-4">
-                <button onclick="switchView('portal')" class="bg-weave-primary text-white px-8 py-3.5 rounded-full font-medium hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-500/20">
-                    Launch System Dashboard
-                </button>
-                <a href="#architecture" class="glass-card px-8 py-3.5 rounded-full font-medium text-slate-700 hover:text-black transition-all">
-                    Explore Architecture
-                </a>
-            </div>
-        </section>
-
-        <!-- Architecture Section (PPT Slide 2: The Solution) -->
-        <section id="architecture" class="max-w-7xl mx-auto px-6 py-20">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold tracking-tight mb-4">The Weave Architecture</h2>
-                <p class="text-slate-500">A modular, full-stack ecosystem designed for infinite scalability.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Node 1 -->
-                <div class="glass-card p-8 rounded-3xl hover:-translate-y-1 transition-transform duration-300">
-                    <div class="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center mb-6 text-weave-primary">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Distributed Nodes</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Microservices deployed across 40+ global availability zones, ensuring zero-latency data traversal.</p>
-                </div>
-                <!-- Node 2 -->
-                <div class="glass-card p-8 rounded-3xl hover:-translate-y-1 transition-transform duration-300 border-indigo-200">
-                    <div class="w-12 h-12 rounded-xl bg-sky-100 flex items-center justify-center mb-6 text-weave-secondary">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Predictive Engine</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Machine learning algorithms forecasting capacity requirements before demand spikes occur.</p>
-                </div>
-                <!-- Node 3 -->
-                <div class="glass-card p-8 rounded-3xl hover:-translate-y-1 transition-transform duration-300">
-                    <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-6 text-slate-700">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Zero-Trust Security</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">End-to-end cryptographic validation safeguarding the enterprise data fabric.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- VIEW 2: FULL-STACK ENTERPRISE PORTAL (Interactive Backend/Dashboard) -->
-    <main id="view-portal" class="hidden flex-1 pt-24 pb-8 px-6 h-screen flex flex-col">
-        <div class="max-w-7xl mx-auto w-full h-full flex flex-col space-y-6">
             
-            <div class="flex justify-between items-end">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 text-left">
+                <!-- Feature Cards -->
+                <div class="glass-ultra p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-100 text-wa-saffron flex items-center justify-center mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Predictive Forecasting</h3>
+                    <p class="text-slate-500 text-sm">AI models analyze global trends to alert weavers of demand spikes before they happen.</p>
+                </div>
+                <div class="glass-ultra p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 border-t-4 border-t-wa-navy">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-100 text-wa-navy flex items-center justify-center mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20zM12 16v-4M12 8h.01"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Native Voice Layer</h3>
+                    <p class="text-slate-500 text-sm">No typing required. Weavers update statuses and receive alerts via regional voice STT/TTS.</p>
+                </div>
+                <div class="glass-ultra p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-green-100 text-wa-green flex items-center justify-center mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Corporate Routing</h3>
+                    <p class="text-slate-500 text-sm">Bulk B2B orders are algorithmically routed to cooperatives with verified capacity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 2: WEAVER DASHBOARD (The Voice-First Marvel) -->
+        <section id="view-weaver" class="view-section max-w-5xl mx-auto">
+            <div class="flex items-center justify-between mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Enterprise Dashboard</h1>
-                    <p class="text-slate-500 text-sm mt-1">Live overview of the WeaveAhead full-stack environment.</p>
+                    <h2 class="text-4xl font-bold">Cooperative Command</h2>
+                    <p class="text-slate-500 mt-2">Varanasi Hub • ID: WV-9920</p>
                 </div>
-                <button onclick="simulateNetworkTraffic()" class="bg-weave-primary hover:bg-indigo-700 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-all shadow-md">
-                    Trigger Global Sync
-                </button>
+                <div class="text-right">
+                    <div class="text-3xl font-bold text-wa-saffron">₹4,20,500</div>
+                    <div class="text-xs font-bold text-slate-400 uppercase">Monthly Yield</div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
-                
-                <!-- Frontend State View -->
-                <div class="lg:col-span-2 flex flex-col gap-6">
-                    <!-- Live Stats -->
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="glass-card p-5 rounded-2xl">
-                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Active Threads</div>
-                            <div class="text-3xl font-bold text-slate-900" id="stat-threads">48,291</div>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl">
-                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Network Health</div>
-                            <div class="text-3xl font-bold text-green-500">99.9%</div>
-                        </div>
-                        <div class="glass-card p-5 rounded-2xl">
-                            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Global Nodes</div>
-                            <div class="text-3xl font-bold text-weave-secondary">142</div>
-                        </div>
-                    </div>
-
-                    <!-- Client Document Store (Database Simulation) -->
-                    <div class="glass-card flex-1 rounded-2xl p-6 flex flex-col min-h-[300px]">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-slate-900">NoSQL Document State (Client View)</h3>
-                            <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded font-mono">collection: weave_nodes</span>
-                        </div>
-                        <div class="bg-white rounded-xl border border-slate-200 p-4 flex-1 overflow-auto">
-                            <pre id="json-store" class="font-mono text-xs text-slate-700 leading-relaxed"></pre>
-                        </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- AI Voice Forecast -->
+                <div class="glass-ultra p-8 rounded-3xl relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
+                    
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">AI Demand Alert</h3>
+                    <p id="forecast-text" class="text-2xl font-medium leading-relaxed text-slate-800 mb-8">
+                        "High demand expected for Zari weaves next week. Suggest securing raw silk threads immediately."
+                    </p>
+                    
+                    <div class="flex gap-4">
+                        <button onclick="playTTS('hi')" class="flex-1 bg-white/80 hover:bg-white text-wa-navy py-4 rounded-2xl font-bold shadow-sm transition flex items-center justify-center gap-2 border border-slate-100">
+                            🔊 Play in Hindi
+                        </button>
+                        <button onclick="playTTS('bn')" class="flex-1 bg-white/80 hover:bg-white text-wa-navy py-4 rounded-2xl font-bold shadow-sm transition flex items-center justify-center gap-2 border border-slate-100">
+                            🔊 Play in Bengali
+                        </button>
                     </div>
                 </div>
 
-                <!-- Backend Server Terminal View -->
-                <div class="bg-weave-dark rounded-2xl p-6 flex flex-col shadow-2xl border border-slate-700 min-h-[400px]">
-                    <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4">
-                        <h3 class="font-bold text-white text-sm tracking-wide">Node.js API Terminal</h3>
-                        <div class="flex gap-2">
-                            <span class="w-3 h-3 bg-red-500 rounded-full"></span>
-                            <span class="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                            <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                <!-- Live Voice STT Update -->
+                <div class="glass-ultra p-8 rounded-3xl bg-wa-navy text-white shadow-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                    
+                    <div class="relative z-10 flex flex-col h-full">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Voice Status Update</h3>
+                        
+                        <div class="flex-1 flex flex-col items-center justify-center mb-6">
+                            <button id="mic-btn" onclick="toggleListening()" class="w-24 h-24 rounded-full bg-wa-saffron flex items-center justify-center shadow-[0_0_40px_rgba(255,153,51,0.4)] hover:scale-105 transition-all">
+                                <svg width="32" height="32" fill="none" stroke="white" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+                            </button>
+                            
+                            <!-- Visualizer -->
+                            <div id="visualizer" class="h-12 mt-6 flex items-end justify-center opacity-0 transition-opacity">
+                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-700 min-h-[80px]">
+                            <div class="text-xs text-wa-saffron font-bold mb-1">LIVE TRANSCRIPT:</div>
+                            <div id="transcript" class="text-sm text-slate-300 font-mono">Press mic to speak order status...</div>
                         </div>
                     </div>
-                    <div id="server-logs" class="flex-1 font-mono text-[11px] overflow-auto space-y-1.5 text-green-400 whitespace-pre-wrap">
-                        <div class="text-slate-400">[SYSTEM] WeaveAhead Backend v2.4.1 Initialized</div>
-                        <div class="text-slate-400">[DB] MongoDB Cluster Connection Established</div>
-                        <div class="text-slate-400">[INFO] Listening on Port 443 (HTTPS)</div>
-                    </div>
                 </div>
-
             </div>
-        </div>
+        </section>
+
+        <!-- MODULE 3: GLOBAL CATALOGUE (Apple-Style Grid) -->
+        <section id="view-catalogue" class="view-section">
+            <div class="flex justify-between items-end mb-10">
+                <h2 class="text-4xl font-bold">National Catalogue</h2>
+                <div class="flex gap-2">
+                    <span class="px-4 py-2 bg-white rounded-full text-sm font-semibold shadow-sm border border-slate-200">B2B Mode</span>
+                    <span class="px-4 py-2 bg-wa-navy text-white rounded-full text-sm font-semibold shadow-sm">Retail Mode</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Item 1 -->
+                <div class="group bg-white rounded-[2rem] p-4 shadow-sm border border-slate-100 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 cursor-pointer">
+                    <div class="h-64 bg-slate-100 rounded-[1.5rem] mb-6 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-200 opacity-50 group-hover:scale-110 transition-transform duration-700"></div>
+                        <div class="absolute top-4 left-4 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-wa-saffron">VARANASI, UP</div>
+                    </div>
+                    <div class="px-2 pb-2">
+                        <h4 class="font-bold text-2xl mb-1 text-slate-900">Banarasi Zari Brocade</h4>
+                        <p class="text-slate-500 text-sm mb-4">100% Pure Silk • Authenticity Verified</p>
+                        <div class="flex justify-between items-center border-t border-slate-100 pt-4">
+                            <span class="font-bold text-xl">₹4,500</span>
+                            <button class="bg-slate-100 hover:bg-wa-navy hover:text-white px-4 py-2 rounded-full text-sm font-bold transition-colors">Request Bulk</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more cards as needed -->
+            </div>
+        </section>
+
     </main>
 
-    <!-- FULL STACK LOGIC SCRIPT -->
     <script>
-        // Simulated Database State for WeaveAhead
-        const Database = {
-            active_nodes: [
-                { node_id: "WA-EU-01", region: "Frankfurt", load: "42%", status: "Optimized" },
-                { node_id: "WA-US-EAST", region: "Virginia", load: "78%", status: "Scaling" },
-                { node_id: "WA-AP-01", region: "Tokyo", load: "21%", status: "Idle" }
-            ],
-            system_metrics: {
-                encryption_protocol: "AES-256",
-                last_sync: new Date().toISOString()
-            }
-        };
-
-        // Initialize UI
-        window.onload = () => {
-            updateDatabaseView();
-        };
-
-        // Router Logic (Switching between PPT-style Website and App Portal)
-        function switchView(viewName) {
-            const corpView = document.getElementById('view-corporate');
-            const portalView = document.getElementById('view-portal');
-            const corpLinks = document.querySelectorAll('.corporate-link');
-            
-            if (viewName === 'corporate') {
-                corpView.classList.remove('hidden');
-                portalView.classList.add('hidden');
-                corpLinks.forEach(link => link.style.display = 'block');
-                document.body.style.overflowY = 'auto'; // Re-enable scrolling
-            } else {
-                corpView.classList.add('hidden');
-                portalView.classList.remove('hidden');
-                corpLinks.forEach(link => link.style.display = 'none');
-                document.body.style.overflowY = 'hidden'; // Lock scrolling for dashboard feel
-                logToServer("GET /api/v1/dashboard - 200 OK");
-            }
-        }
-
-        // Backend Logging Simulator
-        function logToServer(message, type = "INFO") {
-            const logs = document.getElementById('server-logs');
-            const time = new Date().toISOString().split('T')[1].substring(0,12);
-            let color = "text-green-400"; // Default
-            if(type === "WARN") color = "text-yellow-400";
-            if(type === "ACTION") color = "text-sky-400";
-            
-            logs.innerHTML += `<div><span class="text-slate-500">[${time}]</span> <span class="${color}">${message}</span></div>`;
-            logs.scrollTop = logs.scrollHeight;
-        }
-
-        // Update Frontend JSON Viewer
-        function updateDatabaseView() {
-            document.getElementById('json-store').innerText = JSON.stringify(Database, null, 4);
-        }
-
-        // Full Stack Interaction Simulation
-        function simulateNetworkTraffic() {
-            // 1. Client Action logged
-            logToServer("POST /api/v1/network/sync - Initiating global weave...", "ACTION");
-            
-            const regions = ["Mumbai", "London", "Sydney", "Singapore", "Sao Paulo"];
-            const newRegion = regions[Math.floor(Math.random() * regions.length)];
-            const newNodeId = `WA-${newRegion.substring(0,2).toUpperCase()}-${Math.floor(Math.random() * 99)}`;
-            
-            // 2. Animate stat change
-            let threads = parseInt(document.getElementById('stat-threads').innerText.replace(',', ''));
-            document.getElementById('stat-threads').innerText = (threads + Math.floor(Math.random() * 500)).toLocaleString();
-
+        // Router
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Small timeout to allow display block to apply before opacity fades in
             setTimeout(() => {
-                // 3. Database Update
-                Database.active_nodes.unshift({
-                    node_id: newNodeId,
-                    region: newRegion,
-                    load: Math.floor(Math.random() * 80 + 10) + "%",
-                    status: "Connecting..."
-                });
-                Database.system_metrics.last_sync = new Date().toISOString();
+                document.getElementById(`view-${viewId}`).classList.add('active');
+            }, 50);
+            window.scrollTo(0,0);
+        }
+
+        // --- Voice TTS Simulation (Advanced Tier) ---
+        function playTTS(lang) {
+            const strings = {
+                'hi': "आगामी त्योहारों के कारण अगले सप्ताह बनारसी बुनाई की उच्च मांग की उम्मीद है।",
+                'bn': "আসন্ন উৎসবের কারণে আগামী সপ্তাহে বেনারসি তাঁতের উচ্চ চাহিদার আশা করা হচ্ছে।"
+            };
+            
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "🔊 Playing...";
+            btn.classList.add('bg-wa-saffron', 'text-white');
+            
+            document.getElementById('forecast-text').innerText = strings[lang];
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(strings[lang]);
+                u.lang = lang === 'hi' ? 'hi-IN' : 'bn-IN';
+                u.onend = () => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-wa-saffron', 'text-white');
+                };
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        // --- Voice STT Simulation (WebSocket Visualizer effect) ---
+        let isListening = false;
+        function toggleListening() {
+            const visualizer = document.getElementById('visualizer');
+            const transcript = document.getElementById('transcript');
+            const micBtn = document.getElementById('mic-btn');
+            
+            isListening = !isListening;
+
+            if(isListening) {
+                visualizer.classList.add('listening');
+                visualizer.style.opacity = '1';
+                micBtn.classList.replace('bg-wa-saffron', 'bg-red-500');
+                micBtn.classList.add('animate-pulse');
                 
-                // 4. Update UI & Log
-                updateDatabaseView();
-                logToServer(`[DB Write] Node provisioned successfully: ${newNodeId}`, "INFO");
+                transcript.innerHTML = "<span class='text-slate-400'>[WebSocket Connected] Listening...</span>";
                 
-                // Resolve connection status after delay
+                // Simulate STT Stream
+                setTimeout(() => transcript.innerHTML = "Order number...", 1000);
+                setTimeout(() => transcript.innerHTML = "Order number 102...", 1800);
                 setTimeout(() => {
-                    Database.active_nodes[0].status = "Optimized";
-                    updateDatabaseView();
-                    logToServer(`[SYS] Node ${newNodeId} active and participating in weave.`, "INFO");
-                }, 1500);
-                
-            }, 800);
+                    transcript.innerHTML = "<span class='text-wa-saffron font-bold'>Order number 102 is packed and ready.</span><br><span class='text-green-400 text-xs mt-1 block'>✓ SYSTEM INTENT: UPDATE_STATUS_READY</span>";
+                    toggleListening(); // Auto turn off
+                }, 3000);
+            } else {
+                visualizer.classList.remove('listening');
+                visualizer.style.opacity = '0';
+                micBtn.classList.replace('bg-red-500', 'bg-wa-saffron');
+                micBtn.classList.remove('animate-pulse');
+            }
         }
     </script>
 </body>
 </html>
-</html>
-
-
