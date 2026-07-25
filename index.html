@@ -1,284 +1,172 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth antialiased">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WeaveAhead | The National Fabric</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'Roboto', 'sans-serif'] },
-                    colors: {
-                        wa: { saffron: '#ff9933', navy: '#0f172a', green: '#138808', glass: 'rgba(255, 255, 255, 0.65)' }
-                    },
-                    animation: { 'spin-slow': 'spin 8s linear infinite', 'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
-                }
-            }
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeaveAhead — National Platform</title>
     <style>
-        body { 
-            background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(28, 100%, 74%, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(116, 100%, 74%, 0.1) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, hsla(215, 100%, 74%, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
+        :root {
+            --primary: #800020;
+            --secondary: #D4AF37;
+            --bg-light: #F9F8F6;
+            --text-dark: #2C2C2C;
+            --card-bg: #FFFFFF;
         }
-        
-        .glass-ultra {
-            background: var(--tw-colors-wa-glass);
-            backdrop-filter: saturate(180%) blur(24px);
-            -webkit-backdrop-filter: saturate(180%) blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
         }
-
-        .view-section { display: none; opacity: 0; transform: translateY(15px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
-
-        /* Voice Visualizer Bars */
-        .bar { width: 4px; background: #ff9933; border-radius: 4px; display: inline-block; margin: 0 2px; height: 10px; transition: height 0.1s ease; }
-        .listening .bar:nth-child(1) { animation: bounce 1s infinite 0.1s; }
-        .listening .bar:nth-child(2) { animation: bounce 1s infinite 0.2s; }
-        .listening .bar:nth-child(3) { animation: bounce 1s infinite 0.3s; }
-        .listening .bar:nth-child(4) { animation: bounce 1s infinite 0.4s; }
-        .listening .bar:nth-child(5) { animation: bounce 1s infinite 0.5s; }
-        
-        @keyframes bounce { 0%, 100% { height: 10px; } 50% { height: 35px; } }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--secondary);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 600;
+        }
+        nav a:hover {
+            color: var(--secondary);
+        }
+        .hero {
+            background: linear-gradient(rgba(128,0,32,0.85), rgba(128,0,32,0.85));
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .section-title {
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .btn {
+            background-color: var(--secondary);
+            color: var(--text-dark);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        .btn:hover {
+            background-color: #c19b2e;
+        }
+        footer {
+            background-color: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
     </style>
 </head>
-<body class="text-slate-900 min-h-screen flex flex-col selection:bg-wa-saffron selection:text-white">
+<body>
 
-    <!-- NATIONAL NAVIGATION -->
-    <header class="glass-ultra fixed top-0 w-full z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('home')">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-wa-saffron to-orange-400 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M4 19a2 2 0 1 0 4 0a2 2 0 0 0-4 0"/><path d="M16 5a2 2 0 1 0 4 0a2 2 0 0 0-4 0"/><path d="M6 5h10"/><path d="M6 19h10"/><path d="M6 12h10"/><path d="M8 5v14"/><path d="M16 5v14"/></svg>
-                </div>
-                <span class="text-2xl font-bold tracking-tight">Weave<span class="font-light">Ahead</span></span>
-            </div>
-            
-            <!-- Live Ticker -->
-            <div class="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-white/50 rounded-full border border-white text-xs font-semibold text-slate-500">
-                <span class="w-2 h-2 rounded-full bg-wa-green animate-pulse-fast"></span>
-                LIVE CLUSTERS: 142 | ACTIVE WEAVERS: 12,450
-            </div>
-
-            <nav class="hidden md:flex gap-2">
-                <button onclick="switchView('catalogue')" class="px-5 py-2 rounded-full text-sm font-semibold hover:bg-white/60 transition">Global Catalogue</button>
-                <button onclick="switchView('weaver')" class="ml-2 bg-wa-navy text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl hover:bg-slate-800 transition transform hover:scale-105">
-                    Weaver Portal
-                </button>
-            </nav>
-        </div>
+    <header>
+        <h1>WeaveAhead</h1>
+        <nav>
+            <a href="#catalogue">Buyer Catalogue</a>
+            <a href="#directory">Weaver Directory</a>
+            <a href="#corporate">Corporate Gifting</a>
+        </nav>
     </header>
 
-    <main class="flex-1 w-full max-w-7xl mx-auto px-6 pt-32 pb-20">
-        
-        <!-- MODULE 1: THE NATIONAL PLATFORM (HOME) -->
-        <section id="view-home" class="view-section active text-center">
-            <div class="inline-block px-5 py-1.5 rounded-full bg-orange-100 text-wa-saffron text-xs font-bold tracking-widest mb-8 border border-orange-200">
-                GOVERNMENT & ENTERPRISE INTEGRATED
-            </div>
-            <h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter mb-6 leading-tight">
-                The Digital Loom <br>of <span class="text-transparent bg-clip-text bg-gradient-to-r from-wa-saffron to-wa-green">Modern India.</span>
-            </h1>
-            <p class="text-xl text-slate-500 max-w-2xl mx-auto mb-12">
-                An intelligent, voice-first network connecting regional handloom cooperatives directly to global buyers and B2B corporate streams.
-            </p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 text-left">
-                <!-- Feature Cards -->
-                <div class="glass-ultra p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-orange-100 text-wa-saffron flex items-center justify-center mb-6">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Predictive Forecasting</h3>
-                    <p class="text-slate-500 text-sm">AI models analyze global trends to alert weavers of demand spikes before they happen.</p>
+    <div class="hero">
+        <h2>Empowering Weavers with Voice & AI</h2>
+        <p>Connecting regional handloom cooperatives directly with global buyers and demand forecasts.</p>
+        <a href="#corporate" class="btn">Explore Corporate Portal</a>
+    </div>
+
+    <div class="container">
+        <!-- Buyer Catalogue Section -->
+        <section id="catalogue">
+            <h2 class="section-title">Buyer Catalogue & Regional Discoveries[span_12](start_span)[span_12](end_span)</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Banarasi Silk Sarees</h3>
+                    <p><strong>Region:</strong> Uttar Pradesh[span_13](start_span)[span_13](end_span)</p>
+                    <p>Hand-woven zari work crafted by master artisan cooperatives.</p>
                 </div>
-                <div class="glass-ultra p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 border-t-4 border-t-wa-navy">
-                    <div class="w-12 h-12 rounded-2xl bg-slate-100 text-wa-navy flex items-center justify-center mb-6">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20zM12 16v-4M12 8h.01"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Native Voice Layer</h3>
-                    <p class="text-slate-500 text-sm">No typing required. Weavers update statuses and receive alerts via regional voice STT/TTS.</p>
+                <div class="card">
+                    <h3>Sambalpuri Ikat</h3>
+                    <p><strong>Region:</strong> Odisha[span_14](start_span)[span_14](end_span)</p>
+                    <p>Traditional tie-dye technique featuring rich cultural motifs.</p>
                 </div>
-                <div class="glass-ultra p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300">
-                    <div class="w-12 h-12 rounded-2xl bg-green-100 text-wa-green flex items-center justify-center mb-6">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Corporate Routing</h3>
-                    <p class="text-slate-500 text-sm">Bulk B2B orders are algorithmically routed to cooperatives with verified capacity.</p>
+                <div class="card">
+                    <h3>Kanjeevaram Silk</h3>
+                    <p><strong>Region:</strong> Tamil Nadu[span_15](start_span)[span_15](end_span)</p>
+                    <p>Pure mulberry silk with distinct contrasting borders.</p>
                 </div>
             </div>
         </section>
 
-        <!-- MODULE 2: WEAVER DASHBOARD (The Voice-First Marvel) -->
-        <section id="view-weaver" class="view-section max-w-5xl mx-auto">
-            <div class="flex items-center justify-between mb-8">
-                <div>
-                    <h2 class="text-4xl font-bold">Cooperative Command</h2>
-                    <p class="text-slate-500 mt-2">Varanasi Hub • ID: WV-9920</p>
-                </div>
-                <div class="text-right">
-                    <div class="text-3xl font-bold text-wa-saffron">₹4,20,500</div>
-                    <div class="text-xs font-bold text-slate-400 uppercase">Monthly Yield</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- AI Voice Forecast -->
-                <div class="glass-ultra p-8 rounded-3xl relative overflow-hidden group">
-                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
+        <!-- Corporate Gifting Portal -->
+        <section id="corporate" style="margin-top: 4rem;">
+            <h2 class="section-title">Corporate Gifting Portal[span_16](start_span)[span_16](end_span)</h2>
+            <div class="card" style="max-width: 600px; margin: 0 auto; border-top-color: var(--secondary);">
+                <h3>Bulk B2B Order Submission</h3>
+                <form onsubmit="event.preventDefault(); alert('Order submitted and matched to cluster via backend API!');">
+                    <label>Company Name:</label><br>
+                    <input type="text" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0 1rem 0;" required><br>
                     
-                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">AI Demand Alert</h3>
-                    <p id="forecast-text" class="text-2xl font-medium leading-relaxed text-slate-800 mb-8">
-                        "High demand expected for Zari weaves next week. Suggest securing raw silk threads immediately."
-                    </p>
+                    <label>Craft Type & Region:</label><br>
+                    <input type="text" placeholder="e.g. Ikat / Odisha" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0 1rem 0;" required><br>
                     
-                    <div class="flex gap-4">
-                        <button onclick="playTTS('hi')" class="flex-1 bg-white/80 hover:bg-white text-wa-navy py-4 rounded-2xl font-bold shadow-sm transition flex items-center justify-center gap-2 border border-slate-100">
-                            🔊 Play in Hindi
-                        </button>
-                        <button onclick="playTTS('bn')" class="flex-1 bg-white/80 hover:bg-white text-wa-navy py-4 rounded-2xl font-bold shadow-sm transition flex items-center justify-center gap-2 border border-slate-100">
-                            🔊 Play in Bengali
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Live Voice STT Update -->
-                <div class="glass-ultra p-8 rounded-3xl bg-wa-navy text-white shadow-2xl relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                    <label>Quantity Required:</label><br>
+                    <input type="number" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0 1rem 0;" required><br>
                     
-                    <div class="relative z-10 flex flex-col h-full">
-                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Voice Status Update</h3>
-                        
-                        <div class="flex-1 flex flex-col items-center justify-center mb-6">
-                            <button id="mic-btn" onclick="toggleListening()" class="w-24 h-24 rounded-full bg-wa-saffron flex items-center justify-center shadow-[0_0_40px_rgba(255,153,51,0.4)] hover:scale-105 transition-all">
-                                <svg width="32" height="32" fill="none" stroke="white" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
-                            </button>
-                            
-                            <!-- Visualizer -->
-                            <div id="visualizer" class="h-12 mt-6 flex items-end justify-center opacity-0 transition-opacity">
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-800/80 backdrop-blur-md p-4 rounded-2xl border border-slate-700 min-h-[80px]">
-                            <div class="text-xs text-wa-saffron font-bold mb-1">LIVE TRANSCRIPT:</div>
-                            <div id="transcript" class="text-sm text-slate-300 font-mono">Press mic to speak order status...</div>
-                        </div>
-                    </div>
-                </div>
+                    <button type="submit" class="btn" style="width: 100%;">Submit & Auto-Match Cluster</button>
+                </form>
             </div>
         </section>
+    </div>
 
-        <!-- MODULE 3: GLOBAL CATALOGUE (Apple-Style Grid) -->
-        <section id="view-catalogue" class="view-section">
-            <div class="flex justify-between items-end mb-10">
-                <h2 class="text-4xl font-bold">National Catalogue</h2>
-                <div class="flex gap-2">
-                    <span class="px-4 py-2 bg-white rounded-full text-sm font-semibold shadow-sm border border-slate-200">B2B Mode</span>
-                    <span class="px-4 py-2 bg-wa-navy text-white rounded-full text-sm font-semibold shadow-sm">Retail Mode</span>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Item 1 -->
-                <div class="group bg-white rounded-[2rem] p-4 shadow-sm border border-slate-100 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 cursor-pointer">
-                    <div class="h-64 bg-slate-100 rounded-[1.5rem] mb-6 overflow-hidden relative">
-                        <div class="absolute inset-0 bg-gradient-to-br from-orange-100 to-orange-200 opacity-50 group-hover:scale-110 transition-transform duration-700"></div>
-                        <div class="absolute top-4 left-4 bg-white/80 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-wa-saffron">VARANASI, UP</div>
-                    </div>
-                    <div class="px-2 pb-2">
-                        <h4 class="font-bold text-2xl mb-1 text-slate-900">Banarasi Zari Brocade</h4>
-                        <p class="text-slate-500 text-sm mb-4">100% Pure Silk • Authenticity Verified</p>
-                        <div class="flex justify-between items-center border-t border-slate-100 pt-4">
-                            <span class="font-bold text-xl">₹4,500</span>
-                            <button class="bg-slate-100 hover:bg-wa-navy hover:text-white px-4 py-2 rounded-full text-sm font-bold transition-colors">Request Bulk</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more cards as needed -->
-            </div>
-        </section>
+    <footer>
+        <p>&copy; 2026 WeaveAhead National Platform. Powered by FastAPI[span_17](start_span)[span_17](end_span).</p>
+    </footer>
 
-    </main>
-
-    <script>
-        // Router
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.remove('active');
-            });
-            // Small timeout to allow display block to apply before opacity fades in
-            setTimeout(() => {
-                document.getElementById(`view-${viewId}`).classList.add('active');
-            }, 50);
-            window.scrollTo(0,0);
-        }
-
-        // --- Voice TTS Simulation (Advanced Tier) ---
-        function playTTS(lang) {
-            const strings = {
-                'hi': "आगामी त्योहारों के कारण अगले सप्ताह बनारसी बुनाई की उच्च मांग की उम्मीद है।",
-                'bn': "আসন্ন উৎসবের কারণে আগামী সপ্তাহে বেনারসি তাঁতের উচ্চ চাহিদার আশা করা হচ্ছে।"
-            };
-            
-            const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "🔊 Playing...";
-            btn.classList.add('bg-wa-saffron', 'text-white');
-            
-            document.getElementById('forecast-text').innerText = strings[lang];
-
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(strings[lang]);
-                u.lang = lang === 'hi' ? 'hi-IN' : 'bn-IN';
-                u.onend = () => {
-                    btn.innerHTML = originalText;
-                    btn.classList.remove('bg-wa-saffron', 'text-white');
-                };
-                window.speechSynthesis.speak(u);
-            }
-        }
-
-        // --- Voice STT Simulation (WebSocket Visualizer effect) ---
-        let isListening = false;
-        function toggleListening() {
-            const visualizer = document.getElementById('visualizer');
-            const transcript = document.getElementById('transcript');
-            const micBtn = document.getElementById('mic-btn');
-            
-            isListening = !isListening;
-
-            if(isListening) {
-                visualizer.classList.add('listening');
-                visualizer.style.opacity = '1';
-                micBtn.classList.replace('bg-wa-saffron', 'bg-red-500');
-                micBtn.classList.add('animate-pulse');
-                
-                transcript.innerHTML = "<span class='text-slate-400'>[WebSocket Connected] Listening...</span>";
-                
-                // Simulate STT Stream
-                setTimeout(() => transcript.innerHTML = "Order number...", 1000);
-                setTimeout(() => transcript.innerHTML = "Order number 102...", 1800);
-                setTimeout(() => {
-                    transcript.innerHTML = "<span class='text-wa-saffron font-bold'>Order number 102 is packed and ready.</span><br><span class='text-green-400 text-xs mt-1 block'>✓ SYSTEM INTENT: UPDATE_STATUS_READY</span>";
-                    toggleListening(); // Auto turn off
-                }, 3000);
-            } else {
-                visualizer.classList.remove('listening');
-                visualizer.style.opacity = '0';
-                micBtn.classList.replace('bg-red-500', 'bg-wa-saffron');
-                micBtn.classList.remove('animate-pulse');
-            }
-        }
-    </script>
 </body>
 </html>
