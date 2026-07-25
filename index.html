@@ -1,172 +1,354 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead — National Platform</title>
-    <style>
-        :root {
-            --primary: #800020;
-            --secondary: #D4AF37;
-            --bg-light: #F9F8F6;
-            --text-dark: #2C2C2C;
-            --card-bg: #FFFFFF;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-        }
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid var(--secondary);
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 600;
-        }
-        nav a:hover {
-            color: var(--secondary);
-        }
-        .hero {
-            background: linear-gradient(rgba(128,0,32,0.85), rgba(128,0,32,0.85));
-            color: white;
-            text-align: center;
-            padding: 5rem 2rem;
-        }
-        .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--secondary);
-        }
-        .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .section-title {
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--primary);
-        }
-        .card h3 {
-            margin-top: 0;
-            color: var(--primary);
-        }
-        .btn {
-            background-color: var(--secondary);
-            color: var(--text-dark);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-        }
-        .btn:hover {
-            background-color: #c19b2e;
-        }
-        footer {
-            background-color: var(--text-dark);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeaveAhead</title>
+<style>
+  :root{
+    --terracotta:#B85042; --terracotta-dark:#A5443A; --sand:#E7E8D1;
+    --sage:#A7BEAE; --dark:#3A2B26; --cream:#FBF8F3; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Segoe UI', Calibri, sans-serif; background:var(--cream); color:var(--dark);
+  }
+  header{
+    background:var(--terracotta); color:var(--white); padding:1.2rem 2rem;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+  }
+  header h1{font-family:Georgia, 'Times New Roman', serif; font-size:1.8rem;}
+  nav{display:flex; gap:0.5rem; flex-wrap:wrap;}
+  nav button{
+    background:var(--terracotta-dark); color:var(--white); border:none; padding:0.6rem 1.1rem;
+    border-radius:6px; cursor:pointer; font-size:0.95rem;
+  }
+  nav button.active{background:var(--sand); color:var(--dark); font-weight:bold;}
+  main{max-width:1100px; margin:0 auto; padding:2rem;}
+  .tab{display:none;}
+  .tab.active{display:block;}
+  .hero{
+    background:var(--terracotta); color:var(--white); border-radius:14px; padding:2.5rem;
+    margin-bottom:2rem;
+  }
+  .hero h2{font-family:Georgia, serif; font-size:2rem; margin-bottom:0.5rem;}
+  .stats{display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap;}
+  .stat-box{background:var(--terracotta-dark); border-radius:10px; padding:1rem 1.5rem; min-width:140px;}
+  .stat-box .num{font-size:1.8rem; font-weight:bold;}
+  .stat-box .label{font-size:0.85rem; opacity:0.85;}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:1.2rem;}
+  .card{
+    background:var(--white); border:1px solid var(--sand); border-radius:12px; padding:1.2rem;
+  }
+  .card h3{font-size:1.05rem; margin-bottom:0.4rem;}
+  .card .price{color:var(--terracotta); font-weight:bold; font-size:1.1rem; margin:0.5rem 0;}
+  .card .meta{font-size:0.82rem; color:#6a5a52; margin-bottom:0.3rem;}
+  select, input, textarea{
+    width:100%; padding:0.6rem; border:1px solid var(--sand); border-radius:6px; margin-bottom:1rem;
+    font-family:inherit; font-size:0.95rem; background:var(--white); color:var(--dark);
+  }
+  label{font-weight:bold; font-size:0.9rem; display:block; margin-bottom:0.3rem;}
+  button.action{
+    background:var(--terracotta); color:var(--white); border:none; padding:0.7rem 1.3rem;
+    border-radius:6px; cursor:pointer; font-size:0.95rem;
+  }
+  button.action:hover{background:var(--terracotta-dark);}
+  .section-title{font-family:Georgia, serif; font-size:1.5rem; margin:1.5rem 0 1rem; border-bottom:2px solid var(--sage); padding-bottom:0.5rem;}
+  .forecast-item{
+    background:var(--white); border-left:5px solid var(--terracotta); border-radius:8px;
+    padding:1rem; margin-bottom:0.8rem;
+  }
+  .order-row{
+    display:flex; justify-content:space-between; align-items:center; background:var(--white);
+    border-radius:8px; padding:0.9rem 1.2rem; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.5rem;
+  }
+  .badge{
+    padding:0.25rem 0.7rem; border-radius:20px; font-size:0.8rem; font-weight:bold; color:var(--white);
+    white-space:nowrap;
+  }
+  .badge.pending{background:#B0A08C;}
+  .badge.accepted{background:#7A9EB8;}
+  .badge.in_progress{background:var(--terracotta);}
+  .badge.ready{background:#5C8A6A;}
+  .badge.delivered{background:var(--sage); color:var(--dark);}
+  .badge.cancelled{background:#8A5C5C;}
+  .response-box{
+    background:var(--sand); border-radius:8px; padding:1rem; margin-top:1rem; display:none;
+  }
+  .empty, .error-msg{color:#8a7a70; font-style:italic;}
+  footer{text-align:center; padding:2rem; font-size:0.85rem; color:#8a7a70;}
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>WeaveAhead</h1>
-        <nav>
-            <a href="#catalogue">Buyer Catalogue</a>
-            <a href="#directory">Weaver Directory</a>
-            <a href="#corporate">Corporate Gifting</a>
-        </nav>
-    </header>
+<header>
+  <h1>WeaveAhead</h1>
+  <nav>
+    <button class="tab-btn active" data-tab="home">Home</button>
+    <button class="tab-btn" data-tab="catalogue">Catalogue</button>
+    <button class="tab-btn" data-tab="weaver">Weaver Dashboard</button>
+    <button class="tab-btn" data-tab="corporate">Corporate Gifting</button>
+  </nav>
+</header>
 
+<main>
+
+  <!-- HOME -->
+  <section id="home" class="tab active">
     <div class="hero">
-        <h2>Empowering Weavers with Voice & AI</h2>
-        <p>Connecting regional handloom cooperatives directly with global buyers and demand forecasts.</p>
-        <a href="#corporate" class="btn">Explore Corporate Portal</a>
+      <h2>AI-Powered Demand Forecasting for Handloom Weavers</h2>
+      <p>Helping India's handloom weavers see tomorrow's demand today.</p>
+      <div class="stats" id="stats-box"></div>
     </div>
+  </section>
 
-    <div class="container">
-        <!-- Buyer Catalogue Section -->
-        <section id="catalogue">
-            <h2 class="section-title">Buyer Catalogue & Regional Discoveries[span_12](start_span)[span_12](end_span)</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3>Banarasi Silk Sarees</h3>
-                    <p><strong>Region:</strong> Uttar Pradesh[span_13](start_span)[span_13](end_span)</p>
-                    <p>Hand-woven zari work crafted by master artisan cooperatives.</p>
-                </div>
-                <div class="card">
-                    <h3>Sambalpuri Ikat</h3>
-                    <p><strong>Region:</strong> Odisha[span_14](start_span)[span_14](end_span)</p>
-                    <p>Traditional tie-dye technique featuring rich cultural motifs.</p>
-                </div>
-                <div class="card">
-                    <h3>Kanjeevaram Silk</h3>
-                    <p><strong>Region:</strong> Tamil Nadu[span_15](start_span)[span_15](end_span)</p>
-                    <p>Pure mulberry silk with distinct contrasting borders.</p>
-                </div>
-            </div>
-        </section>
+  <!-- CATALOGUE -->
+  <section id="catalogue" class="tab">
+    <div class="section-title">Buyer Catalogue</div>
+    <label for="catalogue-region-filter">Filter by Region</label>
+    <select id="catalogue-region-filter">
+      <option value="">All Regions</option>
+    </select>
+    <div class="grid" id="catalogue-grid"></div>
+  </section>
 
-        <!-- Corporate Gifting Portal -->
-        <section id="corporate" style="margin-top: 4rem;">
-            <h2 class="section-title">Corporate Gifting Portal[span_16](start_span)[span_16](end_span)</h2>
-            <div class="card" style="max-width: 600px; margin: 0 auto; border-top-color: var(--secondary);">
-                <h3>Bulk B2B Order Submission</h3>
-                <form onsubmit="event.preventDefault(); alert('Order submitted and matched to cluster via backend API!');">
-                    <label>Company Name:</label><br>
-                    <input type="text" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0 1rem 0;" required><br>
-                    
-                    <label>Craft Type & Region:</label><br>
-                    <input type="text" placeholder="e.g. Ikat / Odisha" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0 1rem 0;" required><br>
-                    
-                    <label>Quantity Required:</label><br>
-                    <input type="number" style="width: 100%; padding: 0.5rem; margin: 0.5rem 0 1rem 0;" required><br>
-                    
-                    <button type="submit" class="btn" style="width: 100%;">Submit & Auto-Match Cluster</button>
-                </form>
-            </div>
-        </section>
-    </div>
+  <!-- WEAVER DASHBOARD -->
+  <section id="weaver" class="tab">
+    <div class="section-title">Weaver Dashboard</div>
+    <label for="weaver-select">Select Weaver</label>
+    <select id="weaver-select"></select>
 
-    <footer>
-        <p>&copy; 2026 WeaveAhead National Platform. Powered by FastAPI[span_17](start_span)[span_17](end_span).</p>
-    </footer>
+    <div class="section-title">This Week's Forecast</div>
+    <div id="forecast-box"></div>
+
+    <div class="section-title">Orders</div>
+    <div id="orders-box"></div>
+  </section>
+
+  <!-- CORPORATE -->
+  <section id="corporate" class="tab">
+    <div class="section-title">Corporate Gifting — Bulk Order</div>
+    <form id="corporate-form">
+      <label for="co-name">Company Name</label>
+      <input type="text" id="co-name" required>
+
+      <label for="co-email">Contact Email</label>
+      <input type="email" id="co-email" required>
+
+      <label for="co-category">Product Category</label>
+      <select id="co-category">
+        <option value="Saree">Saree</option>
+        <option value="Stole">Stole</option>
+        <option value="Home Furnishing">Home Furnishing</option>
+        <option value="Daily Use">Daily Use</option>
+        <option value="Wedding Card Cover">Wedding Card Cover</option>
+        <option value="Greeting Card">Greeting Card</option>
+        <option value="Corporate Gift">Corporate Gift</option>
+      </select>
+
+      <label for="co-qty">Quantity</label>
+      <input type="number" id="co-qty" min="1" required>
+
+      <label for="co-deadline">Deadline</label>
+      <input type="date" id="co-deadline" required>
+
+      <label for="co-region">Region Preference (optional)</label>
+      <input type="text" id="co-region" placeholder="e.g. Odisha">
+
+      <label for="co-notes">Customization Notes (optional)</label>
+      <textarea id="co-notes" rows="3"></textarea>
+
+      <button type="submit" class="action">Submit Order</button>
+    </form>
+    <div class="response-box" id="corporate-response"></div>
+  </section>
+
+</main>
+
+<footer>WeaveAhead prototype — connects to a FastAPI backend at API_BASE below.</footer>
+
+<script>
+  const API_BASE = "http://127.0.0.1:8000"; // change if backend runs elsewhere
+
+  // ---------- Tab switching ----------
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+      if (btn.dataset.tab === "catalogue") loadCatalogue();
+      if (btn.dataset.tab === "weaver") loadWeavers();
+    });
+  });
+
+  // ---------- Home stats ----------
+  async function loadStats() {
+    try {
+      const res = await fetch(`${API_BASE}/api/stats`);
+      if (!res.ok) throw new Error("bad response");
+      const data = await res.json();
+      document.getElementById("stats-box").innerHTML = `
+        <div class="stat-box"><div class="num">${data.weavers_onboarded}</div><div class="label">Weavers Onboarded</div></div>
+        <div class="stat-box"><div class="num">${data.regions_covered}</div><div class="label">Regions Covered</div></div>
+        <div class="stat-box"><div class="num">${data.products_listed}</div><div class="label">Products Listed</div></div>
+        <div class="stat-box"><div class="num">${data.orders_in_progress}</div><div class="label">Orders In Progress</div></div>
+      `;
+    } catch (e) {
+      document.getElementById("stats-box").innerHTML = "<p class='error-msg'>Could not load stats — is the backend running?</p>";
+    }
+  }
+
+  // ---------- Catalogue ----------
+  let allProducts = [];
+
+  async function loadCatalogue() {
+    const grid = document.getElementById("catalogue-grid");
+    grid.innerHTML = "Loading...";
+    try {
+      const res = await fetch(`${API_BASE}/api/catalogue`);
+      if (!res.ok) throw new Error("bad response");
+      allProducts = await res.json();
+      populateRegionFilter(allProducts);
+      renderCatalogue(allProducts);
+    } catch (e) {
+      grid.innerHTML = "<p class='error-msg'>Could not load catalogue — is the backend running?</p>";
+    }
+  }
+
+  function populateRegionFilter(products) {
+    const select = document.getElementById("catalogue-region-filter");
+    const regions = [...new Set(products.map(p => p.region))].sort();
+    const current = select.value;
+    select.innerHTML = `<option value="">All Regions</option>` +
+      regions.map(r => `<option value="${r}">${r}</option>`).join("");
+    select.value = current || "";
+  }
+
+  function renderCatalogue(products) {
+    const grid = document.getElementById("catalogue-grid");
+    if (!products.length) {
+      grid.innerHTML = "<p class='empty'>No products found for this filter.</p>";
+      return;
+    }
+    grid.innerHTML = products.map(p => `
+      <div class="card">
+        <h3>${p.name}</h3>
+        <div class="meta">${p.craft_type} · ${p.region}</div>
+        <div class="meta">By ${p.weaver_name}</div>
+        <div class="price">₹${p.price_inr}</div>
+        <div class="meta">${p.in_stock} in stock</div>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("catalogue-region-filter").addEventListener("change", (e) => {
+    const region = e.target.value;
+    const filtered = region ? allProducts.filter(p => p.region === region) : allProducts;
+    renderCatalogue(filtered);
+  });
+
+  // ---------- Weaver dashboard ----------
+  async function loadWeavers() {
+    const select = document.getElementById("weaver-select");
+    try {
+      const res = await fetch(`${API_BASE}/api/weavers`);
+      if (!res.ok) throw new Error("bad response");
+      const weavers = await res.json();
+      if (!weavers.length) {
+        select.innerHTML = "<option>No weavers onboarded yet</option>";
+        return;
+      }
+      select.innerHTML = weavers.map(w => `<option value="${w.id}" data-region="${w.region}">${w.name} — ${w.cooperative}</option>`).join("");
+      loadForecast(weavers[0].region);
+      loadOrders(weavers[0].id);
+      select.onchange = () => {
+        const opt = select.options[select.selectedIndex];
+        loadForecast(opt.dataset.region);
+        loadOrders(opt.value);
+      };
+    } catch (e) {
+      select.innerHTML = "<option>Could not load weavers</option>";
+    }
+  }
+
+  async function loadForecast(region) {
+    const box = document.getElementById("forecast-box");
+    box.innerHTML = "Loading...";
+    try {
+      const res = await fetch(`${API_BASE}/api/forecast/${encodeURIComponent(region)}`);
+      if (!res.ok) throw new Error("bad response");
+      const data = await res.json();
+      box.innerHTML = data.items.map(i => `
+        <div class="forecast-item">
+          <strong>${i.product_category}</strong> — ${i.trending_design}<br>
+          Demand index: ${i.demand_index}/100 · Recommended qty: ${i.recommended_quantity}<br>
+          Restock raw material by: ${i.restock_raw_material_by}
+        </div>
+      `).join("");
+    } catch (e) {
+      box.innerHTML = "<p class='error-msg'>Could not load forecast.</p>";
+    }
+  }
+
+  async function loadOrders(weaverId) {
+    const box = document.getElementById("orders-box");
+    box.innerHTML = "Loading...";
+    try {
+      const res = await fetch(`${API_BASE}/api/weavers/${weaverId}/orders`);
+      if (!res.ok) throw new Error("bad response");
+      const orders = await res.json();
+      box.innerHTML = orders.length ? orders.map(o => `
+        <div class="order-row">
+          <div>${o.product_category} × ${o.quantity} — ${o.buyer_name} (due ${o.deadline})</div>
+          <span class="badge ${o.status}">${o.status}</span>
+        </div>
+      `).join("") : "<p class='empty'>No orders yet.</p>";
+    } catch (e) {
+      box.innerHTML = "<p class='error-msg'>Could not load orders.</p>";
+    }
+  }
+
+  // ---------- Corporate order form ----------
+  document.getElementById("corporate-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = e.target.querySelector("button[type=submit]");
+    submitBtn.disabled = true;
+
+    const payload = {
+      company_name: document.getElementById("co-name").value,
+      contact_email: document.getElementById("co-email").value,
+      product_category: document.getElementById("co-category").value,
+      quantity: parseInt(document.getElementById("co-qty").value, 10),
+      deadline: document.getElementById("co-deadline").value,
+      region_preference: document.getElementById("co-region").value || null,
+      customization_notes: document.getElementById("co-notes").value || null,
+    };
+    const resBox = document.getElementById("corporate-response");
+    resBox.style.display = "block";
+    resBox.innerHTML = "Submitting...";
+    try {
+      const res = await fetch(`${API_BASE}/api/corporate/order`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error("bad response");
+      const data = await res.json();
+      resBox.innerHTML = `<strong>${data.message}</strong><br>
+        Order ID: ${data.order_id}<br>
+        ${data.matched_cooperative ? `Matched cooperative: ${data.matched_cooperative}<br>Estimated ready: ${data.estimated_ready_date}` : ""}`;
+      e.target.reset();
+    } catch (e) {
+      resBox.innerHTML = "Could not submit order — is the backend running?";
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  // ---------- Init ----------
+  loadStats();
+</script>
 
 </body>
 </html>
