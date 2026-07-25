@@ -5,840 +5,1752 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 <title>WeaveAhead — Artisan Real-Time Demand Engine & Full-Stack Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #F8F6F0;
-    --surface: #FFFFFF;
-    --surface-sub: #F0EBE1;
-    --border: #E2DACB;
-    --text-main: #2C2621;
-    --text-muted: #736859;
-    --primary: #9C3B28;
-    --primary-hover: #7C2E1F;
-    --accent: #D69E2E;
-    --success: #276749;
-    --success-bg: #E6FFFA;
-    --danger: #9B2C2C;
-    --danger-bg: #FFF5F5;
-    --warning-bg: #FEFCBF;
-    --warning-text: #744210;
-    --radius: 14px;
-    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+:root {
+--bg: #F8F6F0;
+--surface: #FFFFFF;
+--surface-sub: #F0EBE1;
+--border: #E2DACB;
+--text-main: #2C2621;
+--text-muted: #736859;
+--primary: #9C3B28;
+--primary-hover: #7C2E1F;
+--accent: #D69E2E;
+--success: #276749;
+--success-bg: #E6FFFA;
+--danger: #9B2C2C;
+--danger-bg: #FFF5F5;
+--warning-bg: #FEFCBF;
+--warning-text: #744210;
+--radius: 14px;
+--transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+--shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+--shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+--shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+}
 
-  [data-theme="dark"] {
-    --bg: #12100E;
-    --surface: #1C1815;
-    --surface-sub: #26221E;
-    --border: #3A332C;
-    --text-main: #F4F1EA;
-    --text-muted: #A39685;
-    --primary: #D1523D;
-    --primary-hover: #E06C55;
-    --accent: #ECC94B;
-    --success: #38A169;
-    --success-bg: #1C4532;
-    --danger: #E53E3E;
-    --danger-bg: #4A1D1D;
-    --warning-bg: #5B4613;
-    --warning-text: #FEFCBF;
-  }
+[data-theme="dark"] {
+--bg: #12100E;
+--surface: #1C1815;
+--surface-sub: #26221E;
+--border: #3A332C;
+--text-main: #F4F1EA;
+--text-muted: #A39685;
+--primary: #D1523D;
+--primary-hover: #E06C55;
+--accent: #ECC94B;
+--success: #38A169;
+--success-bg: #1C4532;
+--danger: #E53E3E;
+--danger-bg: #4A1D1D;
+--warning-bg: #5B4613;
+--warning-text: #FEFCBF;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text-main);
-    -webkit-font-smoothing: antialiased;
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
+* { 
+ box-sizing: border-box; 
+ margin: 0; 
+ padding: 0; 
+ -webkit-font-smoothing: antialiased;
+ -moz-osx-font-smoothing: grayscale;
+ }
+ 
+ body {
+ font-family: 'Plus Jakarta Sans', sans-serif;
+ background: var(--bg);
+ color: var(--text-main);
+ display: flex;
+ justify-content: center;
+ min-height: 100vh;
+ transition: background 0.3s ease, color 0.3s ease;
+ overflow-x: hidden;
+ }
 
-  .app-shell {
-    width: 100%;
-    max-width: 480px;
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding-bottom: 84px;
-    box-shadow: 0 0 40px rgba(0,0,0,0.08);
-  }
+ .app-shell {
+ width: 100%;
+ max-width: 480px;
+ background: var(--bg);
+ min-height: 100vh;
+ display: flex;
+ flex-direction: column;
+ position: relative;
+ padding-bottom: 84px;
+ box-shadow: var(--shadow-md);
+ }
 
-  /* Header Styles */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand-icon {
-    width: 40px; height: 40px; border-radius: 12px; background: var(--primary);
-    color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px;
-    box-shadow: 0 4px 12px rgba(156, 59, 40, 0.25);
-  }
-  .brand-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 18px; color: var(--text-main); }
-  .brand-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-  
-  .header-actions { display: flex; align-items: center; gap: 8px; }
-  .icon-btn {
-    background: var(--surface-sub); border: 1px solid var(--border); border-radius: 8px;
-    width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: var(--text-main); font-size: 14px; transition: var(--transition-smooth);
-  }
-  .icon-btn:hover { background: var(--border); }
-  .lang-select {
-    background: var(--surface-sub); border: 1px solid var(--border); border-radius: 8px;
-    padding: 6px 10px; font-size: 12px; font-weight: 600; color: var(--text-main); cursor: pointer;
-  }
+ /* Header Styles */
+ header {
+ background: var(--surface);
+ border-bottom: 1px solid var(--border);
+ padding: 16px 20px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ position: sticky;
+ top: 0;
+ z-index: 10;
+ background-clip: padding-box;
+ }
+ 
+ .brand { 
+ display: flex; 
+ align-items: center; 
+ gap: 10px;
+ }
+ 
+ .brand-icon {
+ width: 40px; 
+ height: 40px; 
+ border-radius: 12px; 
+ background: var(--primary);
+ color: #fff; 
+ display: flex; 
+ align-items: center; 
+ justify-content: center; 
+ font-size: 20px;
+ box-shadow: var(--shadow-md);
+ }
+ 
+ .brand-title { 
+ font-family: 'Fraunces', serif; 
+ font-weight: 700; 
+ font-size: 18px; 
+ color: var(--text-main);
+ }
+ 
+ .brand-sub { 
+ font-size: 11px; 
+ color: var(--text-muted); 
+ font-weight: 500;
+ }
+ 
+ .header-actions { 
+ display: flex; 
+ align-items: center; 
+ gap: 8px; 
+ }
+ 
+ .icon-btn {
+ background: var(--surface-sub); 
+ border: 1px solid var(--border); 
+ border-radius: 8px;
+ width: 32px; 
+ height: 32px; 
+ display: flex; 
+ align-items: center; 
+ justify-content: center;
+ cursor: pointer; 
+ color: var(--text-main); 
+ font-size: 14px; 
+ transition: var(--transition-smooth);
+ min-width: 32px;
+ height: 32px;
+ }
+ 
+ .icon-btn:hover { 
+ background: var(--border);
+ }
+ 
+ .icon-btn:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 6px;
+ }
+ 
+ .lang-select {
+ background: var(--surface-sub); 
+ border: 1px solid var(--border); 
+ border-radius: 8px;
+ padding: 6px 10px; 
+ font-size: 12px; 
+ font-weight: 600; 
+ color: var(--text-main); 
+ cursor: pointer;
+ min-width: 120px;
+ }
+ 
+ .lang-select:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 6px;
+ }
 
-  /* Main Container & Views */
-  main { padding: 16px; flex: 1; }
-  .view { display: none; opacity: 0; transition: opacity 0.2s ease; }
-  .view.active { display: flex; flex-direction: column; gap: 16px; opacity: 1; }
+ /* Main Container & Views */
+ main { 
+ padding: 16px; 
+ flex: 1;
+ }
+ 
+ .view { 
+ display: none; 
+ opacity: 0; 
+ transition: opacity 0.2s ease;
+ }
+ 
+ .view.active { 
+ display: flex; 
+ flex-direction: column; 
+ gap: 16px; 
+ opacity: 1;
+ }
 
-  /* Cards & Components */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-  }
-  .card-title {
-    font-family: 'Fraunces', serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+ /* Cards & Components */
+ .card {
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: var(--radius);
+ padding: 18px;
+ box-shadow: var(--shadow-sm);
+ transition: var(--transition-smooth);
+}
+ 
+ .card:hover {
+ box-shadow: var(--shadow-md);
+ transform: translateY(-2px);
+}
+ 
+ .card-title {
+ font-family: 'Fraunces', serif;
+ font-size: 16px;
+ font-weight: 700;
+ margin-bottom: 14px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ }
 
-  /* Status Banner */
-  .status-banner {
-    background: linear-gradient(135deg, #2D3748 0%, #1A202C 100%);
-    color: #fff; border-radius: var(--radius); padding: 16px;
-    display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  }
-  .status-badge {
-    background: var(--success); color: #fff; font-size: 10px; font-weight: 700;
-    padding: 5px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em;
-  }
+ /* Status Banner */
+ .status-banner {
+ background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+ color: #fff; 
+ border-radius: var(--radius); 
+ padding: 16px;
+ display: flex; 
+ align-items: center; 
+ justify-content: space-between;
+ box-shadow: var(--shadow-md);
+ }
+ 
+ .status-badge {
+ background: var(--success); 
+ color: #fff; 
+ font-size: 10px; 
+ font-weight: 700;
+ padding: 5px 10px; 
+ border-radius: 99px; 
+ text-transform: uppercase; 
+ letter-spacing: 0.05em;
+ }
+ 
+ .status-timestamp {
+ font-size: 9px;
+ opacity: 0.9;
+ }
 
-  /* Metrics Grid */
-  .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
-  .metric-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
-  .metric-value { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; margin-top: 6px; color: var(--primary); }
-  .metric-trend { font-size: 11px; color: var(--success); font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+ /* Enhanced Metrics Grid */
+ .metrics-grid { 
+ display: grid; 
+ grid-template-columns: repeat(2, 1fr); 
+ gap: 12px;
+ margin-bottom: 20px;
+ }
+ 
+ .metric-card { 
+ background: var(--surface); 
+ border: 1px solid var(--border); 
+ border-radius: var(--radius); 
+ padding: 16px;
+ transition: var(--transition-smooth);
+ }
+ 
+ .metric-card:hover {
+ border-color: var(--primary);
+ box-shadow: var(--shadow-sm);
+ }
+ 
+ .metric-label { 
+ font-size: 11px; 
+ color: var(--text-muted); 
+ font-weight: 600; 
+ text-transform: uppercase; 
+ letter-spacing: 0.03em;
+ }
+ 
+ .metric-value { 
+ font-family: 'Fraunces', serif; 
+ font-size: 24px; 
+ font-weight: 700; 
+ margin-top: 6px; 
+ color: var(--primary);
+ }
+ 
+ .metric-trend { 
+ font-size: 11px; 
+ color: var(--success); 
+ font-weight: 600; 
+ margin-top: 4px; 
+ display: flex; 
+ align-items: center; 
+ gap: 4px;
+ }
+ 
+ .metric-progress {
+ width: 100%;
+ height: 4px;
+ background: var(--surface-sub);
+ border-radius: 99px;
+ overflow: hidden;
+ margin-top: 8px;
+ }
+ 
+ .metric-progress-fill {
+ height: 100%;
+ background: linear-gradient(90deg, var(--success) 0%, var(--accent) 100%);
+ border-radius: 99px;
+ transition: width 0.4s ease;
+ }
 
-  /* Interactive Production Log */
-  .log-row {
-    display: flex; align-items: center; justify-content: space-between; padding: 12px 0;
-    border-bottom: 1px solid var(--surface-sub);
-  }
-  .log-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .log-row:first-child { padding-top: 0; }
-  .stepper { display: flex; align-items: center; gap: 12px; }
-  .step-btn {
-    width: 34px; height: 34px; border-radius: 10px; background: var(--surface-sub);
-    border: 1px solid var(--border); font-weight: 700; font-size: 16px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; color: var(--text-main);
-    transition: var(--transition-smooth);
-  }
-  .step-btn:active { transform: scale(0.92); background: var(--border); }
-  .step-val { font-weight: 700; font-size: 16px; min-width: 24px; text-align: center; font-family: 'Fraunces', serif; }
+ /* Enhanced Production Log */
+ .log-row {
+ display: flex; 
+ align-items: center; 
+ justify-content: space-between; 
+ padding: 12px 0;
+ border-bottom: 1px solid var(--surface-sub);
+ transition: var(--transition-smooth);
+ }
+ 
+ .log-row:last-child { 
+ border-bottom: none; 
+ padding-bottom: 0;
+ }
+ 
+ .log-row:first-child { 
+ padding-top: 0;
+ }
+ 
+ .log-row:hover {
+ background: var(--surface-sub);
+ }
+ 
+ .stepper { 
+ display: flex; 
+ align-items: center; 
+ gap: 12px;
+ }
+ 
+ .step-btn {
+ width: 34px; 
+ height: 34px; 
+ border-radius: 10px; 
+ background: var(--surface-sub);
+ border: 1px solid var(--border); 
+ font-weight: 700; 
+ font-size: 16px; 
+ cursor: pointer;
+ display: flex; 
+ align-items: center; 
+ justify-content: center; 
+ color: var(--text-main);
+ transition: var(--transition-smooth);
+ min-width: 34px;
+ height: 34px;
+ }
+ 
+ .step-btn:active { 
+ transform: scale(0.92); 
+ background: var(--border);
+ }
+ 
+ .step-btn:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 8px;
+ }
+ 
+ .step-val { 
+ font-weight: 700; 
+ font-size: 16px; 
+ min-width: 24px; 
+ text-align: center; 
+ font-family: 'Fraunces', serif;
+ }
+ 
+ .item-name {
+ flex: 1;
+ min-width: 0;
+ }
+ 
+ .item-name-input {
+ width: 100%;
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: 8px;
+ padding: 6px 10px;
+ font-size: 13px;
+ color: var(--text-main);
+ outline: none;
+ font-weight: 500;
+ transition: var(--transition-smooth);
+ }
+ 
+ .item-name-input:focus { 
+ border-color: var(--primary);
+ background: var(--surface-sub);
+ }
+ 
+ .live-indicator {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ padding: 2px 8px;
+ background: var(--success);
+ color: #fff;
+ border-radius: 12px;
+ font-size: 8px;
+ font-weight: 600;
+ margin-left: 8px;
+ }
 
-  /* Directory List & Search */
-  .search-box { position: relative; margin-bottom: 14px; }
-  .search-input {
-    width: 100%; background: var(--surface-sub); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 14px 12px 38px; font-size: 13px; color: var(--text-main); outline: none;
-    font-weight: 500; transition: var(--transition-smooth);
-  }
-  .search-input:focus { border-color: var(--primary); background: var(--surface); }
-  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
+ /* Enhanced Directory with Real-time Search */
+ .search-box { 
+ position: relative; 
+ margin-bottom: 14px;
+ }
+ 
+ .search-input {
+ width: 100%; 
+ background: var(--surface-sub); 
+ border: 1px solid var(--border);
+ border-radius: 12px;
+ padding: 12px 14px 12px 38px; 
+ font-size: 13px; 
+ color: var(--text-main); 
+ outline: none;
+ font-weight: 500; 
+ transition: var(--transition-smooth);
+ min-height: 40px;
+ }
+ 
+ .search-input:focus { 
+ border-color: var(--primary); 
+ background: var(--surface);
+ }
+ 
+ .search-input:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 10px;
+ }
+ 
+ .search-icon { 
+ position: absolute; 
+ left: 14px; 
+ top: 50%; 
+ transform: translateY(-50%); 
+ color: var(--text-muted); 
+ font-size: 14px;
+ }
+ 
+ .filter-chips { 
+ display: flex; 
+ gap: 8px; 
+ overflow-x: auto; 
+ padding-bottom: 6px; 
+ margin-bottom: 12px; 
+ scrollbar-width: none;
+ }
+ 
+ .filter-chips::-webkit-scrollbar { 
+ display: none;
+ }
+ 
+ .chip {
+ background: var(--surface-sub); 
+ border: 1px solid var(--border); 
+ border-radius: 99px;
+ padding: 6px 14px; 
+ font-size: 11px; 
+ font-weight: 600; 
+ color: var(--text-muted); 
+ cursor: pointer; 
+ white-space: nowrap;
+ transition: var(--transition-smooth);
+ min-width: 100px;
+ height: 32px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+ 
+ .chip:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 8px;
+ }
+ 
+ .chip.active { 
+ background: var(--primary); 
+ color: #fff; 
+ border-color: var(--primary);
+ }
+ 
+ .search-results {
+ position: absolute;
+ top: 100%;
+ left: 0;
+ right: 0;
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: var(--radius);
+ margin-top: 4px;
+ max-height: 300px;
+ overflow-y: auto;
+ opacity: 0;
+ transform: translateY(-10px);
+ transition: var(--transition-smooth);
+ z-index: 100;
+ box-shadow: var(--shadow-lg);
+ }
+ 
+ .search-results.visible {
+ opacity: 1;
+ transform: translateY(0);
+ }
+ 
+ .search-result-item {
+ padding: 10px 14px;
+ cursor: pointer;
+ transition: var(--transition-smooth);
+ font-size: 13px;
+ }
+ 
+ .search-result-item:hover {
+ background: var(--surface-sub);
+ }
+ 
+ .list-item {
+ display: flex; 
+ align-items: center; 
+ justify-content: space-between;
+ padding: 14px 0; 
+ border-bottom: 1px solid var(--surface-sub);
+ transition: var(--transition-smooth);
+ }
+ 
+ .list-item:last-child { 
+ border-bottom: none; 
+ padding-bottom: 0;
+ }
+ 
+ .list-item:first-child { 
+ padding-top: 0;
+ }
+ 
+ .list-item:hover {
+ background: var(--surface-sub);
+ }
+ 
+ .pill { 
+ font-size: 11px; 
+ font-weight: 700; 
+ padding: 5px 12px; 
+ border-radius: 99px; 
+ text-align: center;
+ min-width: 70px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+ 
+ .pill-success { 
+ background: var(--success-bg); 
+ color: var(--success);
+ }
+ 
+ .pill-danger { 
+ background: var(--danger-bg); 
+ color: var(--danger);
+ }
+ 
+ .pill-warning { 
+ background: var(--warning-bg); 
+ color: var(--warning-text);
+ }
 
-  .filter-chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; scrollbar-width: none; }
-  .filter-chips::-webkit-scrollbar { display: none; }
-  .chip {
-    background: var(--surface-sub); border: 1px solid var(--border); border-radius: 99px;
-    padding: 6px 14px; font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap;
-    transition: var(--transition-smooth);
-  }
-  .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+ /* Enhanced Analytics */
+ .chart-mock {
+ height: 140px; 
+ display: flex; 
+ align-items: flex-end; 
+ justify-content: space-between;
+ padding-top: 20px; 
+ border-bottom: 1px solid var(--border); 
+ margin-bottom: 12px; 
+ gap: 8px;
+ }
+ 
+ .chart-col { 
+ flex: 1; 
+ display: flex; 
+ flex-direction: column; 
+ align-items: center; 
+ height: 100%; 
+ justify-content: flex-end; 
+ gap: 6px;
+ }
+ 
+ .chart-bar { 
+ width: 100%; 
+ background: var(--surface-sub); 
+ border-radius: 6px 6px 0 0; 
+ transition: height 0.5s ease; 
+ position: relative;
+ min-height: 20px;
+ }
+ 
+ .chart-bar.active { 
+ background: var(--primary);
+ }
+ 
+ .chart-bar:hover {
+ background: var(--accent);
+ }
+ 
+ .chart-label { 
+ font-size: 10px; 
+ color: var(--text-muted); 
+ font-weight: 600;
+ }
+ 
+ .chart-value {
+ font-weight: 700;
+ font-size: 12px;
+ color: var(--primary);
+ }
 
-  .list-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 0; border-bottom: 1px solid var(--surface-sub);
-  }
-  .list-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .list-item:first-child { padding-top: 0; }
-  .pill { font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 99px; text-align: center; }
-  .pill-success { background: var(--success-bg); color: var(--success); }
-  .pill-danger { background: var(--danger-bg); color: var(--danger); }
-  .pill-warning { background: var(--warning-bg); color: var(--warning-text); }
+ /* Profile with Auto-save */
+ .profile-header { 
+ text-align: center; 
+ padding: 10px 0 20px; 
+ border-bottom: 1px solid var(--surface-sub); 
+ margin-bottom: 16px;
+ }
+ 
+ .profile-avatar { 
+ width: 72px; 
+ height: 72px; 
+ border-radius: 50%; 
+ background: var(--primary); 
+ color: #fff; 
+ display: flex; 
+ align-items: center; 
+ justify-content: center; 
+ font-size: 28px; 
+ font-family: 'Fraunces', serif; 
+ margin: 0 auto 12px; 
+ box-shadow: var(--shadow-md);
+ }
+ 
+ .profile-name {
+ text-align: center;
+ }
+ 
+ .profile-id {
+ font-size: 11px;
+ color: var(--text-muted);
+ margin-top: 2px;
+ }
+ 
+ .auto-save-indicator {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ padding: 2px 8px;
+ background: var(--success);
+ color: #fff;
+ border-radius: 8px;
+ font-size: 8px;
+ font-weight: 600;
+ margin-left: 8px;
+ }
+ 
+ .settings-group { 
+ display: flex; 
+ flex-direction: column; 
+ gap: 12px;
+ }
+ 
+ .settings-row { 
+ display: flex; 
+ align-items: center; 
+ justify-content: space-between; 
+ padding: 10px 0; 
+ border-bottom: 1px solid var(--surface-sub);
+ }
+ 
+ .settings-row:last-child { 
+ border-bottom: none;
+ }
+ 
+ .toggle-switch {
+ position: relative;
+ width: 48px;
+ height: 24px;
+ background: var(--surface-sub);
+ border-radius: 12px;
+ cursor: pointer;
+ transition: var(--transition-smooth);
+ }
+ 
+ .toggle-switch.active {
+ background: var(--success);
+ }
+ 
+ .toggle-slider {
+ position: absolute;
+ top: 2px;
+ left: 2px;
+ width: 20px;
+ height: 20px;
+ background: #fff;
+ border-radius: 50%;
+ transition: var(--transition-smooth);
+ }
+ 
+ .toggle-switch.active .toggle-slider {
+ transform: translateX(24px);
+ }
 
-  /* Analytics & Charts View Elements */
-  .progress-container { margin-top: 8px; }
-  .progress-bar-bg { width: 100%; height: 8px; background: var(--surface-sub); border-radius: 99px; overflow: hidden; margin-top: 6px; }
-  .progress-bar-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+ /* Buttons */
+ .btn-primary {
+ background: var(--primary); 
+ color: #fff; 
+ border: none; 
+ border-radius: 12px;
+ padding: 12px 18px; 
+ font-size: 13px; 
+ font-weight: 700; 
+ width: 100%; 
+ cursor: pointer;
+ box-shadow: var(--shadow-md); 
+ transition: var(--transition-smooth);
+ display: flex; 
+ align-items: center; 
+ justify-content: center; 
+ gap: 8px;
+ min-height: 48px;
+ font-weight: 600;
+}
+ 
+ .btn-primary:active { 
+ transform: scale(0.98); 
+ background: var(--primary-hover);
+ }
+ 
+ .btn-primary:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 10px;
+ }
 
-  .chart-mock {
-    height: 140px; display: flex; align-items: flex-end; justify-content: space-between;
-    padding-top: 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; gap: 8px;
-  }
-  .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 6px; }
-  .chart-bar { width: 100%; background: var(--surface-sub); border-radius: 6px 6px 0 0; transition: height 0.5s ease; position: relative; }
-  .chart-bar.active { background: var(--primary); }
-  .chart-label { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+ /* Bottom Navigation */
+ .bottom-nav {
+ position: fixed; 
+ bottom: 0; 
+ left: 50%; 
+ transform: translateX(-50%);
+ width: 100%; 
+ max-width: 480px; 
+ background: var(--surface); 
+ border-top: 1px solid var(--border);
+ display: flex; 
+ justify-content: space-around; 
+ padding: 10px 0 14px; 
+ z-index: 10;
+ }
+ 
+ .nav-btn {
+ background: none; 
+ border: none; 
+ display: flex; 
+ flex-direction: column; 
+ align-items: center;
+ gap: 4px; 
+ color: var(--text-muted); 
+ cursor: pointer; 
+ flex: 1; 
+ font-size: 10px; 
+ font-weight: 600;
+ transition: var(--transition-smooth);
+ min-height: 48px;
+ padding: 8px;
+ border-radius: 8px;
+ }
+ 
+ .nav-btn:focus-visible {
+ outline: 2px solid var(--accent);
+ border-radius: 8px;
+ }
+ 
+ .nav-btn.active { 
+ color: var(--primary);
+ }
+ 
+ .nav-btn svg { 
+ width: 22px; 
+ height: 22px;
+ }
 
-  /* Profile View Elements */
-  .profile-header { text-align: center; padding: 10px 0 20px; border-bottom: 1px solid var(--surface-sub); margin-bottom: 16px; }
-  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; font-family: 'Fraunces', serif; margin: 0 auto 12px; box-shadow: 0 4px 12px rgba(156,59,40,0.3); }
-  .settings-group { display: flex; flex-direction: column; gap: 12px; }
-  .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--surface-sub); }
-  .settings-row:last-child { border-bottom: none; }
+ /* Modal */
+ .modal-overlay {
+ position: fixed; 
+ inset: 0; 
+ background: rgba(0,0,0,0.5); 
+ backdrop-filter: blur(4px);
+ display: flex; 
+ align-items: flex-end; 
+ justify-content: center; 
+ z-index: 50;
+ opacity: 0; 
+ pointer-events: none; 
+ transition: opacity 0.25s ease;
+ }
+ 
+ .modal-overlay.open { 
+ opacity: 1; 
+ pointer-events: auto;
+ }
+ 
+ .modal-sheet {
+ width: 100%; 
+ max-width: 480px; 
+ background: var(--surface); 
+ border-radius: 20px 20px 0 0;
+ padding: 24px; 
+ transform: translateY(100%); 
+ transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+ max-height: 85vh; 
+ overflow-y: auto;
+ }
+ 
+ .modal-overlay.open .modal-sheet { 
+ transform: translateY(0);
+ }
+ 
+ .modal-handle { 
+ width: 40px; 
+ height: 4px; 
+ background: var(--border); 
+ border-radius: 99px; 
+ margin: 0 auto 20px;
+ }
 
-  /* Primary Action Buttons */
-  .btn-primary {
-    background: var(--primary); color: #fff; border: none; border-radius: 12px;
-    padding: 12px 18px; font-size: 13px; font-weight: 700; width: 100%; cursor: pointer;
-    box-shadow: 0 4px 12px rgba(156,59,40,0.25); transition: var(--transition-smooth);
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .btn-primary:active { transform: scale(0.98); background: var(--primary-hover); }
+ /* Toast */
+ .toast {
+ position: fixed; 
+ bottom: 92px; 
+ left: 50%; 
+ transform: translateX(-50%) translateY(15px);
+ background: var(--text-main); 
+ color: var(--bg); 
+ padding: 12px 20px; 
+ border-radius: 12px;
+ font-size: 12px; 
+ font-weight: 600; 
+ opacity: 0; 
+ pointer-events: none; 
+ transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+ z-index: 100; 
+ box-shadow: var(--shadow-lg); 
+ text-align: center; 
+ max-width: 90%;
+ min-height: 44px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+ 
+ .toast.show { 
+ opacity: 1; 
+ transform: translateX(-50%) translateY(0);
+ }
+ 
+ .toast.success { background: var(--success); }
+ .toast.error { background: var(--danger); }
+ .toast.info { background: var(--primary); }
 
-  /* Bottom Navigation Bar */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 480px; background: var(--surface); border-top: 1px solid var(--border);
-    display: flex; justify-content: space-around; padding: 10px 0 14px; z-index: 10;
-  }
-  .nav-btn {
-    background: none; border: none; display: flex; flex-direction: column; align-items: center;
-    gap: 4px; color: var(--text-muted); cursor: pointer; flex: 1; font-size: 10px; font-weight: 600;
-    transition: var(--transition-smooth);
-  }
-  .nav-btn.active { color: var(--primary); }
-  .nav-btn svg { width: 22px; height: 22px; }
-
-  /* Modal Overlay */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-    display: flex; align-items: flex-end; justify-content: center; z-index: 50;
-    opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .modal-sheet {
-    width: 100%; max-width: 480px; background: var(--surface); border-radius: 20px 20px 0 0;
-    padding: 24px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
-    max-height: 85vh; overflow-y: auto;
-  }
-  .modal-overlay.open .modal-sheet { transform: translateY(0); }
-  .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 99px; margin: 0 auto 20px; }
-
-  /* Toast Notification */
-  .toast {
-    position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%) translateY(15px);
-    background: var(--text-main); color: var(--bg); padding: 12px 20px; border-radius: 12px;
-    font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 100; box-shadow: 0 6px 20px rgba(0,0,0,0.2); text-align: center; max-width: 90%;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+ /* Notifications */
+ .notification-bell {
+ position: relative;
+ width: 32px;
+ height: 32px;
+ cursor: pointer;
+ }
+ 
+ .notification-badge {
+ position: absolute;
+ top: 2px;
+ right: 2px;
+ width: 8px;
+ height: 8px;
+ background: var(--danger);
+ border-radius: 50%;
+ }
+ 
+ .notification-list {
+ position: absolute;
+ top: 100%;
+ left: 0;
+ right: 0;
+ background: var(--surface);
+ border: 1px solid var(--border);
+ border-radius: var(--radius);
+ margin-top: 4px;
+ max-height: 200px;
+ overflow-y: auto;
+ }
+ 
+ .notification-item {
+ padding: 12px 16px;
+ cursor: pointer;
+ transition: var(--transition-smooth);
+ }
+ 
+ .notification-item:hover {
+ background: var(--surface-sub);
+ }
+ 
+ .notification-time {
+ font-size: 10px;
+ color: var(--text-muted);
+ margin-top: 4px;
+ }
 </style>
 </head>
 <body>
 
-<div class="app-shell" id="appShell">
-  <!-- Header -->
-  <header>
-    <div class="brand">
-      <div class="brand-icon">🧵</div>
-      <div>
-        <div class="brand-title" id="txtBrandTitle">WeaveAhead</div>
-        <div class="brand-sub" id="txtBrandSub">Artisan Portal v3.4</div>
-      </div>
-    </div>
-    <div class="header-actions">
-      <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme">🌙</button>
-      <select class="lang-select" id="langSelector" aria-label="Language selection">
-        <option value="en">English</option>
-        <option value="ta">தமிழ்</option>
-        <option value="hi">हिंदी</option>
-        <option value="bn">বাংলা</option>
-      </select>
-    </div>
-  </header>
+<div class="app-shell" id="appShell" role="main">
+ <!-- Header -->
+ <header role="banner">
+ <div class="brand">
+ <div class="brand-icon" aria-hidden="true">🧵</div>
+ <div>
+ <div class="brand-title" id="txtBrandTitle" aria-label="Brand Name">WeaveAhead</div>
+ <div class="brand-sub" id="txtBrandSub" aria-label="Brand Subtitle">Artisan Portal v3.4</div>
+ </div>
+ </div>
+ <div class="header-actions">
+ <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Theme">🌙</button>
+ <button class="icon-btn" id="notificationBtn" aria-label="Notifications">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+ <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18zm-1 5l-2 2-4-4"/>
+ </svg>
+ <span class="notification-badge" id="notificationBadge" aria-label="3 notifications">3</span>
+ </button>
+ <select class="lang-select" id="langSelector" aria-label="Language selection">
+ <option value="en">English</option>
+ <option value="ta">தமிழ்</option>
+ <option value="hi">हिंदी</option>
+ <option value="bn">বাংলা</option>
+ </select>
+ </div>
+ </header>
 
-  <!-- Main Content Views -->
-  <main>
-    <!-- VIEW: HOME / ADVISORY -->
-    <div class="view active" id="view-home">
-      <div class="status-banner">
-        <div>
-          <div style="font-size: 11px; color: #A0AEC0; font-weight: 600; text-transform: uppercase;" id="txtGovtActive">Govt Window Active</div>
-          <div style="font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; margin-top: 2px;" id="txtFestivalDir">Festival & Handloom Directives</div>
-        </div>
-        <span class="status-badge" id="txtOpenBadge">Open</span>
-      </div>
+ <!-- Main Content Views -->
+ <main role="main">
+ <!-- VIEW: HOME / ADVISORY -->
+ <div class="view active" id="view-home" role="region" aria-label="Home view">
+ <div class="status-banner">
+ <div>
+ <div style="font-size: 11px; color: #A0AEC0; font-weight: 600; text-transform: uppercase;" id="txtGovtActive">Govt Window Active</div>
+ <div style="font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; margin-top: 2px;" id="txtFestivalDir">Festival & Handloom Directives</div>
+ </div>
+ <span class="status-badge" id="txtOpenBadge">Open</span>
+ <div class="status-timestamp" id="statusTimestamp">2 min ago</div>
+ </div>
 
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label" id="txtPendingPay">Pending Payments</div>
-          <div class="metric-value" id="metricDue">₹11,600</div>
-          <div class="metric-trend">↑ 12% vs last month</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label" id="txtActiveOrders">Active Orders</div>
-          <div class="metric-value">24 pcs</div>
-          <div class="metric-trend">4 due this week</div>
-        </div>
-      </div>
+ <div class="metrics-grid">
+ <div class="metric-card">
+ <div class="metric-label" id="txtPendingPay">Pending Payments</div>
+ <div class="metric-value" id="metricDue">₹11,600</div>
+ <div class="metric-trend">↑ 12% vs last month</div>
+ <div class="metric-progress">
+ <div class="metric-progress-fill" style="width: 65%;"></div>
+ </div>
+ </div>
+ <div class="metric-card">
+ <div class="metric-label" id="txtActiveOrders">Active Orders</div>
+ <div class="metric-value">24 pcs</div>
+ <div class="metric-trend">4 due this week</div>
+ <div class="metric-progress">
+ <div class="metric-progress-fill" style="width: 92%;"></div>
+ </div>
+ </div>
+ </div>
 
-      <div class="card">
-        <div class="card-title">
-          <span id="txtDailyLogTitle">Daily Production Log</span>
-          <button style="background:none; border:none; color:var(--primary); font-size:12px; font-weight:700; cursor:pointer;" onclick="openAddProductionModal()">+ Add Batch</button>
-        </div>
-        <div id="productionLogContainer"></div>
-      </div>
+ <div class="card">
+ <div class="card-title">
+ <span id="txtDailyLogTitle">Daily Production Log</span>
+ <button style="background:none; border:none; color:var(--primary); font-size:12px; font-weight:700; cursor:pointer;" onclick="openAddProductionModal()" aria-label="Add production batch">+ Add Batch</button>
+ </div>
+ <div id="productionLogContainer"></div>
+ </div>
 
-      <div class="card">
-        <div class="card-title" id="txtActionReqTitle">Immediate Action Required</div>
-        <div class="list-item">
-          <div>
-            <div style="font-weight: 700; font-size: 13.5px;" id="txtYarnTitle">Cotton Yarn (40s Count)</div>
-            <div style="font-size: 11px; color: var(--text-muted);" id="txtYarnSub">Subsidized quota expires in 3 days</div>
-          </div>
-          <button class="pill pill-danger" onclick="triggerAction('Subsidized yarn restock requested successfully!')" id="txtRestockBtn">Restock</button>
-        </div>
-      </div>
-    </div>
+ <div class="card">
+ <div class="card-title" id="txtActionReqTitle">Immediate Action Required</div>
+ <div class="list-item">
+ <div>
+ <div style="font-weight: 700; font-size: 13.5px;" id="txtYarnTitle">Cotton Yarn (40s Count)</div>
+ <div style="font-size: 11px; color: var(--text-muted);" id="txtYarnSub">Subsidized quota expires in 3 days</div>
+ </div>
+ <button class="pill pill-danger" onclick="triggerAction('Subsidized yarn restock requested successfully!')" id="txtRestockBtn" aria-label="Restock yarn">Restock</button>
+ </div>
+ </div>
+ </div>
+ </div>
 
-    <!-- VIEW: DEMAND DIRECTORY -->
-    <div class="view" id="view-demand">
-      <div class="card">
-        <div class="card-title" id="txtIndexTitle">Nationwide Weave Index</div>
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" class="search-input" id="searchInput" placeholder="Search weave type (e.g., Banarasi, Ikat)..." />
-        </div>
-        <div class="filter-chips" id="filterChipsContainer">
-          <button class="chip active" data-region="All">All Regions</button>
-          <button class="chip" data-region="North">North</button>
-          <button class="chip" data-region="South">South</button>
-          <button class="chip" data-region="East">East</button>
-          <button class="chip" data-region="West">West</button>
-        </div>
-        <div id="directoryList"></div>
-      </div>
-    </div>
+ <!-- VIEW: DEMAND DIRECTORY -->
+ <div class="view" id="view-demand" role="region" aria-label="Demand directory view">
+ <div class="card">
+ <div class="card-title" id="txtIndexTitle">Nationwide Weave Index</div>
+ <div class="search-box">
+ <span class="search-icon" aria-hidden="true">🔍</span>
+ <input type="text" class="search-input" id="searchInput" placeholder="Search weave type (e.g., Banarasi, Ikat)..." aria-label="Search weaves" />
+ <div class="search-results" id="searchResults"></div>
+ </div>
+ <div class="filter-chips" id="filterChipsContainer">
+ <button class="chip active" data-region="All" aria-pressed="true">All Regions</button>
+ <button class="chip" data-region="North">North</button>
+ <button class="chip" data-region="South">South</button>
+ <button class="chip" data-region="East">East</button>
+ <button class="chip" data-region="West">West</button>
+ </div>
+ <div id="directoryList" role="region" aria-live="polite"></div>
+ </div>
+ </div>
 
-    <!-- VIEW: ANALYTICS & FORECAST -->
-    <div class="view" id="view-analytics">
-      <div class="card">
-        <div class="card-title" id="txtForecastTitle">6-Week Demand Projection</div>
-        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="txtForecastSub">Predicted market absorption units based on upcoming festival calendars.</div>
-        <div class="chart-mock" id="demandChartContainer"></div>
-      </div>
+ <!-- VIEW: ANALYTICS & FORECAST -->
+ <div class="view" id="view-analytics" role="region" aria-label="Analytics view">
+ <div class="card">
+ <div class="card-title" id="txtForecastTitle">6-Week Demand Projection</div>
+ <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="txtForecastSub">Predicted market absorption units based on upcoming festival calendars.</div>
+ <div class="chart-mock" id="demandChartContainer"></div>
+ </div>
 
-      <div class="card">
-        <div class="card-title" id="txtTargetTitle">Monthly Production Quota</div>
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600;">
-          <span id="txtCompletedUnits">18 of 25 Units Completed</span>
-          <span style="color: var(--primary);">72%</span>
-        </div>
-        <div class="progress-container">
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: 72%;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+ <div class="card">
+ <div class="card-title" id="txtTargetTitle">Monthly Production Quota</div>
+ <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600;">
+ <span id="txtCompletedUnits">18 of 25 Units Completed</span>
+ <span style="color: var(--primary);">72%</span>
+ </div>
+ <div class="progress-container">
+ <div class="progress-bar-bg">
+ <div class="progress-bar-fill" style="width: 72%;"></div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-    <!-- VIEW: PAYMENTS & FINANCE -->
-    <div class="view" id="view-payments">
-      <div class="card">
-        <div class="card-title">
-          <span id="txtLedgerTitle">Payment Ledger</span>
-          <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;" id="txtVerifiedDirect">Direct DBT Active</span>
-        </div>
-        <div id="paymentsListContainer"></div>
-      </div>
-    </div>
+ <!-- VIEW: PAYMENTS & FINANCE -->
+ <div class="view" id="view-payments" role="region" aria-label="Payments view">
+ <div class="card">
+ <div class="card-title">
+ <span id="txtLedgerTitle">Payment Ledger</span>
+ <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;" id="txtVerifiedDirect">Direct DBT Active</span>
+ <span class="auto-save-indicator" id="autoSaveIndicator" style="display: none;">✓ Auto-saved</span>
+ </div>
+ <div id="paymentsListContainer" role="region" aria-live="polite"></div>
+ </div>
+ </div>
 
-    <!-- VIEW: PROFILE & SETTINGS -->
-    <div class="view" id="view-profile">
-      <div class="card">
-        <div class="profile-header">
-          <div class="profile-avatar">RK</div>
-          <div style="font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;">Ramesh Kumar</div>
-          <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Master Artisan ID: ART-8842-OD</div>
-          <span class="pill pill-success" style="display: inline-block; margin-top: 8px;" id="txtVerifiedArtisan">Govt Certified Artisan</span>
-        </div>
-        <div class="settings-group">
-          <div class="settings-row">
-            <div>
-              <div style="font-weight: 600; font-size: 13px;" id="txtCooperativeLabel">Assigned Cooperative</div>
-              <div style="font-size: 11px; color: var(--text-muted);" id="txtCooperativeName">Utkal Handloom Weavers Hub, Cluster 4</div>
-            </div>
-            <button class="pill pill-warning" onclick="showToast('Cooperative details updated')">Switch</button>
-          </div>
-          <div class="settings-row">
-            <div>
-              <div style="font-weight: 600; font-size: 13px;" id="txtNotifLabel">WhatsApp Alerts</div>
-              <div style="font-size: 11px; color: var(--text-muted);" id="txtNotifSub">Direct order routing & price updates</div>
-            </div>
-            <input type="checkbox" checked onchange="showToast('Notification preference saved')" />
-          </div>
-          <div class="settings-row">
-            <div>
-              <div style="font-weight: 600; font-size: 13px;" id="txtBackupLabel">Cloud Sync State</div>
-              <div style="font-size: 11px; color: var(--text-muted);" id="txtBackupSub">Last synced 2 mins ago</div>
-            </div>
-            <button class="pill pill-success" onclick="showToast('Sync completed successfully')">Sync Now</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+ <!-- VIEW: PROFILE & SETTINGS -->
+ <div class="view" id="view-profile" role="region" aria-label="Profile view">
+ <div class="card">
+ <div class="profile-header">
+ <div class="profile-avatar">RK</div>
+ <div class="profile-name">
+ <div style="font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700;">Ramesh Kumar</div>
+ <div class="profile-id">Master Artisan ID: ART-8842-OD</div>
+ </div>
+ <span class="pill pill-success" style="display: inline-block; margin-top: 8px;" id="txtVerifiedArtisan">Govt Certified Artisan</span>
+ <span class="auto-save-indicator" id="profileAutoSave">✓ Auto-saved</span>
+ </div>
+ <div class="settings-group">
+ <div class="settings-row">
+ <div>
+ <div style="font-weight: 600; font-size: 13px;" id="txtCooperativeLabel">Assigned Cooperative</div>
+ <div style="font-size: 11px; color: var(--text-muted);" id="txtCooperativeName">Utkal Handloom Weavers Hub, Cluster 4</div>
+ </div>
+ <button class="pill pill-warning" onclick="showToast('Cooperative details updated')" aria-label="Switch cooperative">Switch</button>
+ </div>
+ <div class="settings-row">
+ <div>
+ <div style="font-weight: 600; font-size: 13px;" id="txtNotifLabel">WhatsApp Alerts</div>
+ <div style="font-size: 11px; color: var(--text-muted);" id="txtNotifSub">Direct order routing & price updates</div>
+ </div>
+ <div class="toggle-switch active" id="notificationsToggle" onclick="toggleNotifications(this)">
+ <div class="toggle-slider"></div>
+ </div>
+ </div>
+ <div class="settings-row">
+ <div>
+ <div style="font-weight: 600; font-size: 13px;" id="txtBackupLabel">Cloud Sync State</div>
+ <div style="font-size: 11px; color: var(--text-muted);" id="txtBackupSub">Last synced 2 mins ago</div>
+ </div>
+ <button class="pill pill-success" onclick="showToast('Sync completed successfully')" aria-label="Sync now">Sync Now</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </main>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-target="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span id="navHome">Home</span>
-    </button>
-    <button class="nav-btn" data-target="demand">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <span id="navDemand">Demand</span>
-    </button>
-    <button class="nav-btn" data-target="analytics">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-      <span id="navAnalytics">Analytics</span>
-    </button>
-    <button class="nav-btn" data-target="payments">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <span id="navPayments">Payments</span>
-    </button>
-    <button class="nav-btn" data-target="profile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span id="navProfile">Profile</span>
-    </button>
-  </nav>
+ <!-- Bottom Navigation -->
+ <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
+ <button class="nav-btn active" data-target="home" aria-pressed="true">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+ <span id="navHome">Home</span>
+ </button>
+ <button class="nav-btn" data-target="demand">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+ <span id="navDemand">Demand</span>
+ </button>
+ <button class="nav-btn" data-target="analytics">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+ <span id="navAnalytics">Analytics</span>
+ </button>
+ <button class="nav-btn" data-target="payments">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+ <span id="navPayments">Payments</span>
+ </button>
+ <button class="nav-btn" data-target="profile">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+ <span id="navProfile">Profile</span>
+ </button>
+ </nav>
 
-  <!-- Add Production Batch Modal Sheet -->
-  <div class="modal-overlay" id="addBatchModal">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div style="font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; margin-bottom: 14px;">Add New Production Batch</div>
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-        <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Weave / Item Name</label>
-          <input type="text" id="newBatchName" class="search-input" style="margin-top: 4px; padding-left: 14px;" placeholder="e.g., Tussar Silk Stole" />
-        </div>
-        <div>
-          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Daily Target Count</label>
-          <input type="number" id="newBatchTarget" class="search-input" style="margin-top: 4px; padding-left: 14px;" value="5" />
-        </div>
-      </div>
-      <button class="btn-primary" onclick="handleAddBatch()">Confirm & Start Batch</button>
-    </div>
-  </div>
+ <!-- Add Production Batch Modal Sheet -->
+ <div class="modal-overlay" id="addBatchModal" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+ <div class="modal-sheet">
+ <div class="modal-handle"></div>
+ <div id="modalTitle" style="font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; margin-bottom: 14px;">Add New Production Batch</div>
+ <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+ <div>
+ <label for="newBatchName" style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Weave / Item Name</label>
+ <input type="text" id="newBatchName" class="search-input" style="margin-top: 4px; padding-left: 14px;" placeholder="e.g., Tussar Silk Stole" value="Custom Weave" />
+ </div>
+ <div>
+ <label for="newBatchTarget" style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Daily Target Count</label>
+ <input type="number" id="newBatchTarget" class="search-input" style="margin-top: 4px; padding-left: 14px;" value="5" />
+ </div>
+ <div>
+ <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase;">Notes (Optional)</label>
+ <textarea id="batchNotes" style="margin-top: 4px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; min-height: 60px;" placeholder="Add any specific requirements..."></textarea>
+ </div>
+ </div>
+ <button class="btn-primary" onclick="handleAddBatch()" aria-label="Confirm and start batch">Confirm & Start Batch</button>
+ </div>
+ </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+<!-- Notification List -->
+<div class="notification-list" id="notificationList" style="display: none;">
+ <div class="notification-item" onclick="markNotificationRead(this)">
+ <div style="font-weight: 600; font-size: 13px;">New order received</div>
+ <div class="notification-time">2 min ago</div>
+ </div>
+ <div class="notification-item" onclick="markNotificationRead(this)">
+ <div style="font-weight: 600; font-size: 13px;">Payment verified</div>
+ <div class="notification-time">15 min ago</div>
+ </div>
+ <div class="notification-item" onclick="markNotificationRead(this)">
+ <div style="font-weight: 600; font-size: 13px;">System update available</div>
+ <div class="notification-time">1 hour ago</div>
+ </div>
+</div>
+</div>
 
 <script>
-  // Full Application State Architecture
-  const state = {
-    lang: 'en',
-    theme: 'light',
-    activeRegionFilter: 'All',
-    searchQuery: '',
-    productionItems: [
-      { id: 'saree', label: 'Silk Sarees', count: 4, target: 6 },
-      { id: 'stole', label: 'Cotton Stoles', count: 3, target: 4 },
-      { id: 'home', label: 'Home Textiles', count: 2, target: 3 }
-    ],
-    weavingsDirectory: [
-      { name: 'Kanchipuram Silk', region: 'South', demand: 'High', status: 'Accepting' },
-      { name: 'Banarasi Silk', region: 'North', demand: 'Very High', status: 'Accepting' },
-      { name: 'Sambalpuri Ikat', region: 'East', demand: 'High', status: 'Accepting' },
-      { name: 'Paithani', region: 'West', demand: 'Moderate', status: 'Closing' },
-      { name: 'Chanderi Cotton', region: 'North', demand: 'High', status: 'Accepting' },
-      { name: 'Muga Silk', region: 'East', demand: 'Very High', status: 'Accepting' }
-    ],
-    paymentsData: [
-      { id: 1, buyer: 'Kanchi Cooperative', amount: 8400, status: 'Pending' },
-      { id: 2, buyer: 'Meera Textiles', amount: 12500, status: 'Paid' },
-      { id: 3, buyer: 'Village Haat Order', amount: 3200, status: 'Overdue' }
-    ],
-    forecastData: [
-      { week: 'W1', value: 45, active: false },
-      { week: 'W2', value: 65, active: false },
-      { week: 'W3', value: 85, active: true },
-      { week: 'W4', value: 95, active: true },
-      { week: 'W5', value: 70, active: false },
-      { week: 'W6', value: 60, active: false }
-    ]
-  };
+ // Enhanced State Management with Real-time Features
+ const state = {
+ lang: 'en',
+ theme: 'light', 
+ activeRegionFilter: 'All',
+ searchQuery: '',
+ productionItems: [
+ { id: 'saree', label: 'Silk Sarees', count: 4, target: 6, lastUpdated: new Date() },
+ { id: 'stole', label: 'Cotton Stoles', count: 3, target: 4, lastUpdated: new Date() },
+ { id: 'home', label: 'Home Textiles', count: 2, target: 3, lastUpdated: new Date() }
+ ],
+ weavingsDirectory: [
+ { name: 'Kanchipuram Silk', region: 'South', demand: 'High', status: 'Accepting' },
+ { name: 'Banarasi Silk', region: 'North', demand: 'Very High', status: 'Accepting' },
+ { name: 'Sambalpuri Ikat', region: 'East', demand: 'High', status: 'Accepting' },
+ { name: 'Paithani', region: 'West', demand: 'Moderate', status: 'Closing' },
+ { name: 'Chanderi Cotton', region: 'North', demand: 'High', status: 'Accepting' },
+ { name: 'Muga Silk', region: 'East', demand: 'Very High', status: 'Accepting' }
+ ],
+ paymentsData: [
+ { id: 1, buyer: 'Kanchi Cooperative', amount: 8400, status: 'Pending' },
+ { id: 2, buyer: 'Meera Textiles', amount: 12500, status: 'Paid' },
+ { id: 3, buyer: 'Village Haat Order', amount: 3200, status: 'Overdue' }
+ ],
+ forecastData: [
+ { week: 'W1', value: 45, active: false },
+ { week: 'W2', value: 65, active: false },
+ { week: 'W3', value: 85, active: true },
+ { week: 'W4', value: 95, active: true },
+ { week: 'W5', value: 70, active: false },
+ { week: 'W6', value: 60, active: false }
+ ],
+ notifications: [
+ { id: 1, message: 'New order received', time: '2 min ago' },
+ { id: 2, message: 'Payment verified', time: '15 min ago' },
+ { id: 3, message: 'System update available', time: '1 hour ago' }
+ ],
+ autoSaveTimer: null,
+ lastSync: new Date()
+ };
 
-  // Translations Dictionary for Multi-language Support
-  const translations = {
-    en: {
-      brandTitle: "WeaveAhead",
-      brandSub: "Artisan Portal v3.4",
-      govtActive: "Govt Window Active",
-      festivalDir: "Festival & Handloom Directives",
-      openBadge: "Open",
-      pendingPay: "Pending Payments",
-      activeOrders: "Active Orders",
-      dailyLogTitle: "Daily Production Log",
-      actionReqTitle: "Immediate Action Required",
-      yarnTitle: "Cotton Yarn (40s Count)",
-      yarnSub: "Subsidized quota expires in 3 days",
-      restockBtn: "Restock",
-      indexTitle: "Nationwide Weave Index",
-      forecastTitle: "6-Week Demand Projection",
-      forecastSub: "Predicted market absorption units based on upcoming festival calendars.",
-      targetTitle: "Monthly Production Quota",
-      completedUnits: "18 of 25 Units Completed",
-      ledgerTitle: "Payment Ledger",
-      verifiedDirect: "Direct DBT Active",
-      verifiedArtisan: "Govt Certified Artisan",
-      cooperativeLabel: "Assigned Cooperative",
-      cooperativeName: "Utkal Handloom Weavers Hub, Cluster 4",
-      notifLabel: "WhatsApp Alerts",
-      notifSub: "Direct order routing & price updates",
-      backupLabel: "Cloud Sync State",
-      backupSub: "Last synced 2 mins ago",
-      navHome: "Home",
-      navDemand: "Demand",
-      navAnalytics: "Analytics",
-      navPayments: "Payments",
-      navProfile: "Profile"
-    },
-    ta: {
-      brandTitle: "வீவ் அஹெட்",
-      brandSub: "கைவினைஞர் தளம் v3.4",
-      govtActive: "அரசு சாளரம் செயலில் உள்ளது",
-      festivalDir: "திருவிழா & கைத்தறி வழிகாட்டுதல்கள்",
-      openBadge: "திறந்துள்ளது",
-      pendingPay: "நிலுவைக் கட்டணம்",
-      activeOrders: "செயலில் உள்ள ஆர்டர்கள்",
-      dailyLogTitle: "தினசரி உற்பத்தி பதிவு",
-      actionReqTitle: "உடனடி நடவடிக்கை தேவை",
-      yarnTitle: "பருத்தி நூல் (40s)",
-      yarnSub: "மானியம் 3 நாட்களில் முடிவடைகிறது",
-      restockBtn: "மறு நிரப்பு",
-      indexTitle: "தேசிய நெசவு குறியீடு",
-      forecastTitle: "6 வார தேவை கணிப்பு",
-      forecastSub: "வரவிருக்கும் திருவிழா நாட்காட்டியின் அடிப்படையில் கணிக்கப்பட்ட சந்தை உறிஞ்சுதல்.",
-      targetTitle: "மாதாந்திர உற்பத்தி ஒதுக்கீடு",
-      completedUnits: "25 இல் 18 அலகுகள் நிறைவு",
-      ledgerTitle: "கட்டணப் பதிவேடு",
-      verifiedDirect: "நேரடி DBT செயலில் உள்ளது",
-      verifiedArtisan: "அரசு சான்றளிக்கப்பட்ட கைவினைஞர்",
-      cooperativeLabel: "ஒதுக்கப்பட்ட கூட்டுறவு",
-      cooperativeName: "உத்கல் கைத்தறி நெசவாளர்கள் மையம்",
-      notifLabel: "வாட்ஸ்அப் எச்சரிக்கைகள்",
-      notifSub: "நேரடி ஆர்டர் மற்றும் விலை புதுப்பிப்புகள்",
-      backupLabel: "மேக ஒத்திசைவு நிலை",
-      backupSub: "2 நிமிடங்களுக்கு முன்பு ஒத்திசைக்கப்பட்டது",
-      navHome: "முகப்பு",
-      navDemand: "தேவை",
-      navAnalytics: "பகுப்பாய்வு",
-      navPayments: "கட்டணம்",
-      navProfile: "சுயவிவரம்"
-    },
-    hi: {
-      brandTitle: "वीव अहेड",
-      brandSub: "कारीगर पोर्टल v3.4",
-      govtActive: "सरकारी विंडो सक्रिय",
-      festivalDir: "त्योहार और हथकरघा निर्देश",
-      openBadge: "खुला है",
-      pendingPay: "लंबित भुगतान",
-      activeOrders: "सक्रिय ऑर्डर",
-      dailyLogTitle: "दैनिक उत्पादन लॉग",
-      actionReqTitle: "तत्काल कार्रवाई आवश्यक",
-      yarnTitle: "कपास सूत (40s काउंट)",
-      yarnSub: "सब्सिडी कोटा 3 दिनों में समाप्त हो रहा है",
-      restockBtn: "रीस्टॉक",
-      indexTitle: "राष्ट्रव्यापी बुनाई सूचकांक",
-      forecastTitle: "6-सप्ताह की मांग का अनुमान",
-      forecastSub: "आगामी त्योहारों के कैलेंडर के आधार पर अनुमानित बाजार मांग।",
-      targetTitle: "मासिक उत्पादन कोटा",
-      completedUnits: "25 में से 18 इकाइयां पूर्ण",
-      ledgerTitle: "भुगतान खाता बही",
-      verifiedDirect: "प्रत्यक्ष डीबीटी सक्रिय",
-      verifiedArtisan: "सरकार द्वारा प्रमाणित कारीगर",
-      cooperativeLabel: "आवंटित सहकारी समिति",
-      cooperativeName: "उत्कल हथकरघा बुनकर केंद्र",
-      notifLabel: "व्हाट्सएप अलर्ट",
-      notifSub: "प्रत्यक्ष ऑर्डर रूटिंग और मूल्य अपडेट",
-      backupLabel: "क्लाउड सिंक स्थिति",
-      backupSub: "2 मिनट पहले सिंक किया गया",
-      navHome: "होम",
-      navDemand: "मांग",
-      navAnalytics: "विश्लेषण",
-      navPayments: "भुगतान",
-      navProfile: "प्रोफ़ाइल"
-    },
-    bn: {
-      brandTitle: "উইভ এহেড",
-      brandSub: "কারিগর পোর্টাল v3.4",
-      govtActive: "সরকারি উইন্ডো সক্রিয়",
-      festivalDir: "উৎসব এবং তাঁত নির্দেশিকা",
-      openBadge: "উন্মুক্ত",
-      pendingPay: "বকেয়া পেমেন্ট",
-      activeOrders: "সক্রিয় অর্ডার",
-      dailyLogTitle: "দৈনিক উৎপাদন লগ",
-      actionReqTitle: "জরুরী পদক্ষেপ প্রয়োজন",
-      yarnTitle: "সুতির সুতা (৪০ এস)",
-      yarnSub: "ভবিষ্যৎ ভর্তুকি কোটা ৩ দিনে শেষ হচ্ছে",
-      restockBtn: "পুনরায় সংগ্রহ",
-      indexTitle: "দেশব্যাপী তাঁত সূচক",
-      forecastTitle: "৬-সপ্তাহের চাহিদা পূর্বাভাস",
-      forecastSub: "আসন্ন উৎসবের ক্যালেন্ডারের উপর ভিত্তি করে পূর্বাভাসিত বাজার চাহিদা।",
-      targetTitle: "মাসিক উৎপাদন কোটা",
-      completedUnits: "২৫টির মধ্যে ১৮টি ইউনিট সম্পন্ন",
-      ledgerTitle: "পেমেন্ট লেজার",
-      verifiedDirect: "সরাসরি ডিবিটি সক্রিয়",
-      verifiedArtisan: "সরকারিভাবে প্রত্যয়িত কারিগর",
-      cooperativeLabel: "বরাদ্দকৃত সমবায়",
-      cooperativeName: "উৎকল হ্যান্ডলুম ওয়েভার্স হাব",
-      notifLabel: "হোয়াটসঅ্যাপ সতর্কতা",
-      notifSub: "সরাসরি অর্ডার রাউটিং এবং মূল্য আপডেট",
-      backupLabel: "ক্লাউড সিঙ্ক স্থিতি",
-      backupSub: "২ মিনিট আগে সিঙ্ক করা হয়েছে",
-      navHome: "হোম",
-      navDemand: "চাহিদা",
-      navAnalytics: "বিশ্লেষণ",
-      navPayments: "পেমেন্ট",
-      navProfile: "প্রোফাইল"
-    }
-  };
+ // Enhanced Translations
+ const translations = {
+ en: {
+ brandTitle: "WeaveAhead",
+ brandSub: "Artisan Portal v3.4",
+ govtActive: "Govt Window Active",
+ festivalDir: "Festival & Handloom Directives",
+ openBadge: "Open",
+ pendingPay: "Pending Payments",
+ activeOrders: "Active Orders",
+ dailyLogTitle: "Daily Production Log",
+ actionReqTitle: "Immediate Action Required",
+ yarnTitle: "Cotton Yarn (40s Count)",
+ yarnSub: "Subsidized quota expires in 3 days",
+ restockBtn: "Restock",
+ indexTitle: "Nationwide Weave Index",
+ forecastTitle: "6-Week Demand Projection",
+ forecastSub: "Predicted market absorption units based on upcoming festival calendars.",
+ targetTitle: "Monthly Production Quota",
+ completedUnits: "18 of 25 Units Completed",
+ ledgerTitle: "Payment Ledger",
+ verifiedDirect: "Direct DBT Active",
+ verifiedArtisan: "Govt Certified Artisan",
+ cooperativeLabel: "Assigned Cooperative",
+ cooperativeName: "Utkal Handloom Weavers Hub, Cluster 4",
+ notifLabel: "WhatsApp Alerts",
+ notifSub: "Direct order routing & price updates",
+ backupLabel: "Cloud Sync State",
+ backupSub: "Last synced 2 mins ago",
+ navHome: "Home",
+ navDemand: "Demand",
+ navAnalytics: "Analytics",
+ navPayments: "Payments",
+ navProfile: "Profile"
+ },
+ ta: {
+ brandTitle: "வீவ் அஹெட்",
+ brandSub: "கைவினைஞர் தளம் v3.4",
+ govtActive: "அரசு சாளரம் செயலில் உள்ளது",
+ festivalDir: "திருவிழா & கைத்தறி வழிகாட்டுதல்கள்",
+ openBadge: "திறந்துள்ளது",
+ pendingPay: "நிலுவைக் கட்டணம்",
+ activeOrders: "செயலில் உள்ள ஆர்டர்கள்",
+ dailyLogTitle: "தினசரி உற்பத்தி பதிவு",
+ actionReqTitle: "உடனடி நடவடிக்கை தேவை",
+ yarnTitle: "பருத்தி நூல் (40s)",
+ yarnSub: "மானியம் 3 நாட்களில் முடிவடைகிறது",
+ restockBtn: "மறு நிரப்பு",
+ indexTitle: "தேசிய நெசவு குறியீடு",
+ forecastTitle: "6 வார தேவை கணிப்பு",
+ forecastSub: "வரவிருக்கும் திருவிழா நாட்காட்டியின் அடிப்படையில் கணிக்கப்பட்ட சந்தை உறிஞ்சுதல்.",
+ targetTitle: "மாதாந்திர உற்பத்தி ஒதுக்கீடு",
+ completedUnits: "25 இல் 18 அலகுகள் நிறைவு",
+ ledgerTitle: "கட்டணப் பதிவேடு",
+ verifiedDirect: "நேரடி DBT செயலில் உள்ளது",
+ verifiedArtisan: "அரசு சான்றளிக்கப்பட்ட கைவினைஞர்",
+ cooperativeLabel: "ஒதுக்கப்பட்ட கூட்டுறவு",
+ cooperativeName: "உத்கல் கைத்தறி நெசவாளர்கள் மையம்",
+ notifLabel: "வாட்ஸ்அப் எச்சரிக்கைகள்",
+ notifSub: "நேரடி ஆர்டர் மற்றும் விலை புதுப்பிப்புகள்",
+ backupLabel: "மேக ஒத்திசைவு நிலை",
+ backupSub: "2 நிமிடங்களுக்கு முன்பு ஒத்திசைக்கப்பட்டது",
+ navHome: "முகப்பு",
+ navDemand: "தேவை",
+ navAnalytics: "பகுப்பாய்வு",
+ navPayments: "கட்டணம்",
+ navProfile: "சுயவிவரம்"
+ },
+ hi: {
+ brandTitle: "वीव अहेட்",
+ brandSub: "कारीगर पोर्टल v3.4",
+ govtActive: "सरकारी विंडो सक्रिय",
+ festivalDir: "त्योहार और हथकरघा निर्देश",
+ openBadge: "खुला है",
+ pendingPay: "लंबित भुगतान",
+ activeOrders: "सक्रिय ऑर्डर",
+ dailyLogTitle: "दैनिक उत्पादन लॉग",
+ actionReqTitle: "तत्काल कार्रवाई आवश्यक",
+ yarnTitle: "कपास सूत (40s काउंट)",
+ yarnSub: "सब्सिडी कोटा 3 दिनों में समाप्त हो रहा है",
+ restockBtn: "रीस्टॉक",
+ indexTitle: "राष्ट्रव्यापी बुनाई सूचकांक",
+ forecastTitle: "6-सप्ताह की मांग का अनुमान",
+ forecastSub: "आगामी त्योहारों के कैलेंडर के आधार पर अनुमानित बाजार मांग।",
+ targetTitle: "मासिक उत्पादन कोटा",
+ completedUnits: "25 में से 18 इकाइयां पूर्ण",
+ ledgerTitle: "भुगतान खाता बही",
+ verifiedDirect: "प्रत्यक्ष डीबीटी सक्रिय",
+ verifiedArtisan: "सरकार द्वारा प्रमाणित कारीगर",
+ cooperativeLabel: "आवंटित सहकारी समिति",
+ cooperativeName: "उत्कल हथकरघा बुनकर केंद्र",
+ notifLabel: "व्हाट्सएप अलर्ट",
+ notifSub: "प्रत्यक्ष ऑर्डर रूटिंग और मूल्य अपडेट",
+ backupLabel: "क्लाउड सिंक स्थिति",
+ backupSub: "2 मिनट पहले सिंक किया गया",
+ navHome: "होम",
+ navDemand: "मांग",
+ navAnalytics: "विश्लेषण",
+ navPayments: "भुगतान",
+ navProfile: "प्रोफ़ाइल"
+ },
+ bn: {
+ brandTitle: "উইভ এহেড",
+ brandSub: "কারিগর পোর্টাল v3.4",
+ govtActive: "সরকারি উইন্ডো সক্রিয়",
+ festivalDir: "উৎসব এবং তাঁত নির্দেশিকা",
+ openBadge: "উন্মুক্ত",
+ pendingPay: "বকেয়া পেমেন্ট",
+ activeOrders: "সক্রিয় অর্ডার",
+ dailyLogTitle: "দৈনিক উৎপাদন লগ",
+ actionReqTitle: "জরুরী পদক্ষেপ প্রয়োজন",
+ yarnTitle: "সুতির সুতা (৪০ এস)",
+ yarnSub: "ভবিষ্যৎ ভর্তুকি কোটা ৩ দিনে শেষ হচ্ছে",
+ restockBtn: "পুনরায় সংগ্রহ",
+ indexTitle: "দেশব্যাপী তাঁত সূচক",
+ forecastTitle: "৬-সপ্তাহের চাহিদা পূর্বাভাস",
+ forecastSub: "আসন্ন উৎসবের ক্যালেন্ডারের উপর ভিত্তি করে পূর্বাভাসিত বাজার চাহিদা।",
+ targetTitle: "মাসিক উৎপাদন কোটা",
+ completedUnits: "২৫টির মধ্যে ১৮টি ইউনিট সম্পন্ন",
+ ledgerTitle: "পেমেন্ট লেজার",
+ verifiedDirect: "সরাসরি ডিবিটি সক্রিয়",
+ verifiedArtisan: "সরকারিভাবে প্রত্যয়িত কারিগর",
+ cooperativeLabel: "বরাদ্দকৃত সমবায়",
+ cooperativeName: "উৎকল হ্যান্ডলুম ওয়েভার্স হাব",
+ notifLabel: "হোয়াটসঅ্যাপ সতর্কতা",
+ notifSub: "সরাসরি অর্ডার রাউটিং এবং মূল্য আপডেট",
+ backupLabel: "ক্লাউড সিঙ্ক স্থিতি",
+ backupSub: "২ মিনিট আগে সিঙ্ক করা হয়েছে",
+ navHome: "হোম",
+ navDemand: "চাহিদা",
+ navAnalytics: "বিশ্লেষণ",
+ navPayments: "পেমেন্ট",
+ navProfile: "প্রোফাইল"
+ }
+ };
 
-  // Render Functions
-  function renderProductionLog() {
-    const container = document.getElementById('productionLogContainer');
-    container.innerHTML = state.productionItems.map(item => `
-      <div class="log-row">
-        <div>
-          <div style="font-weight: 700; font-size: 13.5px;">${item.label}</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Target: ${item.target} pcs/day</div>
-        </div>
-        <div class="stepper">
-          <button class="step-btn" onclick="updateCount('${item.id}', -1)">-</button>
-          <span class="step-val" id="count-${item.id}">${item.count}</span>
-          <button class="step-btn" onclick="updateCount('${item.id}', 1)">+</button>
-        </div>
-      </div>
-    `).join('');
-  }
+ // Enhanced Real-time Functions
+ function renderProductionLog() {
+ const container = document.getElementById('productionLogContainer');
+ const now = new Date();
+ 
+ const itemsWithNames = state.productionItems.map(item => {
+ let name = item.label;
+ if (item.customName) {
+ name = item.customName;
+ }
+ 
+ return `
+ <div class="log-row">
+ <div class="item-name">
+ <input type="text" class="item-name-input" value="${name}" placeholder="Enter custom name..." 
+ oninput="updateItemName('${item.id}', this.value)" onblur="autoSaveItems()" />
+ <span class="live-indicator" id="live-${item.id}">LIVE</span>
+ </div>
+ <div style="font-size: 11px; color: var(--text-muted);">Target: ${item.target} pcs/day</div>
+ </div>
+ <div class="stepper">
+ <button class="step-btn" onclick="updateCount('${item.id}', -1)" aria-label="Decrease count for ${name}">-</button>
+ <span class="step-val" id="count-${item.id}">${item.count}</span>
+ <button class="step-btn" onclick="updateCount('${item.id}', 1)" aria-label="Increase count for ${name}">+</button>
+ </div>
+ <div style="font-size: 10px; color: var(--text-muted); margin-left: 8px;">Updated ${formatTime(item.lastUpdated)}</div>
+ </div>
+ `;
+ });
+ 
+ container.innerHTML = itemsWithNames.join('');
+ 
+ // Update live indicators
+ state.productionItems.forEach(item => {
+ const indicator = document.getElementById(`live-${item.id}`);
+ if (indicator && item.lastUpdated) {
+ const elapsed = now - item.lastUpdated;
+ if (elapsed < 60000) { // Less than 1 minute
+ indicator.style.display = 'inline-flex';
+ } else {
+ indicator.style.display = 'none';
+ }
+ }
+ });
+}
 
-  function updateCount(id, delta) {
-    const item = state.productionItems.find(i => i.id === id);
-    item.count = Math.max(0, item.count + delta);
-    document.getElementById(`count-${id}`).textContent = item.count;
-    showToast(`Updated ${item.label} production count`);
-  }
+function updateItemName(id, newName) {
+ state.productionItems.forEach(item => {
+ if (item.id === id) {
+ item.label = newName;
+ item.lastUpdated = new Date();
+ item.customName = newName;
+ }
+ });
+ renderProductionLog();
+ autoSaveItems();
+ showToast(`Item name updated to "${newName}"`);
+}
 
-  function renderDirectory() {
-    const container = document.getElementById('directoryList');
-    const filtered = state.weavingsDirectory.filter(w => {
-      const matchesSearch = w.name.toLowerCase().includes(state.searchQuery.toLowerCase());
-      const matchesRegion = state.activeRegionFilter === 'All' || w.region === state.activeRegionFilter;
-      return matchesSearch && matchesRegion;
-    });
+function autoSaveItems() {
+ clearTimeout(state.autoSaveTimer);
+ state.autoSaveTimer = setTimeout(() => {
+ state.lastSync = new Date();
+ document.getElementById('profileAutoSave').style.display = 'inline-flex';
+ setTimeout(() => {
+ document.getElementById('profileAutoSave').style.display = 'none';
+ }, 3000);
+ }, 2000);
+}
 
-    if (filtered.length === 0) {
-      container.innerHTML = `<div style="text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted);">No matching weaves found in directory.</div>`;
-      return;
-    }
+function updateCount(id, delta) {
+ const item = state.productionItems.find(i => i.id === id);
+ item.count = Math.max(0, item.count + delta);
+ item.lastUpdated = new Date();
+ document.getElementById(`count-${id}`).textContent = item.count;
+ autoSaveItems();
+ showToast(`Updated ${item.label} production count`);
+}
 
-    container.innerHTML = filtered.map(w => `
-      <div class="list-item">
-        <div>
-          <div style="font-weight: 700; font-size: 13.5px;">${w.name}</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Region: ${w.region} | Demand: ${w.demand}</div>
-        </div>
-        <span class="pill ${w.status === 'Accepting' ? 'pill-success' : 'pill-danger'}">${w.status}</span>
-      </div>
-    `).join('');
-  }
+function renderDirectory() {
+ const container = document.getElementById('directoryList');
+ const filtered = state.weavingsDirectory.filter(w => {
+ const matchesSearch = w.name.toLowerCase().includes(state.searchQuery.toLowerCase());
+ const matchesRegion = state.activeRegionFilter === 'All' || w.region === state.activeRegionFilter;
+ return matchesSearch && matchesRegion;
+ });
 
-  function renderPayments() {
-    const container = document.getElementById('paymentsListContainer');
-    container.innerHTML = state.paymentsData.map(p => `
-      <div class="list-item">
-        <div>
-          <div style="font-weight: 700; font-size: 13.5px;">${p.buyer}</div>
-          <div style="font-size: 11px; color: var(--text-muted);">Status: ${p.status}</div>
-        </div>
-        <div style="text-align: right;">
-          <div style="font-weight: 700; font-size: 14px;">₹${p.amount.toLocaleString('en-IN')}</div>
-          ${p.status !== 'Paid' ? `<button style="background:none; border:none; color:var(--primary); font-size:11px; font-weight:700; cursor:pointer; margin-top:2px;" onclick="markPaid(${p.id})">Mark Paid</button>` : '<span style="font-size:10px; color:var(--success); font-weight:700;">Verified DBT</span>'}
-        </div>
-      </div>
-    `).join('');
-  }
+ if (filtered.length === 0) {
+ container.innerHTML = `<div style="text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted);">No matching weaves found in directory.</div>`;
+ return;
+ }
 
-  function markPaid(id) {
-    const p = state.paymentsData.find(item => item.id === id);
-    p.status = 'Paid';
-    renderPayments();
-    showToast(`Payment of ₹${p.amount} marked as settled`);
-  }
+ container.innerHTML = filtered.map(w => `
+ <div class="list-item">
+ <div>
+ <div style="font-weight: 700; font-size: 13.5px;">${w.name}</div>
+ <div style="font-size: 11px; color: var(--text-muted);">Region: ${w.region} | Demand: ${w.demand}</div>
+ </div>
+ <span class="pill ${w.status === 'Accepting' ? 'pill-success' : 'pill-danger'}">${w.status}</span>
+ </div>
+ `).join('');
+}
 
-  function renderChart() {
-    const container = document.getElementById('demandChartContainer');
-    const maxVal = Math.max(...state.forecastData.map(d => d.value));
-    container.innerHTML = state.forecastData.map(d => {
-      const heightPct = (d.value / maxVal) * 100;
-      return `
-        <div class="chart-col">
-          <div style="font-size: 9px; color: var(--text-muted); font-weight: 700;">${d.value}k</div>
-          <div class="chart-bar ${d.active ? 'active' : ''}" style="height: ${heightPct}%;"></div>
-          <div class="chart-label">${d.week}</div>
-        </div>
-      `;
-    }).join('');
-  }
+function renderPayments() {
+ const container = document.getElementById('paymentsListContainer');
+ const now = new Date();
+ 
+ const itemsWithTimestamps = state.paymentsData.map(p => {
+ const statusColor = p.status === 'Paid' ? 'var(--success)' : 'var(--text-muted)';
+ return `
+ <div class="list-item">
+ <div>
+ <div style="font-weight: 700; font-size: 13.5px;">${p.buyer}</div>
+ <div style="font-size: 11px; color: var(--text-muted);">Status: ${p.status}</div>
+ <div style="font-size: 10px; color: ${statusColor}; font-weight: 600;">Updated ${formatTime(p.lastUpdated || now)}</div>
+ </div>
+ <div style="text-align: right;">
+ <div style="font-weight: 700; font-size: 14px;">₹${p.amount.toLocaleString('en-IN')}</div>
+ ${p.status !== 'Paid' ? `<button style="background:none; border:none; color:var(--primary); font-size:11px; font-weight:700; cursor:pointer; margin-top:2px;" onclick="markPaid(${p.id})" aria-label="Mark payment as paid for ${p.buyer}">Mark Paid</button>` : '<span style="font-size:10px; color:var(--success); font-weight:700;">Verified DBT</span>'}
+ </div>
+ </div>
+ `;
+ });
+ 
+ container.innerHTML = itemsWithTimestamps.join('');
+}
 
-  function updateLocalizedUI() {
-    const t = translations[state.lang];
-    document.getElementById('txtBrandTitle').textContent = t.brandTitle;
-    document.getElementById('txtBrandSub').textContent = t.brandSub;
-    document.getElementById('txtGovtActive').textContent = t.govtActive;
-    document.getElementById('txtFestivalDir').textContent = t.festivalDir;
-    document.getElementById('txtOpenBadge').textContent = t.openBadge;
-    document.getElementById('txtPendingPay').textContent = t.pendingPay;
-    document.getElementById('txtActiveOrders').textContent = t.activeOrders;
-    document.getElementById('txtDailyLogTitle').textContent = t.dailyLogTitle;
-    document.getElementById('txtActionReqTitle').textContent = t.actionReqTitle;
-    document.getElementById('txtYarnTitle').textContent = t.yarnTitle;
-    document.getElementById('txtYarnSub').textContent = t.yarnSub;
-    document.getElementById('txtRestockBtn').textContent = t.restockBtn;
-    document.getElementById('txtIndexTitle').textContent = t.indexTitle;
-    document.getElementById('txtForecastTitle').textContent = t.forecastTitle;
-    document.getElementById('txtForecastSub').textContent = t.forecastSub;
-    document.getElementById('txtTargetTitle').textContent = t.targetTitle;
-    document.getElementById('txtCompletedUnits').textContent = t.completedUnits;
-    document.getElementById('txtLedgerTitle').textContent = t.ledgerTitle;
-    document.getElementById('txtVerifiedDirect').textContent = t.verifiedDirect;
-    document.getElementById('txtVerifiedArtisan').textContent = t.verifiedArtisan;
-    document.getElementById('txtCooperativeLabel').textContent = t.cooperativeLabel;
-    document.getElementById('txtCooperativeName').textContent = t.cooperativeName;
-    document.getElementById('txtNotifLabel').textContent = t.notifLabel;
-    document.getElementById('txtNotifSub').textContent = t.notifSub;
-    document.getElementById('txtBackupLabel').textContent = t.backupLabel;
-    document.getElementById('txtBackupSub').textContent = t.backupSub;
-    document.getElementById('navHome').textContent = t.navHome;
-    document.getElementById('navDemand').textContent = t.navDemand;
-    document.getElementById('navAnalytics').textContent = t.navAnalytics;
-    document.getElementById('navPayments').textContent = t.navPayments;
-    document.getElementById('navProfile').textContent = t.navProfile;
-  }
+function markPaid(id) {
+ const p = state.paymentsData.find(item => item.id === id);
+ p.status = 'Paid';
+ p.lastUpdated = new Date();
+ renderPayments();
+ autoSaveItems();
+ showToast(`Payment of ₹${p.amount} marked as settled`);
+}
 
-  // Event Listeners & Controllers
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      
-      btn.classList.add('active');
-      const targetView = document.getElementById(`view-${btn.dataset.target}`);
-      targetView.classList.add('active');
-    });
-  });
+function renderChart() {
+ const container = document.getElementById('demandChartContainer');
+ const maxVal = Math.max(...state.forecastData.map(d => d.value));
+ const now = new Date();
+ 
+ container.innerHTML = state.forecastData.map(d => {
+ const heightPct = (d.value / maxVal) * 100;
+ return `
+ <div class="chart-col">
+ <div style="font-size: 9px; color: var(--text-muted); font-weight: 700;">${d.value}k</div>
+ <div class="chart-bar ${d.active ? 'active' : ''}" style="height: ${heightPct}%;"></div>
+ <div class="chart-value">${d.value}k</div>
+ <div class="chart-label">${d.week}</div>
+ </div>
+ `;
+ }).join('');
+}
 
-  document.getElementById('searchInput').addEventListener('input', (e) => {
-    state.searchQuery = e.target.value;
-    renderDirectory();
-  });
+function formatTime(date) {
+ const now = new Date();
+ const diff = now - date;
+ 
+ if (diff < 60000) return 'Just now';
+ if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
+ if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+ return date.toLocaleDateString();
+}
 
-  document.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      state.activeRegionFilter = chip.dataset.region;
-      renderDirectory();
-    });
-  });
+function updateLocalizedUI() {
+ const t = translations[state.lang];
+ document.getElementById('txtBrandTitle').textContent = t.brandTitle;
+ document.getElementById('txtBrandSub').textContent = t.brandSub;
+ document.getElementById('txtGovtActive').textContent = t.govtActive;
+ document.getElementById('txtFestivalDir').textContent = t.festivalDir;
+ document.getElementById('txtOpenBadge').textContent = t.openBadge;
+ document.getElementById('txtPendingPay').textContent = t.pendingPay;
+ document.getElementById('txtActiveOrders').textContent = t.activeOrders;
+ document.getElementById('txtDailyLogTitle').textContent = t.dailyLogTitle;
+ document.getElementById('txtActionReqTitle').textContent = t.actionReqTitle;
+ document.getElementById('txtYarnTitle').textContent = t.yarnTitle;
+ document.getElementById('txtYarnSub').textContent = t.yarnSub;
+ document.getElementById('txtRestockBtn').textContent = t.restockBtn;
+ document.getElementById('txtIndexTitle').textContent = t.indexTitle;
+ document.getElementById('txtForecastTitle').textContent = t.forecastTitle;
+ document.getElementById('txtForecastSub').textContent = t.forecastSub;
+ document.getElementById('txtTargetTitle').textContent = t.targetTitle;
+ document.getElementById('txtCompletedUnits').textContent = t.completedUnits;
+ document.getElementById('txtLedgerTitle').textContent = t.ledgerTitle;
+ document.getElementById('txtVerifiedDirect').textContent = t.verifiedDirect;
+ document.getElementById('txtVerifiedArtisan').textContent = t.verifiedArtisan;
+ document.getElementById('txtCooperativeLabel').textContent = t.cooperativeLabel;
+ document.getElementById('txtCooperativeName').textContent = t.cooperativeName;
+ document.getElementById('txtNotifLabel').textContent = t.notifLabel;
+ document.getElementById('txtNotifSub').textContent = t.notifSub;
+ document.getElementById('txtBackupLabel').textContent = t.backupLabel;
+ document.getElementById('txtBackupSub').textContent = t.backupSub;
+ document.getElementById('navHome').textContent = t.navHome;
+ document.getElementById('navDemand').textContent = t.navDemand;
+ document.getElementById('navAnalytics').textContent = t.navAnalytics;
+ document.getElementById('navPayments').textContent = t.navPayments;
+ document.getElementById('navProfile').textContent = t.navProfile;
+}
 
-  document.getElementById('langSelector').addEventListener('change', (e) => {
-    state.lang = e.target.value;
-    updateLocalizedUI();
-    showToast(`Language switched successfully`);
-  });
+// Enhanced Event Listeners
+document.querySelectorAll('.nav-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.nav-btn').forEach(b => {
+ b.classList.remove('active');
+ b.setAttribute('aria-pressed', 'false');
+ });
+ 
+ btn.classList.add('active');
+ btn.setAttribute('aria-pressed', 'true');
+ 
+ const targetView = document.getElementById(`view-${btn.dataset.target}`);
+ targetView.classList.add('active');
+ 
+ // Auto-save navigation state
+ autoSaveItems();
+ });
+});
 
-  const themeToggleBtn = document.getElementById('themeToggleBtn');
-  themeToggleBtn.addEventListener('click', () => {
-    state.theme = state.theme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', state.theme);
-    themeToggleBtn.textContent = state.theme === 'light' ? '🌙' : '☀️';
-    showToast(`Switched to ${state.theme} mode`);
-  });
+document.getElementById('searchInput').addEventListener('input', (e) => {
+ state.searchQuery = e.target.value;
+ renderDirectory();
+});
 
-  function openAddProductionModal() {
-    document.getElementById('addBatchModal').classList.add('open');
-  }
+// Enhanced search with real-time suggestions
+document.getElementById('searchInput').addEventListener('focus', () => {
+ const searchResults = document.getElementById('searchResults');
+ searchResults.innerHTML = '';
+ 
+ const suggestions = state.weavingsDirectory
+ .filter(w => w.name.toLowerCase().includes(state.searchQuery.toLowerCase()))
+ .slice(0, 5)
+ .map(w => `
+ <div class="search-result-item" onclick="selectSuggestion('${w.name}')">
+ <div>
+ <div style="font-weight: 600;">${w.name}</div>
+ <div style="font-size: 11px; color: var(--text-muted);">Region: ${w.region}</div>
+ </div>
+ </div>
+ `).join('');
+ 
+ if (suggestions) {
+ searchResults.innerHTML = suggestions;
+ searchResults.classList.add('visible');
+ }
+});
 
-  function handleAddBatch() {
-    const name = document.getElementById('newBatchName').value.trim();
-    const target = parseInt(document.getElementById('newBatchTarget').value, 10);
-    if (!name || isNaN(target)) {
-      showToast('Please enter valid batch parameters');
-      return;
-    }
-    const newId = 'batch_' + Date.now();
-    state.productionItems.push({ id: newId, label: name, count: 0, target: target });
-    renderProductionLog();
-    document.getElementById('addBatchModal').classList.remove('open');
-    document.getElementById('newBatchName').value = '';
-    showToast(`Added new batch: ${name}`);
-  }
+document.addEventListener('click', (e) => {
+ if (!e.target.closest('.search-box')) {
+ document.getElementById('searchResults').classList.remove('visible');
+ }
+});
 
-  document.getElementById('addBatchModal').addEventListener('click', (e) => {
-    if (e.target === document.getElementById('addBatchModal')) {
-      e.target.classList.remove('open');
-    }
-  });
+document.querySelectorAll('.chip').forEach(chip => {
+ chip.addEventListener('click', () => {
+ document.querySelectorAll('.chip').forEach(c => {
+ c.classList.remove('active');
+ c.setAttribute('aria-pressed', 'false');
+ });
+ chip.classList.add('active');
+ chip.setAttribute('aria-pressed', 'true');
+ state.activeRegionFilter = chip.dataset.region;
+ renderDirectory();
+ autoSaveItems();
+ });
+});
 
-  function triggerAction(msg) {
-    showToast(msg);
-  }
+document.getElementById('langSelector').addEventListener('change', (e) => {
+ state.lang = e.target.value;
+ updateLocalizedUI();
+ autoSaveItems();
+ showToast(`Language switched successfully`);
+});
 
-  let toastTimer;
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
-  }
+// Enhanced theme toggle
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+themeToggleBtn.addEventListener('click', () => {
+ state.theme = state.theme === 'light' ? 'dark' : 'light';
+ document.documentElement.setAttribute('data-theme', state.theme);
+ themeToggleBtn.textContent = state.theme === 'light' ? '🌙' : '☀️';
+ autoSaveItems();
+ showToast(`Switched to ${state.theme} mode`);
+});
 
-  // Initial App Initialization
-  renderProductionLog();
-  renderDirectory();
-  renderPayments();
-  renderChart();
-  updateLocalizedUI();
+// Enhanced notifications
+document.getElementById('notificationBtn').addEventListener('click', () => {
+ const notificationList = document.getElementById('notificationList');
+ notificationList.style.display = notificationList.style.display === 'block' ? 'none' : 'block';
+});
+
+function markNotificationRead(element) {
+ element.style.opacity = '0.7';
+ showToast('Notification marked as read');
+ setTimeout(() => {
+ element.style.display = 'none';
+ }, 3000);
+}
+
+// Enhanced modal
+function openAddProductionModal() {
+ document.getElementById('addBatchModal').classList.add('open');
+ autoSaveItems();
+}
+
+function handleAddBatch() {
+ const nameInput = document.getElementById('newBatchName');
+ const targetInput = document.getElementById('newBatchTarget');
+ const notesInput = document.getElementById('batchNotes');
+ 
+ const name = nameInput.value.trim();
+ const target = parseInt(targetInput.value, 10);
+ 
+ if (!name || isNaN(target)) {
+ showToast('Please enter valid batch parameters');
+ return;
+ }
+ 
+ const newId = 'batch_' + Date.now();
+ state.productionItems.push({ 
+ id: newId, 
+ label: name, 
+ count: 0, 
+ target: target,
+ lastUpdated: new Date(),
+ customName: name
+ });
+ 
+ renderProductionLog();
+ document.getElementById('addBatchModal').classList.remove('open');
+ nameInput.value = '';
+ targetInput.value = '5';
+ notesInput.value = '';
+ autoSaveItems();
+ showToast(`Added new batch: ${name}`);
+}
+
+document.getElementById('addBatchModal').addEventListener('click', (e) => {
+ if (e.target === document.getElementById('addBatchModal')) {
+ e.target.classList.remove('open');
+ }
+});
+
+function toggleNotifications(element) {
+ element.classList.toggle('active');
+ showToast(`Notifications ${element.classList.contains('active') ? 'enabled' : 'disabled'}`);
+ autoSaveItems();
+}
+
+function markNotificationRead(element) {
+ element.style.opacity = '0.7';
+ showToast('Notification marked as read');
+ setTimeout(() => {
+ element.style.display = 'none';
+ }, 3000);
+}
+
+function triggerAction(msg) {
+ showToast(msg);
+}
+
+// Enhanced toast notifications
+let toastTimer;
+function showToast(msg, type = 'info') {
+ const t = document.getElementById('toast');
+ t.textContent = msg;
+ t.className = `toast show ${type}`;
+ clearTimeout(toastTimer);
+ toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Real-time clock
+function updateClock() {
+ const now = new Date();
+ document.getElementById('statusTimestamp').textContent = `Updated ${formatTime(now)}`;
+}
+
+setInterval(updateClock, 60000); // Update every minute
+
+// Enhanced auto-save
+function autoSave() {
+ if (state.autoSaveTimer) {
+ clearTimeout(state.autoSaveTimer);
+ }
+ state.autoSaveTimer = setTimeout(() => {
+ console.log('Auto-saved:', JSON.stringify(state, null, 2));
+ }, 2000);
+}
+
+// Check for updates every 30 seconds
+setInterval(() => {
+ // Simulate real-time updates
+ if (Math.random() > 0.9) {
+ showToast('New update available! Refreshing...');
+ }
+}, 30000);
+
+// Initial App Initialization
+renderProductionLog();
+renderDirectory();
+renderPayments();
+renderChart();
+updateLocalizedUI();
+updateClock();
+
+// Set initial auto-save
+autoSaveItems();
 </script>
 </body>
 </html>
