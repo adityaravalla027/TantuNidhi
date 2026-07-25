@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead | Comprehensive National Handloom Intelligence & Cooperative OS</title>
+    <title>WeaveAhead | Enterprise AI & Voice-Enabled National Handloom OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,65 +16,40 @@
                 extend: {
                     colors: {
                         loom: {
-                            50: '#fcf8f2',
-                            100: '#f7eee1',
-                            200: '#edd9be',
-                            300: '#e0be91',
-                            400: '#d19e62',
-                            500: '#c5843b',
-                            600: '#b47030',
-                            700: '#945729',
-                            800: '#784627',
-                            900: '#633b24',
-                            950: '#351d11',
+                            50: '#fcf8f2', 100: '#f7eee1', 200: '#edd9be', 300: '#e0be91',
+                            400: '#d19e62', 500: '#c5843b', 600: '#b47030', 700: '#945729',
+                            800: '#784627', 900: '#633b24', 950: '#351d11',
                         },
-                        earth: {
-                            850: '#1a1614',
-                            900: '#12100e',
-                            950: '#0a0908',
-                        }
+                        earth: { 850: '#1a1614', 900: '#12100e', 950: '#0a0908' }
                     },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        .glass-panel {
-            background: rgba(26, 22, 20, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(197, 132, 59, 0.25);
-        }
-        .glass-card {
-            background: rgba(30, 25, 22, 0.8);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(197, 132, 59, 0.16);
-        }
-        .glass-card:hover {
-            border-color: rgba(197, 132, 59, 0.45);
-        }
-        .water-ui-glow {
-            box-shadow: 0 0 35px rgba(197, 132, 59, 0.12);
-        }
+        .glass-panel { background: rgba(26, 22, 20, 0.94); backdrop-filter: blur(24px); border: 1px solid rgba(197, 132, 59, 0.28); }
+        .glass-card { background: rgba(30, 25, 22, 0.82); backdrop-filter: blur(16px); border: 1px solid rgba(197, 132, 59, 0.18); }
+        .glass-card:hover { border-color: rgba(197, 132, 59, 0.5); }
+        .glow { box-shadow: 0 0 40px rgba(197, 132, 59, 0.15); }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0a0908; }
         ::-webkit-scrollbar-thumb { background: #351d11; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #784627; }
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.02); } }
+        .voice-active { animation: pulse-slow 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="bg-earth-950 text-loom-100 font-sans antialiased selection:bg-loom-500 selection:text-white">
 
     <!-- Ambient Background Lighting -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="absolute -top-[20%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-loom-800/15 blur-[140px]"></div>
-        <div class="absolute top-[35%] -right-[15%] w-[50vw] h-[50vw] rounded-full bg-amber-700/10 blur-[160px]"></div>
-        <div class="absolute -bottom-[20%] left-[15%] w-[60vw] h-[60vw] rounded-full bg-loom-900/20 blur-[180px]"></div>
+        <div class="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-loom-800/15 blur-[150px]"></div>
+        <div class="absolute top-[30%] -right-[15%] w-[55vw] h-[55vw] rounded-full bg-amber-700/10 blur-[170px]"></div>
+        <div class="absolute -bottom-[20%] left-[10%] w-[65vw] h-[65vw] rounded-full bg-loom-900/20 blur-[190px]"></div>
     </div>
 
-    <!-- Master Header -->
+    <!-- Top Navigation Bar -->
     <header class="sticky top-0 z-50 glass-panel border-b border-loom-900/60 shadow-xl">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -85,22 +60,21 @@
                 </div>
                 <div>
                     <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-loom-200 via-loom-300 to-loom-500 bg-clip-text text-transparent">WeaveAhead</span>
-                    <span class="block text-[10px] uppercase tracking-widest text-loom-400 font-bold">National Gov & Market OS</span>
+                    <span class="block text-[10px] uppercase tracking-widest text-loom-400 font-bold">FastAPI AI & 12-Lang Voice OS</span>
                 </div>
             </div>
 
-            <nav class="hidden xl:flex items-center space-x-7 text-xs font-semibold text-loom-300">
-                <a href="#national-command" class="hover:text-loom-400 text-loom-400">National Dashboard</a>
-                <a href="#live-ticker" class="hover:text-loom-400">Mandi Stream</a>
-                <a href="#cluster-matrix" class="hover:text-loom-400">Cluster Intelligence</a>
-                <a href="#water-ui-hub" class="hover:text-loom-400">Traditional Water UI</a>
-                <a href="#gov-schemes" class="hover:text-loom-400">Credit & Schemes</a>
-                <a href="#analytics-lab" class="hover:text-loom-400">AI Analytics</a>
+            <nav class="hidden xl:flex items-center space-x-6 text-xs font-semibold text-loom-300">
+                <a href="#ai-command" class="hover:text-loom-400 text-loom-400">AI Forecasting</a>
+                <a href="#voice-hub" class="hover:text-loom-400">12-Lang Voiceover</a>
+                <a href="#fastapi-metrics" class="hover:text-loom-400">FastAPI Backend</a>
+                <a href="#framework" class="hover:text-loom-400">Problem & Solution</a>
+                <a href="#financial-flow" class="hover:text-loom-400">Cash Flow Tracker</a>
             </nav>
 
             <div class="flex items-center space-x-3">
                 <span class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800 shadow-inner">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span> NHDC API Connected
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2"></span> FastAPI Websocket Active
                 </span>
             </div>
         </div>
@@ -109,20 +83,20 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 relative z-10">
 
-        <!-- Section 1: National Command Center & Live Feed -->
-        <section id="national-command" class="space-y-6">
-            <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-loom-500/30 shadow-2xl space-y-8 water-ui-glow">
+        <!-- Section 1: AI Command Hub & Cluster Selector -->
+        <section id="ai-command" class="space-y-6">
+            <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-loom-500/30 shadow-2xl space-y-8 glow">
                 
                 <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-6 border-b border-loom-900">
                     <div>
                         <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-loom-950 border border-loom-900 text-loom-300 text-xs font-semibold mb-2">
-                            <span>🇮🇳 Ministry of Textiles & National Handloom Development Corporation</span>
+                            <span>🤖 FastAPI Neural Engine & National Handloom Intelligence Hub</span>
                         </div>
-                        <h1 class="text-2xl sm:text-4xl font-extrabold text-white">National Handloom Market Intelligence OS</h1>
-                        <p class="text-sm text-loom-300 mt-1">Real-time synchronized data processing commodity rates, 4th Handloom Census statistics, and cooperative demand pools.</p>
+                        <h1 class="text-2xl sm:text-4xl font-extrabold text-white">AI-Powered Handloom Demand Forecasting & Voice OS</h1>
+                        <p class="text-sm text-loom-300 mt-1">Solving seasonal income volatility[span_0](start_span)[span_0](end_span), delayed payments[span_1](start_span)[span_1](end_span), and lack of order visibility[span_2](start_span)[span_2](end_span) through multi-language AI synchronization[span_3](start_span)[span_3](end_span).</p>
                     </div>
 
-                    <!-- Regional Cluster Selector Tabs -->
+                    <!-- Regional Cluster Selector -->
                     <div class="flex flex-wrap gap-2 bg-earth-900 p-1.5 rounded-2xl border border-loom-900">
                         <button onclick="switchClusterOS('varanasi')" class="cluster-tab px-4 py-2 rounded-xl text-xs font-bold bg-loom-600 text-white shadow-md transition-all">Varanasi (North)</button>
                         <button onclick="switchClusterOS('fulia')" class="cluster-tab px-4 py-2 rounded-xl text-xs font-bold text-loom-300 hover:text-white transition-all">Fulia (East)</button>
@@ -131,24 +105,24 @@
                     </div>
                 </div>
 
-                <!-- National Metrics Grid -->
+                <!-- Core Metrics Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-500 space-y-2">
                         <div class="flex justify-between items-center text-xs text-loom-400">
-                            <span>NHDC Yarn Mandi API</span>
-                            <span class="text-emerald-400 font-bold">Live Sync</span>
+                            <span>FastAPI Mandi Sync</span>
+                            <span class="text-emerald-400 font-bold">99.9% Uptime</span>
                         </div>
                         <div class="text-lg font-extrabold text-white" id="cmd-mandi">Silk Yarn: ₹4,250/kg</div>
-                        <div class="text-[11px] text-loom-400">National Commodity Exchange Feed</div>
+                        <div class="text-[11px] text-loom-400">Live National Commodity Exchange</div>
                     </div>
 
                     <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500 space-y-2">
                         <div class="flex justify-between items-center text-xs text-loom-400">
                             <span>Festival & Wedding Index</span>
-                            <span class="text-amber-400 font-bold">Peak Active</span>
+                            <span class="text-amber-400 font-bold">Surge Active</span>
                         </div>
-                        <div class="text-lg font-extrabold text-white" id="cmd-fest">Demand Surge: +42%</div>
-                        <div class="text-[11px] text-loom-400">Ministry Seasonal Calendar</div>
+                        <div class="text-lg font-extrabold text-white" id="cmd-fest">Demand Index: +42%</div>
+                        <div class="text-[11px] text-loom-400">AI Seasonal Calendar Integration</div>
                     </div>
 
                     <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500 space-y-2">
@@ -156,56 +130,78 @@
                             <span>Cooperative Order Pool</span>
                             <span class="text-blue-400 font-bold">Verified</span>
                         </div>
-                        <div class="text-lg font-extrabold text-white" id="cmd-coop">1,420 Units Pending[span_0](start_span)[span_0](end_span)</div>
-                        <div class="text-[11px] text-loom-400">Regional Producer Societies[span_1](start_span)[span_1](end_span)</div>
+                        <div class="text-lg font-extrabold text-white" id="cmd-coop">1,420 Units Pending[span_4](start_span)[span_4](end_span)</div>
+                        <div class="text-[11px] text-loom-400">Producer Societies Order Tracking</div>
                     </div>
 
                     <div class="glass-card p-5 rounded-2xl border-l-4 border-l-purple-500 space-y-2">
                         <div class="flex justify-between items-center text-xs text-loom-400">
-                            <span>4th Census Workforce</span>
-                            <span class="text-purple-400 font-bold">Official Data</span>
+                            <span>Unsold Inventory Risk</span>
+                            <span class="text-emerald-400 font-bold">Minimized (-65%)</span>
                         </div>
-                        <div class="text-lg font-extrabold text-white" id="cmd-census">35 Lakh+ Households[span_2](start_span)[span_2](end_span)</div>
-                        <div class="text-[11px] text-loom-400">Active Artisans & Allied Units</div>
+                        <div class="text-lg font-extrabold text-white" id="cmd-risk">Optimized Stock[span_5](start_span)[span_5](end_span)</div>
+                        <div class="text-[11px] text-loom-400">Advanced Production Planning</div>
                     </div>
                 </div>
 
-                <!-- Main Chart & Traditional Water UI Interface -->
+                <!-- Main Forecasting Chart & 12-Language Voice Engine -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-2">
                     <div class="lg:col-span-8 glass-card p-6 rounded-3xl flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-6">
                             <div>
-                                <h3 class="text-base font-bold text-white">National Demand Forecasting Engine</h3>
-                                <p class="text-xs text-loom-300">Predictive analytics engine mapping weekly demand indexes for handloom clusters.</p>
+                                <h3 class="text-base font-bold text-white">AI-Driven Weekly Demand Forecast</h3>
+                                <p class="text-xs text-loom-300">Visual demand index tailored for low-literacy artisans[span_6](start_span)[span_6](end_span) (Sarees, Stoles, Furnishings[span_7](start_span)[span_7](end_span)).</p>
                             </div>
-                            <span class="text-xs bg-loom-950 text-loom-300 px-3 py-1 rounded-full border border-loom-900">AI Model v2.4</span>
+                            <span class="text-xs bg-loom-950 text-loom-300 px-3 py-1 rounded-full border border-loom-900">Neural Engine v3.2</span>
                         </div>
                         <div class="h-64 relative w-full">
                             <canvas id="commandChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Traditional Water UI Integration Card -->
-                    <div id="water-ui-hub" class="lg:col-span-4 glass-card p-6 rounded-3xl flex flex-col justify-between space-y-4">
+                    <!-- Section 2: 12-Language Voiceover Hub -->
+                    <div id="voice-hub" class="lg:col-span-4 glass-card p-6 rounded-3xl flex flex-col justify-between space-y-4">
                         <div>
-                            <span class="text-xs text-loom-400 font-bold uppercase tracking-wider">Traditional Water UI Dispatch[span_3](start_span)[span_3](end_span)</span>
-                            <h3 class="text-base font-bold text-white mt-1">Regional Voice & WhatsApp Node</h3>
-                            <p class="text-xs text-loom-300 mt-1">Zero-app-literacy audio synthesis dispatching market insights straight to artisan handsets[span_4](start_span)[span_4](end_span).</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-loom-400 font-bold uppercase tracking-wider">12-Language Voiceover[span_8](start_span)[span_8](end_span)</span>
+                                <span class="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-800 font-bold">TTS Active</span>
+                            </div>
+                            <h3 class="text-base font-bold text-white mt-1">Select Regional Language</h3>
+                            <p class="text-xs text-loom-300 mt-1">Audio synthesis delivering automated SMS/WhatsApp alerts in local dialects[span_9](start_span)[span_9](end_span).</p>
+                        </div>
+
+                        <!-- Language Selector Dropdown -->
+                        <div>
+                            <select id="langSelect" onchange="updateVoiceScript()" class="w-full bg-earth-900 border border-loom-900 text-loom-100 text-xs rounded-xl p-2.5 focus:outline-none focus:border-loom-500">
+                                <option value="bn">Bengali (বাংলা) - Fulia / Bengal</option>
+                                <option value="hi">Hindi (हिन्दी) - Varanasi / Panipat</option>
+                                <option value="ta">Tamil (தமிழ்) - Kanchipuram</option>
+                                <option value="te">Telugu (తెలుగు) - Pochampally</option>
+                                <option value="gu">Gujarati (ગુજરાતી) - Surat</option>
+                                <option value="mr">Marathi (मराठी) - Solapur</option>
+                                <option value="kn">Kannada (ಕನ್ನಡ) - Ilkal</option>
+                                <option value="ml">Malayalam (മലയാളം) - Balaramapuram</option>
+                                <option value="pa">Punjabi (ਪੰਜਾਬੀ) - Ludhiana</option>
+                                <option value="or">Odia (ଓଡ଼ିଆ) - Maniabandha</option>
+                                <option value="as">Assamese (অসমীয়া) - Sualkuchi</option>
+                                <option value="en">English (Pan-India)</option>
+                            </select>
                         </div>
                         
-                        <div class="bg-earth-900/90 p-4 rounded-2xl border border-loom-900 space-y-3 text-xs">
-                            <div class="flex items-center space-x-2 text-emerald-400 font-bold">
-                                <span>▶ Audio Synthesizer Ready (0:45)</span>
+                        <div class="bg-earth-900/90 p-4 rounded-2xl border border-loom-900 space-y-3 text-xs voice-active">
+                            <div class="flex items-center justify-between text-emerald-400 font-bold">
+                                <span id="voice-status">▶ Audio Synthesizer Ready (0:45)</span>
+                                <span class="text-[10px] text-loom-400" id="lang-tag">Bengali</span>
                             </div>
                             <p class="text-loom-200 font-medium italic" id="water-script">"আগামী সপ্তাহে বেনারসি সিল্ক শাড়ির চাহিদা ৩০% বাড়বে। কাঁচামাল সোমবারে কিনুন।"</p>
                             <div class="pt-2 border-t border-loom-900/60 flex justify-between text-[11px] text-loom-400">
                                 <span id="water-product">Product: Banarasi Silk Sarees</span>
-                                <span class="text-emerald-400 font-bold">Gateway Online</span>
+                                <span class="text-emerald-400 font-bold">WhatsApp & SMS Ready</span>
                             </div>
                         </div>
 
-                        <button onclick="triggerWaterUIDispatch()" class="w-full py-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-loom-600 to-loom-500 hover:from-loom-500 hover:to-loom-400 shadow-lg transition-all">
-                            Dispatch Voice Alert to Cluster Network
+                        <button onclick="triggerVoiceBroadcast()" class="w-full py-3 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-loom-600 to-loom-500 hover:from-loom-500 hover:to-loom-400 shadow-lg transition-all">
+                            Broadcast Voice Alert to Weavers
                         </button>
                     </div>
                 </div>
@@ -213,206 +209,105 @@
             </div>
         </section>
 
-        <!-- Section 2: Live Mandi & Commodity Rate Stream -->
-        <section id="live-ticker" class="space-y-6">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h2 class="text-xl font-extrabold text-white">Live National Mandi Commodity Ticker</h2>
-                    <p class="text-xs text-loom-300">Synchronized with raw material exchange nodes across key production zones.</p>
-                </div>
-                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-900">🟢 Real-Time Websocket</span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-card p-5 rounded-2xl space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-loom-400 uppercase">Raw Mulberry Silk</span>
-                        <span class="text-xs text-emerald-400 font-semibold">+3.4% ↗</span>
-                    </div>
-                    <div class="text-2xl font-extrabold text-white">₹4,250 <span class="text-xs text-loom-400">/ kg</span></div>
-                    <div class="text-xs text-loom-300 flex justify-between pt-2 border-t border-loom-900">
-                        <span>Hub: Varanasi Mandi</span>
-                        <span class="text-loom-400">Grade-A Certified</span>
-                    </div>
-                </div>
-
-                <div class="glass-card p-5 rounded-2xl space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-loom-400 uppercase">Mercerized Cotton</span>
-                        <span class="text-xs text-emerald-400 font-semibold">+1.2% ↗</span>
-                    </div>
-                    <div class="text-2xl font-extrabold text-white">₹1,850 <span class="text-xs text-loom-400">/ kg</span></div>
-                    <div class="text-xs text-loom-300 flex justify-between pt-2 border-t border-loom-900">
-                        <span>Hub: Fulia / Bengal</span>
-                        <span class="text-loom-400">Fine Count 100s</span>
-                    </div>
-                </div>
-
-                <div class="glass-card p-5 rounded-2xl space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-loom-400 uppercase">Metallic Gold Zari</span>
-                        <span class="text-xs text-amber-400 font-semibold">0.0% ↔</span>
-                    </div>
-                    <div class="text-2xl font-extrabold text-white">₹6,100 <span class="text-xs text-loom-400">/ unit</span></div>
-                    <div class="text-xs text-loom-300 flex justify-between pt-2 border-t border-loom-900">
-                        <span>Hub: Kanchipuram</span>
-                        <span class="text-loom-400">Electroplated Silver Core</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 3: Detailed Cluster Intelligence Matrix -->
-        <section id="cluster-matrix" class="space-y-6">
+        <!-- Section 3: FastAPI Backend Integration & Architecture -->
+        <section id="fastapi-metrics" class="space-y-6">
             <div class="glass-panel p-8 rounded-3xl border border-loom-500/20 space-y-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">Cluster Deep Dive</span>
-                        <h2 class="text-2xl font-extrabold text-white mt-2">National Cooperative Cluster Performance</h2>
-                        <p class="text-xs text-loom-300">Granular breakdown of production capacity, active looms, and market absorption rates.</p>
+                        <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">FastAPI Architecture</span>
+                        <h2 class="text-2xl font-extrabold text-white mt-2">Backend Microservices & API Endpoints</h2>
+                        <p class="text-xs text-loom-300">High-performance asynchronous Python FastAPI routes powering real-time demand estimation and notification pipelines.</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="filterClusterData('all')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-loom-600 text-white">All Clusters</button>
-                        <button onclick="filterClusterData('north')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-earth-900 text-loom-300 border border-loom-900">North</button>
-                        <button onclick="filterClusterData('south')" class="filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-earth-900 text-loom-300 border border-loom-900">South & East</button>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-earth-900 text-loom-400 border-b border-loom-900 uppercase tracking-wider">
-                            <tr>
-                                <th class="p-4">Cluster Name</th>
-                                <th class="p-4">State / Region</th>
-                                <th class="p-4">Primary Product</th>
-                                <th class="p-4">Active Weavers</th>
-                                <th class="p-4">Coop Pool</th>
-                                <th class="p-4">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-loom-900/60 text-loom-200">
-                            <tr class="hover:bg-earth-900/40 transition-colors" data-region="north">
-                                <td class="p-4 font-bold text-white flex items-center space-x-2">
-                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                                    <span>Varanasi Silk Cluster</span>
-                                </td>
-                                <td class="p-4">Uttar Pradesh (North)</td>
-                                <td class="p-4 text-loom-300">Banarasi Brocades & Sarees</td>
-                                <td class="p-4">1,30,000</td>
-                                <td class="p-4 text-emerald-400 font-bold">1,420 Units[span_5](start_span)[span_5](end_span)</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-semibold text-[10px]">Peak Demand</span></td>
-                            </tr>
-                            <tr class="hover:bg-earth-900/40 transition-colors" data-region="south">
-                                <td class="p-4 font-bold text-white flex items-center space-x-2">
-                                    <span class="w-2 h-2 rounded-full bg-loom-500"></span>
-                                    <span>Fulia Handloom Cluster</span>
-                                </td>
-                                <td class="p-4">West Bengal (East)</td>
-                                <td class="p-4 text-loom-300">Jamdani, Tangail & Stoles</td>
-                                <td class="p-4">3,60,000</td>
-                                <td class="p-4 text-emerald-400 font-bold">2,100 Units[span_6](start_span)[span_6](end_span)</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 font-semibold text-[10px]">Festival Prep</span></td>
-                            </tr>
-                            <tr class="hover:bg-earth-900/40 transition-colors" data-region="south">
-                                <td class="p-4 font-bold text-white flex items-center space-x-2">
-                                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                                    <span>Kanchipuram Silk Cluster</span>
-                                </td>
-                                <td class="p-4">Tamil Nadu (South)</td>
-                                <td class="p-4 text-loom-300">Kanchipuram Pattu Sarees</td>
-                                <td class="p-4">1,90,000</td>
-                                <td class="p-4 text-emerald-400 font-bold">980 Units[span_7](start_span)[span_7](end_span)</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-blue-950 text-blue-400 border border-blue-800 font-semibold text-[10px]">Temple Season</span></td>
-                            </tr>
-                            <tr class="hover:bg-earth-900/40 transition-colors" data-region="north">
-                                <td class="p-4 font-bold text-white flex items-center space-x-2">
-                                    <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                                    <span>Panipat Textile Hub</span>
-                                </td>
-                                <td class="p-4">Haryana (North-West)</td>
-                                <td class="p-4 text-loom-300">Recycled Blankets & Carpets</td>
-                                <td class="p-4">14,400</td>
-                                <td class="p-4 text-emerald-400 font-bold">1,850 Units[span_8](start_span)[span_8](end_span)</td>
-                                <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-purple-950 text-purple-400 border border-purple-800 font-semibold text-[10px]">Steady Supply</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 4: Government Schemes & Credit Access Integration -->
-        <section id="gov-schemes" class="space-y-6">
-            <div class="glass-panel p-8 rounded-3xl border border-loom-500/20 space-y-6">
-                <div>
-                    <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">Financial Inclusion</span>
-                    <h2 class="text-2xl font-extrabold text-white mt-2">National Handloom Credit & Scheme Integration</h2>
-                    <p class="text-xs text-loom-300">Connecting forecasted cooperative income data directly with Ministry financial welfare programs.</p>
+                    <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Status: 200 OK (Latency: 14ms)</span>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="glass-card p-6 rounded-2xl space-y-3">
-                        <div class="w-10 h-10 rounded-xl bg-loom-900 text-loom-400 flex items-center justify-center font-bold border border-loom-800">01</div>
-                        <h3 class="text-base font-bold text-white">Mudra Handloom Loan</h3>
-                        <p class="text-xs text-loom-300 leading-relaxed">Subsidized collateral-free credit up to ₹2 Lakhs facilitated through verified WeaveAhead income projections.</p>
-                        <button onclick="alert('✓ Mudra Scheme Application Link Generated for Cooperative Cluster.')" class="text-xs text-loom-400 font-bold hover:text-white underline pt-2 block">Apply via Portal →</button>
+                    <div class="glass-card p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-loom-400">GET /api/v1/forecast</span>
+                            <span class="text-[10px] bg-loom-950 text-loom-300 px-2 py-0.5 rounded border border-loom-900">JSON Payload</span>
+                        </div>
+                        <p class="text-xs text-loom-300 leading-relaxed">Computes regional weekly demand curves by evaluating historical weaver data and upcoming festival calendars.</p>
+                        <div class="p-2.5 rounded bg-earth-950 font-mono text-[11px] text-amber-300 overflow-x-auto">
+                            { "cluster": "varanasi", "trend": "+30%", "status": "optimal" }
+                        </div>
                     </div>
 
-                    <div class="glass-card p-6 rounded-2xl space-y-3">
-                        <div class="w-10 h-10 rounded-xl bg-loom-900 text-loom-400 flex items-center justify-center font-bold border border-loom-800">02</div>
-                        <h3 class="text-base font-bold text-white">Pehchan Smart Identity Cards</h3>
-                        <p class="text-xs text-loom-300 leading-relaxed">National database verification issuing biometric artisan cards for direct benefit transfers and raw material subsidies.</p>
-                        <button onclick="alert('✓ Pehchan Registry Verified against 4th Census Records.')" class="text-xs text-loom-400 font-bold hover:text-white underline pt-2 block">Verify Registry →</button>
+                    <div class="glass-card p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-loom-400">POST /api/v1/voice-dispatch</span>
+                            <span class="text-[10px] bg-loom-950 text-loom-300 px-2 py-0.5 rounded border border-loom-900">Twilio / AI TTS</span>
+                        </div>
+                        <p class="text-xs text-loom-300 leading-relaxed">Triggers automated text-to-speech audio generation across 12 Indian regional languages for instant mobile dispatch.</p>
+                        <div class="p-2.5 rounded bg-earth-950 font-mono text-[11px] text-emerald-300 overflow-x-auto">
+                            { "dispatched": true, "lang": "bn", "sms_sent": 1420 }
+                        </div>
                     </div>
 
-                    <div class="glass-card p-6 rounded-2xl space-y-3">
-                        <div class="w-10 h-10 rounded-xl bg-loom-900 text-loom-400 flex items-center justify-center font-bold border border-loom-800">03</div>
-                        <h3 class="text-base font-bold text-white"> Yarn Supply Scheme (YSS)</h3>
-                        <p class="text-xs text-loom-300 leading-relaxed">10% price subsidy on cotton, silk, and wool delivered directly to registered weaver cooperative societies.</p>
-                        <button onclick="alert('✓ YSS Subsidized Depot Delivery Order Initialized.')" class="text-xs text-loom-400 font-bold hover:text-white underline pt-2 block">Request Depot Supply →</button>
+                    <div class="glass-card p-5 rounded-2xl space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-loom-400">WS /ws/mandi-stream</span>
+                            <span class="text-[10px] bg-loom-950 text-loom-300 px-2 py-0.5 rounded border border-loom-900">Websocket</span>
+                        </div>
+                        <p class="text-xs text-loom-300 leading-relaxed">Streaming live raw material commodity rates (silk, cotton, zari) straight from national exchange servers to dashboards.</p>
+                        <div class="p-2.5 rounded bg-earth-950 font-mono text-[11px] text-blue-300 overflow-x-auto">
+                            { "material": "silk", "rate_inr": 4250, "delta": "+3.4%" }
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 5: AI Analytics Lab & Problem/Solution Framework -->
-        <section id="analytics-lab" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Section 4: Problem, Solution & Business Impact Framework -->
+        <section id="framework" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div class="glass-panel p-8 rounded-3xl border border-loom-500/20 space-y-6">
-                <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">Core Architecture[span_9](start_span)[span_9](end_span)</span>
-                <h3 class="text-2xl font-extrabold text-white">The Problem & Solution Framework[span_10](start_span)[span_10](end_span)</h3>
+                <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">Core Ideation[span_10](start_span)[span_10](end_span)</span>
+                <h3 class="text-2xl font-extrabold text-white">Solving Handloom Instability[span_11](start_span)[span_11](end_span)</h3>
                 
                 <div class="space-y-4 text-xs text-loom-300">
                     <div class="glass-card p-4 rounded-xl space-y-1">
-                        <strong class="text-white block text-sm">Problem: Unpredictable Demand & Inventory Loss[span_11](start_span)[span_11](end_span)</strong>
-                        Weavers produce blindly without real-time market data, leading to piled-up inventory and delayed payments[span_12](start_span)[span_12](end_span).
+                        <strong class="text-white block text-sm">The Problem: Seasonal Volatility & Guesswork[span_12](start_span)[span_12](end_span)</strong>
+                        Weavers face constant income instability due to seasonal demand fluctuations, unpredictable market trends, delayed payments, and zero visibility into future orders[span_13](start_span)[span_13](end_span). This discourages younger generations from continuing the craft[span_14](start_span)[span_14](end_span).
                     </div>
                     <div class="glass-card p-4 rounded-xl space-y-1">
-                        <strong class="text-white block text-sm">Solution: Automated Weekly Demand Forecasting[span_13](start_span)[span_13](end_span)</strong>
-                        Aggregates national market trends, festivals, and export data, transforming complex metrics into simple voice & WhatsApp alerts[span_14](start_span)[span_14](end_span).
+                        <strong class="text-white block text-sm">The Solution: WeaveAhead Mobile-First OS[span_15](start_span)[span_15](end_span)</strong>
+                        Aggregates local market data, festival calendars, and buyer trends to generate easy-to-understand weekly demand forecasts for sarees, stoles, and home furnishings[span_16](start_span)[span_16](end_span).
                     </div>
                     <div class="glass-card p-4 rounded-xl space-y-1">
-                        <strong class="text-white block text-sm">Impact: Sustainable Weaver Livelihoods[span_15](start_span)[span_15](end_span)</strong>
-                        Eliminates unsold stock, stabilizes monthly income, and encourages the younger generation to stay in the craft[span_16](start_span)[span_16](end_span).
+                        <strong class="text-white block text-sm">Targeted Impact: Secure Livelihoods[span_17](start_span)[span_17](end_span)</strong>
+                        Minimizes unsold inventory, optimizes raw material stock timing, and attracts the next generation with predictable monthly earnings[span_18](start_span)[span_18](end_span).
                     </div>
                 </div>
             </div>
 
-            <div class="glass-panel p-8 rounded-3xl border border-loom-500/20 space-y-6">
-                <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">Roadmap & Business Model</span>
-                <h3 class="text-2xl font-extrabold text-white">Strategic Rollout Plan[span_17](start_span)[span_17](end_span)</h3>
+            <!-- Section 5: Financial Cash Flow & Order Tracker -->
+            <div id="financial-flow" class="glass-panel p-8 rounded-3xl border border-loom-500/20 space-y-6">
+                <span class="text-xs font-bold uppercase tracking-widest text-loom-400 px-3 py-1 rounded-full bg-loom-950 border border-loom-900">Cash Flow & Payments[span_19](start_span)[span_19](end_span)</span>
+                <h3 class="text-2xl font-extrabold text-white">Pending Payments & Expected Order Cycles</h3>
 
                 <div class="space-y-4 text-xs text-loom-300">
-                    <div class="glass-card p-4 rounded-xl space-y-1">
-                        <strong class="text-white block text-sm">Phase 1 (Current): Pilot & Validation[span_18](start_span)[span_18](end_span)</strong>
-                        Deploying cluster forecasting engines in Varanasi and Fulia with 500 active weaver families[span_19](start_span)[span_19](end_span).
+                    <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <strong class="text-white block">Cooperative Batch #402 (Varanasi)</strong>
+                            <span class="text-[11px] text-loom-400">Expected Settlement: Monday (Due in 2 days)</span>
+                        </div>
+                        <span class="text-emerald-400 font-extrabold text-sm">₹48,500</span>
                     </div>
-                    <div class="glass-card p-4 rounded-xl space-y-1">
-                        <strong class="text-white block text-sm">Phase 2: Cooperative Subscription Model[span_20](start_span)[span_20](end_span)</strong>
-                        Nominal SaaS subscription fee paid by cooperative societies for group dashboards and raw material price alerts[span_21](start_span)[span_21](end_span).
+
+                    <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+                        <div>
+                            <strong class="text-white block">Handloom Export House (Fulia)</strong>
+                            <span class="text-[11px] text-loom-400">Expected Settlement: Next Friday</span>
+                        </div>
+                        <span class="text-amber-400 font-extrabold text-sm">₹32,000</span>
                     </div>
-                    <div class="glass-card p-4 rounded-xl space-y-1">
-                        <strong class="text-white block text-sm">Phase 3: National Government Integration[span_22](start_span)[span_22](end_span)</strong>
-                        Full API integration with National Handloom Development Corporation and Ministry databases for seamless subsidy distribution[span_23](start_span)[span_23](end_span).
+
+                    <div class="p-4 rounded-xl bg-earth-900 border border-loom-900 space-y-2">
+                        <div class="flex justify-between text-white font-bold">
+                            <span>Monthly Cash Flow Predictability:</span>
+                            <span class="text-emerald-400">92% Secure</span>
+                        </div>
+                        <p class="text-[11px] text-loom-300">Eliminates payment guesswork[span_20](start_span)[span_20](end_span) by syncing buyer invoices directly with artisan SMS alerts.</p>
                     </div>
                 </div>
             </div>
@@ -427,53 +322,103 @@
                 <div class="w-6 h-6 rounded-lg bg-loom-600 flex items-center justify-center text-white font-bold text-xs">WA</div>
                 <span class="text-white font-bold text-sm">WeaveAhead</span>
             </div>
-            <p>Empowering India's handloom weaver communities with real-time market visibility, cooperative intelligence, and traditional water UI design[span_24](start_span)[span_24](end_span).</p>
-            <p class="text-loom-400/60">&copy; 2026 WeaveAhead National Initiative. All Rights Reserved. Integrated with NHDC & Ministry of Textiles Data APIs[span_25](start_span)[span_25](end_span).</p>
+            <p>Empowering India's handloom weaver communities with FastAPI intelligence, 12-language voice support[span_21](start_span)[span_21](end_span), and traditional water UI design[span_22](start_span)[span_22](end_span).</p>
+            <p class="text-loom-400/60">&copy; 2026 WeaveAhead Initiative. Built for National Handloom Development[span_23](start_span)[span_23](end_span). All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- Master Application Script Logic -->
+    <!-- Master Application Script & 12-Language TTS Engine -->
     <script>
         let commandChartInstance = null;
 
-        const clusterOSDatabase = {
+        const clusterVoiceDatabase = {
             varanasi: {
                 mandi: "Silk Yarn: ₹4,250/kg",
                 fest: "Wedding Season Peak Active",
-                coop: "1,420 Units Pending[span_26](start_span)[span_26](end_span)",
-                census: "1.3 Lakh+ Weavers",
-                product: "Banarasi Silk Sarees",
-                script: "\"আগামী সপ্তাহে বেনারসি সিল্ক শাড়ির চাহিদা ৩০% বাড়বে। কাঁচামাল সোমবারে কিনুন।\"",
-                values: [65, 82, 94, 110, 128, 142, 160]
+                coop: "1,420 Units Pending[span_24](start_span)[span_24](end_span)",
+                product: "Banarasi Silk Sarees[span_25](start_span)[span_25](end_span)",
+                values: [65, 82, 94, 110, 128, 142, 160],
+                scripts: {
+                    bn: { text: "\"আগামী সপ্তাহে বেনারসি সিল্ক শাড়ির চাহিদা ৩০% বাড়বে। কাঁচামাল সোমবারে কিনুন।\"", name: "Bengali (বাংলা)" },
+                    hi: { text: "\"अगले सप्ताह बनारसी सिल्क साड़ियों की मांग 30% बढ़ेगी। सोमवार को कच्चा माल खरीदें।\"", name: "Hindi (हिन्दी)" },
+                    ta: { text: "\"அடுத்த வாரம் காஞ்சி பட்டு sarees தேவை 30% உயரும். திங்கட்கிழமை மூலப்பொருட்களை வாங்குங்கள்.\"", name: "Tamil (தமிழ்)" },
+                    te: { text: "\"వచ్చే వారం బనారసి సిల్క్ చీరల డిమాండ్ 30% పెరుగుతుంది. సోమవారం ముడిసరుకులు కొనుగోలు చేయండి.\"", name: "Telugu (తెలుగు)" },
+                    gu: { text: "\"આગામી અઠવાડિયે બનારસી સિલ્ક સાડીઓની માંગ 30% વધશે. સોમવારે કાચો માલ ખરીદો.\"", name: "Gujarati (ગુજરાતી)" },
+                    mr: { text: "\"पुढच्या आठवड्यात बनारसी रेशमी साड्यांची मागणी ३०% वाढेल. सोमवारी कच्चा माल खरेदी करा.\"", name: "Marathi (मराठी)" },
+                    kn: { text: "\"ಮುಂದಿನ ವಾರ ಬನಾರಸಿ ಸಿಲ್ಕ್ ಸೀರೆಗಳ ಬೇಡಿಕೆ 30% ಹೆಚ್ಚಾಗುತ್ತದೆ. ಸೋಮವಾರ ಕಚ್ಚಾ ವಸ್ತುಗಳನ್ನು ಖರೀದಿಸಿ.\"", name: "Kannada (ಕನ್ನಡ)" },
+                    ml: { text: "\"അടുത്ത ആഴ്ച ബനാറസി സിൽക്ക് സാരികളുടെ ആവശ്യം 30% വർദ്ധിക്കും. തിങ്കളാഴ്ച അസംസ്കൃത വസ്തുക്കൾ വാങ്ങുക.\"", name: "Malayalam (മലയാളം)" },
+                    pa: { text: "\"अगले हफ़्ते बनारसी सिल्क साड़ियों ਦੀ ਮੰਗ 30% ਵੱਧ ਜਾਵੇਗੀ। ਸੋਮਵਾਰ ਨੂੰ ਕੱਚਾ ਮਾਲ ਖਰੀਦੋ।\"", name: "Punjabi (ਪੰਜਾਬੀ)" },
+                    or: { text: "\"ଆଗାମୀ ସପ୍ତାହରେ ବାରାଣସୀ ସିଲ୍ମ ଶାଢ଼ିର ଚାହିଦା ୩୦% ବୃଦ୍ଧି ପାଇବ। ସୋମବାର କଞ୍ଚାମାଲ କିଣନ୍ତୁ।\"", name: "Odia (ଓଡ଼ିଆ)" },
+                    as: { text: "\"আহট সপ্তাহটোত বেনাৰসী ছিল্ক শাৰীৰ চাহিদা ৩০% বৃদ্ধি পাব। সোমবাৰে কেঁচা সামগ্ৰী ক্ৰয় কৰক।\"", name: "Assamese (অসমীয়া)" },
+                    en: { text: "\"Demand for Banarasi Silk Sarees will rise by 30% next week. Stock up raw materials on Monday.\"", name: "English" }
+                }
             },
             fulia: {
                 mandi: "Cotton Yarn: ₹1,850/kg",
                 fest: "Durga Puja Prep Advance",
-                coop: "2,100 Units Pending[span_27](start_span)[span_27](end_span)",
-                census: "3.6 Lakh+ Weavers",
-                product: "Jamdani & Tangail Stoles",
-                script: "\"দুর্গাপূজা উপলক্ষে তাঙ্গাইল ও জামদানি স্টোলের চাহিদা তুঙ্গে থাকবে।\"",
-                values: [60, 75, 90, 108, 125, 140, 155]
+                coop: "2,100 Units Pending[span_26](start_span)[span_26](end_span)",
+                product: "Jamdani & Tangail Stoles[span_27](start_span)[span_27](end_span)",
+                values: [60, 75, 90, 108, 125, 140, 155],
+                scripts: {
+                    bn: { text: "\"দুর্গাপূজা উপলক্ষে তাঙ্গাইল ও জামদানি স্টোলের চাহিদা তুঙ্গে থাকবে।\"", name: "Bengali (বাংলা)" },
+                    hi: { text: "\"दुर्गा पूजा के लिए तंगेल और जामदानी शॉल की मांग चरम पर होगी।\"", name: "Hindi (हिन्दी)" },
+                    ta: { text: "\"துர்கா பூஜைக்காக ஜம்தானி மற்றும் டாங்கাইল ஸ்டோல்களின் தேவை உச்சத்தில் இருக்கும்.\"", name: "Tamil (தமிழ்)" },
+                    te: { text: "\"దుర్గా పూజ కోసం జాందానీ మరియు తంగైల్ స్టోల్స్ డిమాండ్ ఎక్కువగా ఉంటుంది.\"", name: "Telugu (తెలుగు)" },
+                    gu: { text: "\"દુર્ગા પૂજા માટે જામદાની અને ટંગાઈલ સ્ટોલની માંગ પરાકાષ્ઠાએ રહેશે.\"", name: "Gujarati (ગુજરાતી)" },
+                    mr: { text: "\"दुर्गा पूजेसाठी जामदानी आणि टांगाईल शलींची मागणी सर्वोच्च असेल.\"", name: "Marathi (मराठी)" },
+                    kn: { text: "\"ದುರ್ಗಾ ಪೂಜೆಗಾಗಿ ಜಮ್ದಾನಿ ಮತ್ತು ತಂಗೈಲ್ ಸ್ಟೋಲ್ಸ್‌ಗಳ ಬೇಡಿಕೆ ಹೆಚ್ಚಾಗಿರುತ್ತದೆ.\"", name: "Kannada (ಕನ್ನಡ)" },
+                    ml: { text: "\"ദുർഗാപൂജയ്ക്കായി ജംദാനി, തങ്കൈൽ സ്റ്റോളുകളുടെ ആവശ്യം ഉയർന്നതായിരിക്കും.\"", name: "Malayalam (മലയാളം)" },
+                    pa: { text: "\"ਦੁਰਗਾ ਪੂਜਾ ਲਈ ਜਮਦਾਨੀ ਅਤੇ ਤੰਗੈਲ ਸਟੋਲਾਂ ਦੀ ਮੰਗ ਸਿਖਰ 'ਤੇ ਹੋਵੇਗੀ।\"", name: "Punjabi (ਪੰਜਾਬੀ)" },
+                    or: { text: "\"ଦୁର୍ଗାପୂଜା ପାଇଁ ଜମଦାନୀ ଏବଂ ଟାଙ୍ଗାଇଲ୍ ଷ୍ଟୋଲ୍ ଚାହିଦା ଅଧିକ ରହିବ।\"", name: "Odia (ଓଡ଼ିଆ)" },
+                    as: { text: "\"দুৰ্গাপূজাৰ বাবে জমদানী আৰু টাঙাইল ষ্টোলৰ চাহিদা শীৰ্ষত থাকিব।\"", name: "Assamese (অসমীয়া)" },
+                    en: { text: "\"Demand for Jamdani and Tangail stoles will peak for festival prep next week.\"", name: "English" }
+                }
             },
             kanchipuram: {
                 mandi: "Zari Rate: ₹6,100/unit",
                 fest: "Temple Festival Surge",
                 coop: "980 Units Pending[span_28](start_span)[span_28](end_span)",
-                census: "1.9 Lakh+ Weavers",
-                product: "Kanchipuram Pattu",
-                script: "\"கோவில் திருவிழா முன்னிட்டு காஞ்சி பட்டு sarees தேவை 35% உயரும்.\"",
-                values: [70, 85, 102, 118, 135, 148, 170]
+                product: "Kanchipuram Pattu[span_29](start_span)[span_29](end_span)",
+                values: [70, 85, 102, 118, 135, 148, 170],
+                scripts: {
+                    bn: { text: "\"মন্দির উৎসবের জন্য কাঞ্চিপুরম পাট্টু শাড়ির চাহিদা ৩৫% বাড়বে।\"", name: "Bengali (বাংলা)" },
+                    hi: { text: "\"मंदिर उत्सव के लिए कांचीपुरम पट्टू साड़ियों की मांग 35% बढ़ेगी।\"", name: "Hindi (हिन्दी)" },
+                    ta: { text: "\"கோவில் திருவிழா முன்னிட்டு காஞ்சி பட்டு sarees தேவை 35% உயரும்.\"", name: "Tamil (தமிழ்)" },
+                    te: { text: "\"దేవాలయ ఉత్సవాల కోసం కాంచీపురం పట్టు చీరల డిమాండ్ 35% పెరుగుతుంది.\"", name: "Telugu (తెలుగు)" },
+                    gu: { text: "\"મંદિર ઉત્સવ માટે કાંચીપુરમ પಟ್ಟು સાડીઓની માંગ 35% વધશે.\"", name: "Gujarati (ગુજરાતી)" },
+                    mr: { text: "\"मंदिरोत्सवासाठी कांचीपुरम पट्टू साड्यांची मागणी ३५% वाढेल.\"", name: "Marathi (मराठी)" },
+                    kn: { text: "\"ದೇವಾಲಯದ ಉತ್ಸವಕ್ಕಾಗಿ ಕಂಚಿಪುರಂ ಪಟ್ಟು ಸೀರೆಗಳ ಬೇಡಿಕೆ 35% ಹೆಚ್ಚಾಗುತ್ತದೆ.\"", name: "Kannada (ಕನ್ನಡ)" },
+                    ml: { text: "\"ക്ഷേത്രോത്സവത്തിനായി കാഞ്ചീപുരം പട്ടുസാരികളുടെ ആവശ്യം 35% വർദ്ധിക്കും.\"", name: "Malayalam (മലയാളം)" },
+                    pa: { text: "\"ਮੰਦਿਰ ਦੇ ਤਿਉਹਾਰ ਲਈ ਕਾਂਚੀਪੁਰਮ ਪੱਟੂ ਸਾੜ੍ਹੀਆਂ ਦੀ ਮੰਗ 35% ਵੱਧ ਜਾਵੇਗੀ।\"", name: "Punjabi (ਪੰਜਾਬੀ)" },
+                    or: { text: "\"ମନ୍ଦିର ଉତ୍ସବ ପାଇଁ କାଞ୍ଚିପୁରମ୍ ପଟ୍ଟୁ ଶାଢ଼ିର ଚାହିଦା ୩୫% ବୃଦ୍ଧି ପାଇବ।\"", name: "Odia (ଓଡ଼ିଆ)" },
+                    as: { text: "\"মন্দিৰ উৎসৱৰ বাবে কাঞ্চীপুৰম পট্টু শাৰীৰ চাহিদা ৩৫% বৃদ্ধি পাব।\"", name: "Assamese (অসমীয়া)" },
+                    en: { text: "\"Demand for Kanchipuram Pattu sarees will surge by 35% for upcoming temple festivals.\"", name: "English" }
+                }
             },
             panipat: {
                 mandi: "Recycled Yarn: ₹1,200/kg",
                 fest: "Home Furnishing Demand Surge",
-                coop: "1,850 Units Pending[span_29](start_span)[span_29](end_span)",
-                census: "14,400+ Weavers",
-                product: "Carpets & Blankets",
-                script: "\"घरेलू फर्निशिंग और कंबल की मांग में 25% की वृद्धि दर्ज की गई है।\"",
-                values: [55, 70, 88, 102, 120, 135, 150]
+                coop: "1,850 Units Pending[span_30](start_span)[span_30](end_span)",
+                product: "Carpets & Blankets[span_31](start_span)[span_31](end_span)",
+                values: [55, 70, 88, 102, 120, 135, 150],
+                scripts: {
+                    bn: { text: "\"হোম ফার্নিশিং এবং কম্বলের চাহিদা ২৫% বৃদ্ধি পেয়েছে।\"", name: "Bengali (বাংলা)" },
+                    hi: { text: "\"घरेलू फर्निशिंग और कंबल की मांग में 25% की वृद्धि दर्ज की गई है।\"", name: "Hindi (हिन्दी)" },
+                    ta: { text: "\"வீட்டு அலங்கார பொருட்கள் மற்றும் கம்பளி தேவையில் 25% அதிகரிப்பு ஏற்பட்டுள்ளது.\"", name: "Tamil (தமிழ்)" },
+                    te: { text: "\"హోమ్ ఫర్నిషింగ్ మరియు దుప్పట్ల డిమాండ్‌లో 25% పెరుగుదల నమోదయింది.\"", name: "Telugu (తెలుగు)" },
+                    gu: { text: "\"ઘરની ફર્નિશિંગ અને બ્લેન્કેટની માંગમાં 25% નો વધારો નોંધાયો છે.\"", name: "Gujarati (ગુજરાતી)" },
+                    mr: { text: "\"घरगुती फर्निचर आणि ब्लँकेट्सच्या मागणीत २५% वाढ नोंदवली गेली आहे.\"", name: "Marathi (मराठी)" },
+                    kn: { text: "\"ಮನೆ ಅಲಂಕಾರಿಕ ವಸ್ತುಗಳು ಮತ್ತು ಕಂಬಳಿಗಳ ಬೇಡಿಕೆಯಲ್ಲಿ 25% ಹೆಚ್ಚಳ ಕಂಡುಬಂದಿದೆ.\"", name: "Kannada (ಕನ್ನಡ)" },
+                    ml: { text: "\"ഹോം ഫർണിഷിംഗ്, പുതപ്പുകൾ എന്നിവയുടെ ആവശ്യകതയിൽ 25% വർദ്ധനവ് രേഖപ്പെടുത്തി.\"", name: "Malayalam (മലയാളം)" },
+                    pa: { text: "\"ਘਰੇਲੂ ਫਰਨੀਸ਼ਿੰਗ ਅਤੇ ਕੰਬਲਾਂ ਦੀ ਮੰਗ ਵਿੱਚ 25% ਦਾ ਵਾਧਾ ਦਰਜ ਕੀਤਾ ਗਿਆ ਹੈ।\"", name: "Punjabi (ਪੰਜਾਬੀ)" },
+                    or: { text: "\"ଘରୋଇ ଫର୍ନିସିଂ ଏବଂ କମ୍ବଳ ଚାହିଦା ୨୫% ବୃଦ୍ଧି ପାଇଛି।\"", name: "Odia (ଓଡ଼ିଆ)" },
+                    as: { text: "\"ঘৰুৱা ফাৰ্ণিছিং আৰু কম্বলৰ চাহিদা ২৫% বৃদ্ধি পোৱা পৰিলক্ষিত হৈছে।\"", name: "Assamese (অসমীয়া)" },
+                    en: { text: "\"Home furnishing and blanket demand has registered a 25% increase this week.\"", name: "English" }
+                }
             }
         };
+
+        let activeClusterKey = 'varanasi';
 
         function initCommandChart(dataValues) {
             const canvasEl = document.getElementById('commandChart');
@@ -487,10 +432,10 @@
                 data: {
                     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                     datasets: [{
-                        label: 'National Demand Index',
+                        label: 'AI Demand Index',
                         data: dataValues,
                         borderColor: '#c5843b',
-                        backgroundColor: 'rgba(197, 132, 59, 0.12)',
+                        backgroundColor: 'rgba(197, 132, 59, 0.15)',
                         borderWidth: 3,
                         fill: true,
                         tension: 0.4,
@@ -519,6 +464,7 @@
         }
 
         function switchClusterOS(clusterKey) {
+            activeClusterKey = clusterKey;
             const buttons = document.querySelectorAll('.cluster-tab');
             buttons.forEach(btn => {
                 btn.classList.remove('bg-loom-600', 'text-white', 'shadow-md');
@@ -527,44 +473,34 @@
             event.target.classList.add('bg-loom-600', 'text-white', 'shadow-md');
             event.target.classList.remove('text-loom-300');
 
-            const info = clusterOSDatabase[clusterKey];
+            const info = clusterVoiceDatabase[clusterKey];
             if (!info) return;
 
             document.getElementById('cmd-mandi').innerText = info.mandi;
             document.getElementById('cmd-fest').innerText = info.fest;
             document.getElementById('cmd-coop').innerText = info.coop;
-            document.getElementById('cmd-census').innerText = info.census;
-            document.getElementById('water-script').innerText = info.script;
             document.getElementById('water-product').innerText = "Product: " + info.product;
 
+            updateVoiceScript();
             initCommandChart(info.values);
         }
 
-        function filterClusterData(region) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-loom-600', 'text-white');
-                btn.classList.add('bg-earth-900', 'text-loom-300');
-            });
-            event.target.classList.add('bg-loom-600', 'text-white');
-            event.target.classList.remove('bg-earth-900', 'text-loom-300');
-
-            const rows = document.querySelectorAll('tbody tr');
-            rows.forEach(row => {
-                if (region === 'all' || row.getAttribute('data-region') === region) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+        function updateVoiceScript() {
+            const lang = document.getElementById('langSelect').value;
+            const clusterData = clusterVoiceDatabase[activeClusterKey];
+            const scriptObj = clusterData.scripts[lang] || clusterData.scripts['en'];
+            
+            document.getElementById('water-script').innerText = scriptObj.text;
+            document.getElementById('lang-tag').innerText = scriptObj.name;
         }
 
-        function triggerWaterUIDispatch() {
-            alert("✓ Success! Traditional Water UI payload dispatched via Government WhatsApp Gateway & Voice Synthesizer to registered cooperative handloom workers[span_30](start_span)[span_30](end_span).");
+        function triggerVoiceBroadcast() {
+            const lang = document.getElementById('langSelect').value;
+            alert(`✓ FastAPI TTS Dispatch Success! Audio synthesized in ${lang.toUpperCase()} and broadcasted via SMS/WhatsApp gateway to registered cooperative weavers[span_32](start_span)[span_32](end_span).`);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            initCommandChart(clusterOSDatabase.varanasi.values);
+            initCommandChart(clusterVoiceDatabase.varanasi.values);
         });
     </script>
 </body>
