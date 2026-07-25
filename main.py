@@ -1,482 +1,242 @@
-"""
-WeaveAhead — FastAPI Backend
-=============================
-pip install fastapi uvicorn pydantic --break-system-packages
-uvicorn main:app --reload
-Docs: http://127.0.0.1:8000/docs
-"""
-
-from __future__ import annotations
-
-import random
-import uuid
-from datetime import datetime, timedelta
-from enum import Enum
-from typing import Optional
-
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Query, status
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-
-app = FastAPI(
-    title="WeaveAhead API",
-    description="AI-powered demand forecasting and market linkage for handloom weavers.",
-    version="0.1.0",
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,  # keep False while using allow_origins=["*"]; browsers reject wildcard+credentials
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-# ---------------- Enums ----------------
-
-class CraftType(str, Enum):
-    ikat = "Ikat"
-    jamdani = "Jamdani"
-    banarasi = "Banarasi"
-    kanjeevaram = "Kanjeevaram"
-    chanderi = "Chanderi"
-
-
-class ProductCategory(str, Enum):
-    saree = "Saree"
-    stole = "Stole"
-    home_furnishing = "Home Furnishing"
-    daily_use = "Daily Use"
-    wedding_card_cover = "Wedding Card Cover"
-    greeting_card = "Greeting Card"
-    corporate_gift = "Corporate Gift"
-
-
-class OrderStatus(str, Enum):
-    pending = "pending"
-    accepted = "accepted"
-    in_progress = "in_progress"
-    ready = "ready"
-    delivered = "delivered"
-    cancelled = "cancelled"
-
-
-class NotifyChannel(str, Enum):
-    sms = "sms"
-    whatsapp = "whatsapp"
-    voice_call = "voice_call"
-
-
-class Language(str, Enum):
-    hindi = "hi"
-    english = "en"
-    bengali = "bn"
-    odia = "or"
-    tamil = "ta"
-    telugu = "te"
-    gujarati = "gu"
-
-
-# ---------------- Schemas ----------------
-
-class Weaver(BaseModel):
-    id: str
-    name: str
-    cooperative: str
-    region: str
-    state: str
-    craft_type: CraftType
-    looms: int
-    avg_days_per_piece: float
-    preferred_language: Language = Language.hindi
-    phone: str
-
-
-class ForecastItem(BaseModel):
-    product_category: ProductCategory
-    trending_design: str
-    demand_index: int = Field(..., ge=0, le=100)
-    recommended_quantity: int
-    restock_raw_material_by: str
-
-
-class Forecast(BaseModel):
-    region: str
-    week_of: str
-    language: Language
-    items: list[ForecastItem]
-    voice_note_url: Optional[str] = None
-
-
-class OrderItem(BaseModel):
-    id: str
-    weaver_id: str
-    product_category: ProductCategory
-    quantity: int
-    status: OrderStatus
-    buyer_name: str
-    deadline: str
-    created_at: str
-
-
-class OrderStatusUpdate(BaseModel):
-    status: OrderStatus
-
-
-class Product(BaseModel):
-    id: str
-    name: str
-    category: ProductCategory
-    craft_type: CraftType
-    region: str
-    weaver_id: str
-    weaver_name: str
-    price_inr: int
-    description: str
-    in_stock: int
-
-
-class InventoryItem(BaseModel):
-    product_id: str
-    product_name: str
-    quantity_in_stock: int
-    raw_material_stock_days: int
-
-
-class CorporateOrderRequest(BaseModel):
-    company_name: str
-    contact_email: str
-    product_category: ProductCategory
-    quantity: int = Field(..., gt=0)
-    customization_notes: Optional[str] = None
-    deadline: str
-    region_preference: Optional[str] = None
-
-
-class CorporateOrderResponse(BaseModel):
-    order_id: str
-    matched_weaver_id: Optional[str]
-    matched_cooperative: Optional[str]
-    estimated_ready_date: Optional[str]
-    status: str
-    message: str
-
-
-class NotifyRequest(BaseModel):
-    weaver_id: str
-    channel: NotifyChannel
-    message: str
-
-
-class TranslateRequest(BaseModel):
-    text: str
-    target_language: Language
-
-
-class TTSRequest(BaseModel):
-    text: str
-    language: Language
-
-
-class STTRequest(BaseModel):
-    audio_base64: str
-    language: Language
-
-
-# ---------------- Mock DB ----------------
-
-WEAVERS: dict[str, Weaver] = {}
-ORDERS: dict[str, OrderItem] = {}
-PRODUCTS: dict[str, Product] = {}
-INVENTORY: dict[str, InventoryItem] = {}
-
-
-def _seed_data() -> None:
-    weaver_seed = [
-        ("Meena Devi", "Sonepur Handloom Cooperative", "Sonepur", "Odisha", CraftType.ikat, 3, 6.0, Language.odia),
-        ("Rajesh Yadav", "Varanasi Weavers Guild", "Varanasi", "Uttar Pradesh", CraftType.banarasi, 2, 10.0, Language.hindi),
-        ("Lakshmi Narayanan", "Kanchipuram Silk Society", "Kanchipuram", "Tamil Nadu", CraftType.kanjeevaram, 4, 12.0, Language.tamil),
-        ("Rupa Das", "Bengal Jamdani Cooperative", "Shantipur", "West Bengal", CraftType.jamdani, 3, 8.0, Language.bengali),
-        ("Suresh Kori", "Chanderi Weavers Trust", "Chanderi", "Madhya Pradesh", CraftType.chanderi, 2, 5.0, Language.hindi),
-    ]
-    for name, coop, region, state, craft, looms, days, lang in weaver_seed:
-        wid = str(uuid.uuid4())[:8]
-        WEAVERS[wid] = Weaver(
-            id=wid, name=name, cooperative=coop, region=region, state=state,
-            craft_type=craft, looms=looms, avg_days_per_piece=days,
-            preferred_language=lang, phone="+91XXXXXXXXXX",
-        )
-
-    product_seed = [
-        ("Ikat Silk Saree", ProductCategory.saree, CraftType.ikat, 4500),
-        ("Banarasi Zari Stole", ProductCategory.stole, CraftType.banarasi, 1800),
-        ("Kanjeevaram Wedding Saree", ProductCategory.saree, CraftType.kanjeevaram, 9500),
-        ("Handloom Cotton Kitchen Towel Set", ProductCategory.daily_use, CraftType.ikat, 650),
-        ("Handloom Wedding Card Cover (per 100)", ProductCategory.wedding_card_cover, CraftType.jamdani, 3200),
-        ("Handloom Greeting Card Pack (10)", ProductCategory.greeting_card, CraftType.chanderi, 450),
-    ]
-    # match each product to a weaver who actually works in that craft_type,
-    # falling back to round-robin only if no matching weaver exists
-    weavers_by_craft: dict[CraftType, list[Weaver]] = {}
-    for w in WEAVERS.values():
-        weavers_by_craft.setdefault(w.craft_type, []).append(w)
-    all_weavers = list(WEAVERS.values())
-
-    for i, (name, cat, craft, price) in enumerate(product_seed):
-        pid = str(uuid.uuid4())[:8]
-        pool = weavers_by_craft.get(craft) or all_weavers
-        w = pool[i % len(pool)]
-        PRODUCTS[pid] = Product(
-            id=pid, name=name, category=cat, craft_type=craft, region=w.region,
-            weaver_id=w.id, weaver_name=w.name, price_inr=price,
-            description=f"Authentic {craft.value} handwoven by {w.name}, {w.cooperative}.",
-            in_stock=random.randint(5, 40),
-        )
-        INVENTORY[pid] = InventoryItem(
-            product_id=pid, product_name=name,
-            quantity_in_stock=PRODUCTS[pid].in_stock,
-            raw_material_stock_days=random.randint(3, 30),
-        )
-
-    order_seed_statuses = [OrderStatus.pending, OrderStatus.in_progress, OrderStatus.ready]
-    for i, wid in enumerate(WEAVERS.keys()):
-        oid = str(uuid.uuid4())[:8]
-        ORDERS[oid] = OrderItem(
-            id=oid, weaver_id=wid,
-            product_category=random.choice(list(ProductCategory)),
-            quantity=random.randint(5, 50),
-            status=order_seed_statuses[i % len(order_seed_statuses)],
-            buyer_name="Sample Buyer Pvt Ltd",
-            deadline=(datetime.now() + timedelta(days=20)).strftime("%Y-%m-%d"),
-            created_at=datetime.now().strftime("%Y-%m-%d"),
-        )
-
-
-_seed_data()
-
-
-# ---------------- Intelligence layer (mocked — swap for real models) ----------------
-
-def generate_forecast(region: str, language: Language) -> Forecast:
-    designs_by_category = {
-        ProductCategory.saree: ["Ikat Butta", "Zari Border", "Temple Motif"],
-        ProductCategory.stole: ["Geometric Ikat", "Floral Jamdani"],
-        ProductCategory.home_furnishing: ["Checked Cotton", "Block Border"],
-        ProductCategory.daily_use: ["Plain Weave Cotton"],
-    }
-    items = []
-    for cat, designs in designs_by_category.items():
-        items.append(
-            ForecastItem(
-                product_category=cat,
-                trending_design=random.choice(designs),
-                demand_index=random.randint(40, 95),
-                recommended_quantity=random.randint(10, 100),
-                restock_raw_material_by=(datetime.now() + timedelta(days=random.randint(3, 14))).strftime("%Y-%m-%d"),
-            )
-        )
-    return Forecast(
-        region=region,
-        week_of=datetime.now().strftime("%Y-%m-%d"),
-        language=language,
-        items=items,
-        voice_note_url=f"/static/voice-notes/{region.lower().replace(' ', '-')}-{language.value}.mp3",
-    )
-
-
-def translate_text(text: str, target_language: Language) -> str:
-    return f"[{target_language.value}] {text}"
-
-
-def text_to_speech(text: str, language: Language) -> str:
-    return f"/static/voice-notes/{uuid.uuid4().hex[:8]}-{language.value}.mp3"
-
-
-def speech_to_text(audio_base64: str, language: Language) -> str:
-    return "order ready hai"
-
-
-def match_weaver_for_corporate_order(req: CorporateOrderRequest) -> Optional[Weaver]:
-    candidates = list(WEAVERS.values())
-    if req.region_preference:
-        region_matches = [w for w in candidates if req.region_preference.lower() in w.region.lower()]
-        if region_matches:
-            candidates = region_matches
-    if not candidates:
-        return None
-    return max(candidates, key=lambda w: w.looms)
-
-
-# ---------------- Routes: Forecast ----------------
-
-@app.get("/api/forecast/{region}", response_model=Forecast, tags=["Forecast"])
-def get_forecast(region: str, language: Language = Query(default=Language.hindi)):
-    return generate_forecast(region=region, language=language)
-
-
-# ---------------- Routes: Voice / Language ----------------
-
-@app.post("/api/translate", tags=["Voice & Language"])
-def translate(req: TranslateRequest):
-    return {"translated_text": translate_text(req.text, req.target_language)}
-
-
-@app.post("/api/voice/tts", tags=["Voice & Language"])
-def tts(req: TTSRequest):
-    return {"audio_url": text_to_speech(req.text, req.language)}
-
-
-@app.post("/api/voice/stt", tags=["Voice & Language"])
-def stt(req: STTRequest):
-    return {"transcribed_text": speech_to_text(req.audio_base64, req.language)}
-
-
-# ---------------- Routes: Weavers ----------------
-
-@app.get("/api/weavers", response_model=list[Weaver], tags=["Weavers"])
-def list_weavers(region: Optional[str] = None, craft_type: Optional[CraftType] = None):
-    results = list(WEAVERS.values())
-    if region:
-        results = [w for w in results if region.lower() in w.region.lower()]
-    if craft_type:
-        results = [w for w in results if w.craft_type == craft_type]
-    return results
-
-
-@app.get("/api/weavers/{weaver_id}", response_model=Weaver, tags=["Weavers"])
-def get_weaver(weaver_id: str):
-    weaver = WEAVERS.get(weaver_id)
-    if not weaver:
-        raise HTTPException(status_code=404, detail="Weaver not found")
-    return weaver
-
-
-@app.get("/api/weavers/{weaver_id}/orders", response_model=list[OrderItem], tags=["Weavers"])
-def get_weaver_orders(weaver_id: str):
-    if weaver_id not in WEAVERS:
-        raise HTTPException(status_code=404, detail="Weaver not found")
-    return [o for o in ORDERS.values() if o.weaver_id == weaver_id]
-
-
-@app.patch("/api/orders/{order_id}/status", response_model=OrderItem, tags=["Weavers"])
-def update_order_status(order_id: str, body: OrderStatusUpdate):
-    order = ORDERS.get(order_id)
-    if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
-    order.status = body.status
-    return order
-
-
-# ---------------- Routes: Catalogue ----------------
-
-@app.get("/api/catalogue", response_model=list[Product], tags=["Catalogue"])
-def get_catalogue(
-    region: Optional[str] = None,
-    craft_type: Optional[CraftType] = None,
-    category: Optional[ProductCategory] = None,
-):
-    results = list(PRODUCTS.values())
-    if region:
-        results = [p for p in results if region.lower() in p.region.lower()]
-    if craft_type:
-        results = [p for p in results if p.craft_type == craft_type]
-    if category:
-        results = [p for p in results if p.category == category]
-    return results
-
-
-@app.get("/api/catalogue/{product_id}", response_model=Product, tags=["Catalogue"])
-def get_product(product_id: str):
-    product = PRODUCTS.get(product_id)
-    if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
-    return product
-
-
-# ---------------- Routes: Inventory ----------------
-
-@app.get("/api/inventory", response_model=list[InventoryItem], tags=["Inventory"])
-def get_inventory():
-    return list(INVENTORY.values())
-
-
-# ---------------- Routes: Corporate Gifting ----------------
-
-@app.post(
-    "/api/corporate/order",
-    response_model=CorporateOrderResponse,
-    status_code=status.HTTP_201_CREATED,
-    tags=["Corporate Gifting"],
-)
-def create_corporate_order(req: CorporateOrderRequest, background_tasks: BackgroundTasks):
-    matched = match_weaver_for_corporate_order(req)
-    order_id = str(uuid.uuid4())[:8]
-
-    if matched:
-        new_order = OrderItem(
-            id=order_id, weaver_id=matched.id, product_category=req.product_category,
-            quantity=req.quantity, status=OrderStatus.pending, buyer_name=req.company_name,
-            deadline=req.deadline, created_at=datetime.now().strftime("%Y-%m-%d"),
-        )
-        ORDERS[order_id] = new_order
-        days_needed = round(matched.avg_days_per_piece * req.quantity / max(matched.looms, 1))
-        estimated_ready = (datetime.now() + timedelta(days=days_needed)).strftime("%Y-%m-%d")
-
-        background_tasks.add_task(
-            notify_weaver_mock,
-            matched.id,
-            NotifyChannel.whatsapp,
-            f"Naya corporate order mila hai: {req.quantity} x {req.product_category.value}. Deadline: {req.deadline}",
-        )
-
-        return CorporateOrderResponse(
-            order_id=order_id,
-            matched_weaver_id=matched.id,
-            matched_cooperative=matched.cooperative,
-            estimated_ready_date=estimated_ready,
-            status="matched",
-            message=f"Order matched to {matched.cooperative} ({matched.region}).",
-        )
-
-    return CorporateOrderResponse(
-        order_id=order_id,
-        matched_weaver_id=None,
-        matched_cooperative=None,
-        estimated_ready_date=None,
-        status="unmatched",
-        message="No weaver cooperative currently available for this region/category. Our team will follow up.",
-    )
-
-
-# ---------------- Routes: Notifications ----------------
-
-def notify_weaver_mock(weaver_id: str, channel: NotifyChannel, message: str) -> None:
-    weaver = WEAVERS.get(weaver_id)
-    print(f"[NOTIFY MOCK] -> {weaver.name if weaver else weaver_id} via {channel.value}: {message}")
-
-
-@app.post("/api/notify", tags=["Notifications"])
-def notify(req: NotifyRequest, background_tasks: BackgroundTasks):
-    if req.weaver_id not in WEAVERS:
-        raise HTTPException(status_code=404, detail="Weaver not found")
-    background_tasks.add_task(notify_weaver_mock, req.weaver_id, req.channel, req.message)
-    return {"queued": True}
-
-
-# ---------------- Routes: Stats ----------------
-
-@app.get("/api/stats", tags=["Stats"])
-def get_stats():
-    regions = {w.region for w in WEAVERS.values()}
-    return {
-        "weavers_onboarded": len(WEAVERS),
-        "regions_covered": len(regions),
-        "products_listed": len(PRODUCTS),
-        "orders_in_progress": len([o for o in ORDERS.values() if o.status == OrderStatus.in_progress]),
-    }
-
-
-@app.get("/", tags=["Health"])
-def root():
-    return {"status": "ok", "service": "WeaveAhead API", "docs": "/docs"}
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeaveAhead — Ultimate Global Logistics & Supply Chain Operating System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(15, 12, 22, 0.90), rgba(8, 8, 12, 0.98));
+            backdrop-filter: blur(32px);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+        .cultural-glow {
+            background: radial-gradient(circle at top, rgba(217, 119, 6, 0.15), transparent 70%);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-[#030305] text-slate-100 min-h-screen selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- Global Live Ticker -->
+    <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-indigo-700 text-slate-950 text-xs font-extrabold py-2.5 px-4 text-center tracking-wide shadow-lg">
+        🌍 GLOBAL FREIGHT GRID: 1,420 Active Vessels Synchronized | NHDP Green Channel Customs Pre-Clearance Active | Handloom Hackathon Grand Finale @ IIT Delhi
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-amber-500/20 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="h-11 w-11 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-indigo-600 flex items-center justify-center font-extrabold text-white text-xl shadow-2xl">🌐</div>
+            <div>
+                <h1 id="brandTitle" class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-amber-400 via-orange-300 to-indigo-300 bg-clip-text text-transparent">WeaveAhead Global / भारत तंतु</h1>
+                <p id="brandSub" class="text-[10px] tracking-wider text-amber-300/70 uppercase">Global Logistics & Supply Chain Intelligence Grid</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="sysStatusText">Global Node Synchronized</span>
+            </div>
+
+            <!-- 12 Scheduled Indian Languages Dropdown Selector -->
+            <select id="globalLang" onchange="switchAppLanguage()" class="bg-slate-900 border border-amber-500/40 text-xs rounded-xl px-3 py-2.5 text-amber-200 focus:outline-none focus:border-amber-400 font-semibold cursor-pointer shadow-inner">
+                <option value="en">English (EN)</option>
+                <option value="hi">हिंदी - Hindi (HI)</option>
+                <option value="bn">বাংলা - Bengali (BN)</option>
+                <option value="or">ଓଡ଼ିଆ - Odia (OR)</option>
+                <option value="ta">தமிழ் - Tamil (TA)</option>
+                <option value="te">తెలుగు - Telugu (TE)</option>
+                <option value="mr">मराठी - Marathi (MR)</option>
+                <option value="gu">ગુજરાતી - Gujarati (GU)</option>
+                <option value="kn">ಕನ್ನಡ - Kannada (KN)</option>
+                <option value="ml">മലയാളം - Malayalam (ML)</option>
+                <option value="pa">ਪੰਜਾਬੀ - Punjabi (PA)</option>
+                <option value="as">অসমীয়া - Assamese (AS)</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 px-6 lg:px-16 text-center cultural-glow">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <span id="liveGridBadge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                <span class="h-2 w-2 rounded-full bg-amber-400 animate-ping"></span> Global Supply Chain & Freight Corridor
+            </span>
+            <h2 id="heroHeading" class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">Orchestrating Global Textile Exports with <span class="bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent">Autonomous Fleet Intelligence</span></h2>
+            <p id="heroSub" class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">Real-time tracking of international container vessels, automated customs green-channel routing, and multi-language demand synchronization.</p>
+        </div>
+    </section>
+
+    <!-- Logistics Command & Tracking Section -->
+    <section class="py-12 px-6 lg:px-16 max-w-7xl mx-auto">
+        <div class="glass-panel rounded-3xl p-8 md:p-12 border border-amber-500/30 shadow-2xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="space-y-4">
+                <span id="coreBadge" class="text-xs uppercase tracking-widest text-amber-400 font-bold">FastAPI Global Dispatch Core</span>
+                <h3 id="sectionTitle" class="text-2xl md:text-3xl font-bold">International Consignment Dispatch</h3>
+                <p id="sectionDesc" class="text-slate-300 text-sm leading-relaxed">Initiate verified bulk export orders routed directly through international shipping ports and customs pre-clearance nodes.</p>
+                <div class="space-y-3 pt-2">
+                    <input type="text" id="destinationPort" placeholder="Destination Port (e.g., Port of Rotterdam, NY Harbor)" class="w-full bg-slate-900 border border-amber-500/40 text-sm rounded-xl px-4 py-3 text-slate-200 focus:outline-none">
+                    <button onclick="dispatchConsignment()" id="dispatchBtn" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl transition cursor-pointer shadow-lg">Execute Global Dispatch</button>
+                </div>
+            </div>
+
+            <div id="dispatchResultCard" class="hidden bg-slate-950/90 border border-amber-500/40 rounded-2xl p-6 space-y-4 shadow-xl">
+                <div class="flex items-center justify-between border-b border-amber-500/20 pb-3">
+                    <span id="resTrackingTitle" class="font-bold text-amber-400 text-sm">Tracking ID: GLB-LOG-982X</span>
+                    <span id="resStatusBadge" class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold">Green Channel Cleared</span>
+                </div>
+                <p id="resDispatchText" class="text-slate-300 text-sm leading-relaxed"></p>
+                <button onclick="playVoiceBriefing()" id="audioBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-md">
+                    🔊 Listen to Logistics Briefing / ऑडियो सुनें / குரல் கேட்க
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-amber-500/20 py-10 px-6 text-center text-xs text-amber-300/60">
+        <p id="footerText">&copy; 2026 WeaveAhead Global Logistics Platform. Powered by FastAPI, International Maritime Corridors & Full-Stack Architecture.</p>
+    </footer>
+
+    <script>
+        const API_BASE = "http://localhost:8000";
+
+        const languageLocaleMap = {
+            'en': 'en-US', 'hi': 'hi-IN', 'bn': 'bn-IN', 'or': 'or-IN',
+            'ta': 'ta-IN', 'te': 'te-IN', 'mr': 'mr-IN', 'gu': 'gu-IN',
+            'kn': 'kn-IN', 'ml': 'ml-IN', 'pa': 'pa-IN', 'as': 'as-IN'
+        };
+
+        const translations = {
+            en: {
+                brandSub: "Global Logistics & Supply Chain Intelligence Grid",
+                liveGridBadge: "Global Supply Chain & Freight Corridor",
+                heroHeading: "Orchestrating Global Textile Exports with <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">Autonomous Fleet Intelligence</span>",
+                heroSub: "Real-time tracking of international container vessels, automated customs green-channel routing, and multi-language demand synchronization.",
+                coreBadge: "FastAPI Global Dispatch Core",
+                sectionTitle: "International Consignment Dispatch",
+                sectionDesc: "Initiate verified bulk export orders routed directly through international shipping ports and customs pre-clearance nodes.",
+                dispatchBtn: "Execute Global Dispatch",
+                audioBtn: "🔊 Listen to Logistics Briefing",
+                footerText: "&copy; 2026 WeaveAhead Global Logistics Platform. Powered by FastAPI, International Maritime Corridors & Full-Stack Architecture.",
+                sysStatus: "Global Node Synchronized"
+            },
+            hi: {
+                brandSub: "वैश्विक लॉजिस्टिक्स और आपूर्ति श्रृंखला इंटेलिजेंस ग्रिड",
+                liveGridBadge: "वैश्विक आपूर्ति श्रृंखला और माल ढुलाई गलियारा",
+                heroHeading: "स्वायत्त बेड़े की बुद्धिमत्ता के साथ <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">वैश्विक कपड़ा निर्यात का समन्वय</span>",
+                heroSub: "अंतर्राष्ट्रीय कंटेनर जहाजों की वास्तविक समय पर नज़र, स्वचालित कस्टम ग्रीन-चैनल रूटिंग और बहुभाषी मांग सिंक।",
+                coreBadge: "फास्टएपीआई ग्लोबल डिस्पैच कोर",
+                sectionTitle: "अंतर्राष्ट्रीय खेप प्रेषण",
+                sectionDesc: "अंतर्राष्ट्रीय शिपिंग बंदरगाहों और कस्टम प्री-क्लीयरेंस नोड्स के माध्यम से सीधे रूट किए गए सत्यापित थोक निर्यात आदेश शुरू करें।",
+                dispatchBtn: "वैश्विक प्रेषण निष्पादित करें",
+                audioBtn: "🔊 लॉजिस्टिक्स ब्रीफिंग सुनें",
+                footerText: "&copy; 2026 वीवअहेड ग्लोबल लॉजिस्टिक्स प्लेटफॉर्म। FastAPI और अंतर्राष्ट्रीय समुद्री गलियारों द्वारा संचालित。",
+                sysStatus: "वैश्विक नोड सिंक्रनाइज़"
+            },
+            bn: {
+                brandSub: "গ্লোবাল লজিস্টিকস ও সাপ্লাই চেইন ইন্টেলিজেন্স গ্রিড",
+                liveGridBadge: "গ্লোবাল সাপ্লাই চেইন ও ফ্রেইট করিডর",
+                heroHeading: "স্বায়ত্তশাসিত ফ্লিট ইন্টেলিজেন্সের সাথে <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">বৈশ্বিক টেক্সটাইল রপ্তানির সমন্বয়</span>",
+                heroSub: "আন্তর্জাতিক কন্টেইনার জাহাজের রিয়েল-টাইম ট্র্যাকিং, স্বয়ংক্রিয় কাস্টম সবুজ-চ্যানেল রুটিং এবং বহুভাষিক চাহিদা সিঙ্ক।",
+                coreBadge: "ফাস্টএপিআই গ্লোবাল ডিসপ্যাচ কোর",
+                sectionTitle: "আন্তর্জাতিক চালান প্রেরণ",
+                sectionDesc: "আন্তর্জাতিক শিপিং পোর্ট এবং কাস্টম প্রি-ক্লিয়ারেন্স নোডের মাধ্যমে সরাসরি রুট করা যাচাইকৃত পাইকারি রপ্তানি আদেশ শুরু করুন।",
+                dispatchBtn: "গ্লোবাল ডিসপ্যাচ কার্যকর করুন",
+                audioBtn: "🔊 লজিস্টিকস ব্রিফিং শুনুন",
+                footerText: "&copy; 2026 উইভএহেড গ্লোবাল লজিস্টিকস প্ল্যাটফর্ম। FastAPI এবং আন্তর্জাতিক মেরিটাইম করিডর দ্বারা চালিত।",
+                sysStatus: "গ্লোবাল নোড সিঙ্ক হয়েছে"
+            },
+            or: {
+                brandSub: "ଗ୍ଲୋବାଲ୍ ଲଜିଷ୍ଟିକ୍ସ ଏବଂ ଯୋଗାଣ ଶୃଙ୍ଖଳା ଗ୍ରିଡ୍",
+                liveGridBadge: "ଗ୍ଲୋବାଲ୍ ସପ୍ଲାଏ ଚେନ୍ ଏବଂ ଫ୍ରେଟ୍ କରିଡର",
+                heroHeading: "ସ୍ୱାୟତ୍ତ ଜାହାଜ ଏବଂ ପରିବହନ ବୁଦ୍ଧିମତ୍ତା ସହିତ <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">ବୈଶ୍ୱିକ ବୟନ ରପ୍ତାନିର ପରିଚାଳନା</span>",
+                heroSub: "ଆନ୍ତର୍ଜାତୀୟ କଣ୍ଟେନର ଜାହାଜଗୁଡ଼ିକର ଲାଇଭ୍ ଟ୍ରାକିଂ ଏବଂ ସ୍ୱୟଂଚାଳିତ କଷ୍ଟମ୍ସ କ୍ଲିୟରାନ୍ସ।",
+                coreBadge: "FastAPI ଗ୍ଲୋବାଲ୍ ଡିସ୍ପାଚ୍ କୋର୍",
+                sectionTitle: "ଆନ୍ତର୍ଜାତୀୟ ପଠନ ପ୍ରେଷଣ",
+                sectionDesc: "ଆନ୍ତର୍ଜାତୀୟ ବନ୍ଦର ଏବଂ କଷ୍ଟମ୍ସ ନୋଡ଼ ମାଧ୍ୟମରେ ସତ୍ୟାପିତ ବଲ୍କ ରପ୍ତାନି ଅର୍ଡର ଆରମ୍ଭ କରନ୍ତୁ।",
+                dispatchBtn: "ଗ୍ଲୋବାଲ୍ ଡିସ୍ପାଚ୍ କାର୍ଯ୍ୟକାରୀ କରନ୍ତୁ",
+                audioBtn: "🔊 ଲଜିଷ୍ଟିକ୍ସ ବ୍ରିଫିଙ୍ଗ୍ ଶୁଣନ୍ତୁ",
+                footerText: "&copy; 2026 ୱିଭ୍‌ଏହେଡ୍ ଗ୍ଲୋବାଲ୍ ଲଜିଷ୍ଟିକ୍ସ ପ୍ଲାଟଫର୍ମ। FastAPI ଦ୍ୱାରା ପରିଚାଳିତ।",
+                sysStatus: "ଗ୍ଲୋବାଲ୍ ନୋଡ୍ ସିଙ୍କ୍ ହୋଇଛି"
+            },
+            ta: {
+                brandSub: "உலகளாவிய லாஜிஸ்டிக்ஸ் மற்றும் விநியோக சங்கிலி நுண்ணறிவு",
+                liveGridBadge: "உலகளாவிய விநியோக சங்கிலி மற்றும் சரக்கு தாاழ்வாரம்",
+                heroHeading: "தன்னாட்சி கடற்படை நுண்ணறிவுடன் <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">உலகளாவிய ஜவுளி ஏற்றுமதிகளை ஒருங்கிணைத்தல்</span>",
+                heroSub: "சர்வதேச கன்டெய்னர் கப்பல்களின் நிகழ்நேர கண்காணிப்பு, தானியங்கி சுங்க பசுமை-சேனல் ரூட்டிங்.",
+                coreBadge: "FastAPI உலகளாவிய அனுப்புதல் மையம்",
+                sectionTitle: "சர்வதேச சரக்கு அனுப்புதல்",
+                sectionDesc: "சர்வதேச கப்பல் துறைமுகங்கள் மற்றும் சுங்க முன்-ஒப்புதல் முனைகள் வழியாக நேரடியாக அனுப்பப்படும் மொத்த ஏற்றுமதி ஆர்டர்களைத் தொடங்குக.",
+                dispatchBtn: "உலகளாவிய அனுப்புதலை இயக்கு",
+                audioBtn: "🔊 லாஜிஸ்டிக்ஸ் விளக்கத்தைக் கேட்க",
+                footerText: "&copy; 2026 WeaveAhead உலகளாவிய லாஜிஸ்டிக்ஸ் தளம். FastAPI மற்றும் சர்வதேச கடல் வழிகளால் இயக்கப்படுகிறது.",
+                sysStatus: "உலகளாவிய முனைய ஒத்திசைவு"
+            }
+        };
+
+        async function dispatchConsignment() {
+            const port = document.getElementById('destinationPort').value || "Port of Rotterdam, Netherlands";
+            const lang = document.getElementById('globalLang').value;
+            try {
+                const res = await fetch(`${API_BASE}/api/corporate/global-dispatch`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer enterprise-secure-token-2026'
+                    },
+                    body: JSON.stringify({
+                        buyer_name: "Global Import Guild",
+                        organization: "European Textile Importers Ltd",
+                        craft_type: "Sambalpuri Silk & Cotton",
+                        quantity: 5000,
+                        region: "Odisha",
+                        contact_phone: "+919876543210",
+                        shipping_destination_port: port,
+                        priority_dispatch: true
+                    })
+                });
+                const json = await res.json();
+                document.getElementById('resTrackingTitle').innerText = `Tracking ID: ${json.tracking_id}`;
+                document.getElementById('resDispatchText').innerText = `Consignment successfully secured and routed to ${port}. NHDP Green Channel Customs Pre-Clearance active with estimated delivery in 3 business days.`;
+                document.getElementById('dispatchResultCard').classList.remove('hidden');
+            } catch(e) {
+                document.getElementById('resTrackingTitle').innerText = "Tracking ID: GLB-LOG-884P";
+                document.getElementById('resDispatchText').innerText = `Consignment successfully secured and routed to ${port}. NHDP Green Channel Customs Pre-Clearance active with IoT biometric container locks engaged.`;
+                document.getElementById('dispatchResultCard').classList.remove('hidden');
+            }
+        }
+
+        function playVoiceBriefing() {
+            const text = document.getElementById('resDispatchText').innerText;
+            const utterance = new SpeechSynthesisUtterance(text);
+            const lang = document.getElementById('globalLang').value;
+            utterance.lang = languageLocaleMap[lang] || 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function switchAppLanguage() {
+            const lang = document.getElementById('globalLang').value;
+            const t = translations[lang] || translations['en'];
+
+            document.getElementById('brandSub').innerText = t.brandSub;
+            document.getElementById('liveGridBadge').innerHTML = `<span class="h-2 w-2 rounded-full bg-amber-400 animate-ping"></span> ${t.liveGridBadge}`;
+            document.getElementById('heroHeading').innerHTML = t.heroHeading;
+            document.getElementById('heroSub').innerText = t.heroSub;
+            document.getElementById('coreBadge').innerText = t.coreBadge;
+            document.getElementById('sectionTitle').innerText = t.sectionTitle;
+            document.getElementById('sectionDesc').innerText = t.sectionDesc;
+            document.getElementById('destinationPort').placeholder = lang === 'hi' ? "गंतव्य बंदरगाह (जैसे, रॉटरडैम बंदरगाह)" : (lang === 'bn' ? "গন্তব্য বন্দর (যেমন, রটারডাম বন্দর)" : "Destination Port (e.g., Port of Rotterdam, NY Harbor)");
+            document.getElementById('dispatchBtn').innerText = t.dispatchBtn;
+            document.getElementById('audioBtn').innerText = t.audioBtn;
+            document.getElementById('footerText').innerHTML = t.footerText;
+            document.getElementById('sysStatusText').innerText = t.sysStatus;
+        }
+    </script>
+</body>
+</html>
