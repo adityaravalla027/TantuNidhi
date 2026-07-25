@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="in">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>WeaveAhead — Govt. Handloom Real-Time Advisory & Demand Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#223A63; --indigo-dark:#182a49;
+    --marigold:#E0982E; --marigold-deep:#b5761c;
+    --madder:#9C3B28; --madder-deep:#7c2e1f;
+    --zari:#C9A34E; --zari-light:#E6C878;
+    --cotton:#F3EBD8; --cotton-dark:#E8DDC2; --cotton-line:#ECE1C7;
+    --charcoal:#2A231C; --ink-soft:#5c5040; --ink-faint:#8a7d63;
+    --green:#2f5e3a; --green-bg:#DCE6D3;
+    --red-bg:#EFD9CE;
+    --amber-bg:#F3E1B8; --amber-ink:#7a541c;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Nunito Sans', sans-serif;
+    background:#c9bd9e;
+    color:var(--charcoal);
+    -webkit-font-smoothing:antialiased;
+  }
+  .font-display{font-family:'Fraunces', serif;}
+  button{font-family:inherit; border:none; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;}
+  button:active{transform:scale(0.97);}
+  input, select{font-family:inherit;}
+  ::-webkit-scrollbar{display:none;}
+
+  .app-shell{
+    max-width:430px; margin:0 auto; min-height:100vh;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(201,163,78,0.06) 0, transparent 40%),
+      radial-gradient(circle at 92% 88%, rgba(156,59,40,0.05) 0, transparent 40%),
+      var(--cotton);
+    position:relative;
+    padding-bottom:88px;
+    box-shadow:0 0 40px rgba(0,0,0,0.18);
+  }
+
+  .temple-strip{
+    width:100%; height:12px; line-height:0; overflow:hidden;
+    background-color:var(--zari);
+    background-image:
+      linear-gradient(135deg, var(--zari-light) 25%, transparent 25%),
+      linear-gradient(225deg, var(--zari-light) 25%, transparent 25%);
+    background-size:14px 14px;
+  }
+
+  /* ---------- Header ---------- */
+  header.app-header{
+    position:sticky; top:0; z-index:20;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(201,163,78,0.18), transparent 55%),
+      linear-gradient(160deg, var(--indigo), var(--indigo-dark));
+    color:var(--cotton);
+    padding:18px 16px 0;
+    border-radius:0 0 22px 22px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.16);
+    overflow:hidden;
+  }
+  .header-inner{padding-bottom:16px;}
+  .header-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+  .brand{display:flex; align-items:center; gap:9px;}
+  .brand-mark{
+    width:36px; height:36px; border-radius:11px; background:linear-gradient(150deg, var(--zari-light), var(--marigold-deep));
+    display:flex; align-items:center; justify-content:center; font-size:18px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.4);
+  }
+  .brand-name{font-family:'Fraunces',serif; font-weight:700; font-size:19px; line-height:1.15;}
+  .brand-sub{font-size:11px; color:#c9d3e3; line-height:1.2;}
+  .header-actions{display:flex; gap:8px;}
+  .icon-btn{
+    width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.15);
+    display:flex; align-items:center; justify-content:center; position:relative; color:var(--cotton);
+    transition:background .15s;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,0.25);}
+  .dot{
+    position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-radius:50%;
+    background:var(--marigold); border:2px solid var(--indigo);
+  }
+  .greeting-card{
+    background:rgba(255,255,255,0.1); border-radius:16px; padding:12px 14px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    border:1px solid rgba(201,163,78,0.3);
+  }
+  .greeting-name{font-size:13px; color:#c9d3e3;}
+  .greeting-line{font-size:15px; font-weight:800; margin-top:1px;}
+  .voice-btn{
+    width:44px; height:44px; min-width:44px; border-radius:50%; background:var(--marigold);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.25);
+    color:var(--charcoal);
+  }
+
+  /* ---------- Main ---------- */
+  main{padding:20px 16px 0;}
+  section{margin-bottom:24px;}
+
+  .section-head{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:12px; padding:0 2px;}
+  .eyebrow{font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--madder); font-weight:800; margin-bottom:3px; display:flex; align-items:center; gap:6px;}
+  .eyebrow::before{content:"◆"; font-size:7px; color:var(--zari); transform:translateY(-1px);}
+  .section-title{font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:var(--charcoal); letter-spacing:.01em;}
+  .link-btn{font-size:12px; font-weight:800; color:var(--madder); display:flex; align-items:center; gap:2px;}
+
+  .banner{
+    background:linear-gradient(135deg, var(--marigold), var(--marigold-deep));
+    border-radius:18px; padding:14px 16px; display:flex; align-items:center; gap:12px;
+    box-shadow:0 3px 10px rgba(181,118,28,0.3);
+    border:1px solid rgba(255,255,255,0.25);
+  }
+  .banner-icon{
+    width:44px; height:44px; min-width:44px; border-radius:50%; background:rgba(42,38,34,0.12);
+    display:flex; align-items:center; justify-content:center; font-size:21px;
+  }
+  .banner-title{font-weight:800; font-size:14px; color:var(--charcoal); line-height:1.35;}
+  .banner-sub{font-size:12px; color:#5c4321; margin-top:1px;}
+
+  .card{
+    background:#fff; border-radius:18px; padding:16px;
+    box-shadow:0 2px 6px rgba(42,38,34,0.06); border:1px solid var(--zari);
+    position:relative;
+  }
+  .card.tight{padding:8px;}
+  .card::before{
+    content:""; position:absolute; inset:0; border-radius:18px; pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(201,163,78,0.35);
+  }
+
+  /* Govt Realtime Feed Ticker */
+  .gov-ticker{
+    background:var(--indigo-dark); color:var(--cotton); border-radius:14px; padding:12px 14px;
+    margin-bottom:16px; border:1px solid var(--zari); display:flex; align-items:center; gap:10px;
+  }
+  .live-badge{
+    background:var(--madder); color:#fff; font-size:10px; font-weight:900; padding:3px 7px; border-radius:99px;
+    text-transform:uppercase; letter-spacing:0.05em; animation:pulse 1.5s infinite;
+  }
+  .ticker-text{font-size:12px; font-weight:700; color:#e2dbcd; line-height:1.3;}
+
+  /* Search & Filter Bar */
+  .filter-bar{display:flex; gap:8px; margin-bottom:12px;}
+  .search-input{
+    flex:1; background:#fff; border:1px solid var(--cotton-dark); border-radius:12px; padding:10px 12px;
+    font-size:13px; color:var(--charcoal); outline:none; font-weight:700;
+  }
+  .filter-select{
+    background:#fff; border:1px solid var(--cotton-dark); border-radius:12px; padding:10px 10px;
+    font-size:12px; color:var(--charcoal); outline:none; font-weight:700; cursor:pointer;
+  }
+
+  /* Product tabs */
+  .tabs{display:flex; gap:8px; margin-bottom:16px;}
+  .tab{
+    flex:1; border-radius:12px; padding:9px 6px; display:flex; flex-direction:column;
+    align-items:center; gap:4px; background:var(--cotton); color:var(--ink-soft); transition:.15s;
+    border:1px solid transparent;
+  }
+  .tab.active{background:var(--madder); color:#fff; border-color:var(--zari);}
+  .tab-emoji{font-size:16px;}
+  .tab-label{font-size:10px; font-weight:800; line-height:1;}
+
+  /* Thread bar chart */
+  .chart-row{display:flex; align-items:flex-end; gap:8px; padding:0 4px; margin-bottom:6px;}
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:6px;}
+  .bar-track{width:100%; height:128px; display:flex; align-items:flex-end; justify-content:center;}
+  .bar-fill{
+    width:26px; border-radius:14px; box-shadow:inset -2px 0 3px rgba(0,0,0,0.15), inset 2px 0 3px rgba(255,255,255,0.15);
+    transition:height 0.7s cubic-bezier(.2,.8,.2,1);
+  }
+  .bar-label{font-size:11px; font-weight:700; color:var(--ink-soft);}
+  .chart-note{text-align:center; font-size:12px; color:var(--ink-faint); margin-top:8px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+  .pill{font-size:11px; font-weight:800; padding:5px 9px; border-radius:999px; border:none;}
+  .pill-warn{background:var(--amber-bg); color:var(--amber-ink);}
+  .pill-good{background:var(--green-bg); color:var(--green);}
+  .pill-bad{background:var(--red-bg); color:var(--madder);}
+  .pill-neutral{background:var(--cotton-dark); color:var(--ink-soft);}
+  .pill-btn{cursor:pointer; transition:transform .12s;}
+  .pill-btn:active{transform:scale(0.94);}
+
+  /* Window status indicator box */
+  .window-box{
+    background:var(--indigo-dark); color:#fff; border-radius:16px; padding:14px; margin-bottom:14px;
+    border:1px solid rgba(201,163,78,0.4); display:flex; justify-content:space-between; align-items:center;
+  }
+  .wb-title{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--zari-light); font-weight:800;}
+  .wb-main{font-family:'Fraunces',serif; font-size:15px; font-weight:700; margin-top:2px;}
+  .wb-badge{background:var(--green); color:#fff; font-size:11px; font-weight:800; padding:5px 10px; border-radius:99px;}
+  .wb-badge.closed{background:var(--madder);}
+
+  /* Action items */
+  .action-item{
+    display:flex; align-items:center; gap:12px; background:var(--cotton); border-radius:16px; padding:11px;
+    margin-bottom:10px;
+  }
+  .action-item:last-child{margin-bottom:0;}
+  .action-icon{
+    width:46px; height:46px; min-width:46px; border-radius:13px; display:flex; align-items:center;
+    justify-content:center; font-size:20px; color:#fff;
+  }
+  .action-title{font-weight:800; font-size:14px;}
+  .action-sub{font-size:12px; color:var(--ink-soft); margin-top:1px;}
+
+  /* Production log widget */
+  .log-card{background:#fff; border-radius:18px; padding:16px; box-shadow:0 2px 6px rgba(42,38,34,0.06); border:1px solid var(--zari); position:relative;}
+  .log-card::before{content:""; position:absolute; inset:0; border-radius:18px; pointer-events:none; box-shadow:inset 0 0 0 1px rgba(201,163,78,0.35);}
+  .log-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--cotton-line);}
+  .log-row:last-of-type{border-bottom:none;}
+  .log-emoji{width:38px; height:38px; min-width:38px; border-radius:11px; background:var(--cotton); display:flex; align-items:center; justify-content:center; font-size:18px;}
+  .log-name{font-weight:800; font-size:13.5px;}
+  .log-target{font-size:11px; color:var(--ink-faint); margin-top:1px;}
+  .stepper{display:flex; align-items:center; gap:10px; margin-left:auto;}
+  .step-btn{
+    width:30px; height:30px; border-radius:50%; background:var(--cotton); display:flex; align-items:center;
+    justify-content:center; font-weight:900; font-size:16px; color:var(--madder); border:1px solid var(--cotton-dark);
+  }
+  .step-btn.plus{background:var(--madder); color:#fff; border-color:var(--madder-deep);}
+  .step-val{min-width:22px; text-align:center; font-weight:800; font-size:15px;}
+  .progress-wrap{margin-top:14px;}
+  .progress-label{display:flex; justify-content:space-between; font-size:11.5px; font-weight:700; color:var(--ink-soft); margin-bottom:6px;}
+  .progress-track{height:10px; background:var(--cotton-dark); border-radius:999px; overflow:hidden;}
+  .progress-fill{height:100%; background:linear-gradient(90deg, var(--zari), var(--marigold)); border-radius:999px; transition:width .5s ease;}
+  .streak-note{display:flex; align-items:center; gap:6px; margin-top:12px; font-size:12px; color:var(--green); font-weight:700;}
+
+  /* List rows */
+  .list-row{
+    display:flex; align-items:center; justify-content:space-between; padding:12px;
+    border-bottom:1px solid var(--cotton-line);
+  }
+  .list-row:last-child{border-bottom:none;}
+  .list-row.clickable{cursor:pointer; transition:background .12s;}
+  .list-row.clickable:active{background:var(--cotton);}
+  .row-left{display:flex; align-items:center; gap:10px;}
+  .row-name{font-size:13.5px; font-weight:800; color:var(--charcoal);}
+  .row-sub{font-size:11.5px; color:var(--ink-faint); margin-top:1px;}
+  .trend-val{display:flex; align-items:center; gap:3px; font-size:13px; font-weight:800;}
+  .trend-up{color:var(--green);}
+  .trend-down{color:var(--madder);}
+  .urgency-dot{width:10px; height:10px; border-radius:50%; min-width:10px;}
+  .urgency-high{background:var(--madder);}
+  .urgency-med{background:var(--marigold);}
+  .urgency-low{background:#5B8A6B;}
+  .material-row{
+    display:flex; align-items:center; gap:12px; background:#fff; border-radius:16px; padding:14px;
+    box-shadow:0 2px 6px rgba(42,38,34,0.06); border:1px solid var(--cotton-dark); margin-bottom:8px;
+    cursor:pointer; transition:background .12s;
+  }
+  .material-row:active{background:var(--cotton);}
+  .material-row:last-child{margin-bottom:0;}
+  .material-row.ordered{opacity:.6;}
+
+  /* Cashflow dark card */
+  .cash-card{
+    background:linear-gradient(160deg, var(--indigo-dark), #14213a);
+    border-radius:20px; padding:16px; color:#fff; margin-bottom:12px;
+    border:1px solid rgba(201,163,78,0.35);
+  }
+  .cash-top{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px;}
+  .cash-label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#c9c2b3; font-weight:800;}
+  .cash-amount{font-family:'Fraunces',serif; font-weight:700; font-size:27px; display:flex; align-items:center; gap:2px; margin-top:2px;}
+  .overdue-chip{background:var(--madder); border-radius:12px; padding:6px 10px; display:flex; align-items:center; gap:5px; font-size:11px; font-weight:800;}
+  .cash-bars{display:flex; align-items:flex-end; gap:8px; height:80px;}
+  .cash-bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:5px;}
+  .cash-bar{width:100%; border-radius:6px 6px 0 0; background:var(--marigold);}
+  .cash-bar.forecast{background:rgba(232,163,61,0.5); border:1px dashed var(--marigold);}
+  .cash-bar-label{font-size:9px; color:#c9c2b3; font-weight:700; text-align:center; line-height:1.2;}
+  .cash-note{font-size:10px; color:#c9c2b3; margin-top:6px;}
+
+  .footer-note{
+    display:flex; align-items:center; gap:12px; background:var(--green-bg); border-radius:18px; padding:14px;
+    margin-bottom:24px;
+  }
+  .footer-note p{font-size:12px; color:var(--green); font-weight:700; line-height:1.4;}
+
+  /* ---------- Bottom nav ---------- */
+  .nav-wrap{position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:100%; max-width:430px; z-index:20;}
+  nav.bottom-nav{
+    background:#fff; border-top:1px solid var(--cotton-dark);
+    display:flex; justify-content:space-around; align-items:center; padding:8px 4px;
+    box-shadow:0 -4px 16px rgba(0,0,0,0.08);
+  }
+  .nav-btn{display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 4px; flex:1; color:var(--ink-faint); position:relative;}
+  .nav-btn.active{color:var(--madder);}
+  .nav-label{font-size:10px; font-weight:800;}
+  .nav-badge{position:absolute; top:2px; right:22%; width:7px; height:7px; border-radius:50%; background:var(--madder);}
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed; bottom:96px; left:50%; transform:translateX(-50%) translateY(20px); z-index:40;
+    background:var(--charcoal); color:#fff; padding:11px 18px; border-radius:14px; font-size:13px; font-weight:700;
+    display:flex; align-items:center; gap:8px; opacity:0; pointer-events:none; transition:all .25s ease;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25); max-width:88%; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ---------- Modals / Sheets ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:30;
+    display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .overlay.center{align-items:center;}
+  .sheet{
+    width:100%; max-width:430px; background:var(--cotton); border-radius:26px 26px 0 0; padding:20px 20px 32px;
+    transform:translateY(20px); transition:transform .25s; max-height:80vh; overflow-y:auto;
+  }
+  .overlay.open .sheet{transform:translateY(0);}
+  .sheet-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+  .sheet-title{font-family:'Fraunces',serif; font-weight:700; font-size:18px;}
+  .sheet-sub{font-size:12px; color:var(--ink-faint); margin-top:-10px; margin-bottom:16px;}
+  .close-btn{width:32px; height:32px; border-radius:50%; background:var(--cotton-dark); display:flex; align-items:center; justify-content:center;}
+  .lang-option{
+    width:100%; text-align:left; padding:14px 16px; border-radius:16px; font-weight:800; font-size:15px;
+    background:#fff; color:var(--charcoal); display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+  }
+  .lang-option.selected{background:var(--charcoal); color:#fff;}
+  .sheet-action{
+    width:100%; text-align:left; padding:15px 16px; border-radius:16px; font-weight:800; font-size:14.5px;
+    background:#fff; color:var(--charcoal); display:flex; align-items:center; gap:12px; margin-bottom:10px;
+    border:1px solid var(--cotton-dark);
+  }
+  .sheet-action .sa-icon{width:34px; height:34px; min-width:34px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px;}
+  .sheet-action.primary{background:var(--madder); color:#fff; border-color:var(--madder-deep);}
+  .sheet-action.primary .sa-icon{background:rgba(255,255,255,0.2);}
+  .sheet-summary{background:#fff; border-radius:16px; padding:14px; margin-bottom:16px; border:1px solid var(--cotton-dark);}
+  .sheet-summary-row{display:flex; justify-content:space-between; font-size:13px; padding:4px 0;}
+  .sheet-summary-row.total{font-weight:900; font-size:15px; border-top:1px dashed var(--cotton-dark); margin-top:6px; padding-top:10px;}
+
+  .voice-card{
+    width:85%; max-width:340px; background:#fff; border-radius:26px; padding:26px 22px; text-align:center;
+    transform:scale(0.9); transition:transform .2s;
+  }
+  .overlay.open .voice-card{transform:scale(1);}
+  .voice-pulse{
+    width:64px; height:64px; border-radius:50%; background:var(--marigold); margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center; color:var(--charcoal);
+    animation:pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,152,46,0.4);}50%{box-shadow:0 0 0 14px rgba(224,152,46,0);}}
+  .voice-title{font-family:'Fraunces',serif; font-weight:700; font-size:17px; margin-bottom:8px;}
+  .voice-text{font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:20px;}
+  .voice-done{width:100%; background:var(--charcoal); color:#fff; font-weight:800; padding:13px; border-radius:16px;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* Profile / settings */
+  .profile-card{background:#fff; border-radius:20px; padding:22px; text-align:center; border:1px solid var(--zari); margin-bottom:20px;}
+  .avatar{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 12px; background:linear-gradient(150deg,var(--zari-light),var(--marigold-deep));
+    display:flex; align-items:center; justify-content:center; font-size:26px; border:2px solid #fff; box-shadow:0 0 0 2px var(--zari);
+  }
+  .profile-name{font-family:'Fraunces',serif; font-weight:700; font-size:18px;}
+  .profile-sub{font-size:12.5px; color:var(--ink-faint); margin-top:2px; line-height:1.4;}
+  .stat-row{display:flex; gap:10px; margin-top:16px;}
+  .stat-box{flex:1; background:var(--cotton); border-radius:14px; padding:12px 6px; text-align:center;}
+  .stat-num{font-family:'Fraunces',serif; font-weight:700; font-size:19px; color:var(--madder);}
+  .stat-label{font-size:10px; color:var(--ink-faint); font-weight:700; margin-top:2px; line-height:1.2;}
+  .setting-row{
+    display:flex; align-items:center; justify-content:space-between; padding:14px; background:#fff;
+    border-radius:16px; border:1px solid var(--cotton-dark); margin-bottom:8px;
+  }
+  .setting-left{display:flex; align-items:center; gap:12px;}
+  .setting-icon{width:36px; height:36px; min-width:36px; border-radius:10px; background:var(--cotton); display:flex; align-items:center; justify-content:center; font-size:16px;}
+  .setting-name{font-weight:800; font-size:13.5px;}
+  .setting-sub{font-size:11px; color:var(--ink-faint); margin-top:1px;}
+  .switch{width:42px; height:24px; border-radius:999px; background:var(--cotton-dark); position:relative; transition:background .2s; min-width:42px;}
+  .switch.on{background:var(--green);}
+  .switch-knob{position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+  .switch.on .switch-knob{left:20px;}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ HEADER ============ -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-mark">🧵</div>
+          <div>
+            <div class="brand-name">WeaveAhead</div>
+            <div class="brand-sub">Govt. Handloom Advisory</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="langBtn" aria-label="Change language">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>
+          </button>
+          <button class="icon-btn" id="notifBtn" aria-label="Notifications">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span class="dot"></span>
+          </button>
+        </div>
+      </div>
+      <div class="greeting-card">
+        <div>
+          <div class="greeting-name" id="greetingName">Namaskaram, Lakshmi</div>
+          <div class="greeting-line">National Weave Demand Active</div>
+        </div>
+        <button class="voice-btn" id="voiceBtn" aria-label="Listen to forecast">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="temple-strip"></div>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+
+  <!-- ===== HOME ===== -->
+  <div class="view active" id="view-home">
+
+    <!-- Government Live Ticker -->
+    <section>
+      <div class="gov-ticker">
+        <span class="live-badge">Live Gov Feed</span>
+        <div class="ticker-text">Ministry of Textiles: 116 heritage weaves active across India. Special Festival Dilli Haat & Onam slots open.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="banner">
+        <div class="banner-icon">🪔</div>
+        <div style="flex:1">
+          <div class="banner-title">Festival & Exhibition Windows Open</div>
+          <div class="banner-sub">Accept orders for Onam and National Handloom Day showcases now.</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5c4321" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    </section>
+
+    <!-- Window Status Module -->
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Real-Time Windows</div><div class="section-title">Demand & Acceptance Portal</div></div></div>
+      <div class="window-box">
+        <div>
+          <div class="wb-title">Current Window Status</div>
+          <div class="wb-main" id="windowStatusTitle">Accepting Festival Demand</div>
+        </div>
+        <div class="wb-badge" id="windowStatusBadge">OPEN</div>
+      </div>
+    </section>
+
+    <!-- All Types of Weavings Search Directory -->
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Nationwide Index</div><div class="section-title">Weavings Across India</div></div></div>
+      <div class="card">
+        <div class="filter-bar">
+          <input type="text" class="search-input" id="weaveSearch" placeholder="Search weave (e.g. Banarasi, Ikat)..." />
+          <select class="filter-select" id="regionFilter">
+            <option value="all">All Regions</option>
+            <option value="South">South</option>
+            <option value="East">East</option>
+            <option value="North">North</option>
+            <option value="West">West</option>
+          </select>
+        </div>
+        <div id="weavesDirectoryList" style="max-height:220px; overflow-y:auto;"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Next 6 Weeks</div><div class="section-title">Demand Forecast</div></div></div>
+      <div class="card">
+        <div class="tabs" id="productTabs"></div>
+        <div class="chart-row" id="chartRow"></div>
+        <p class="chart-note">Bundle height = pieces expected to sell that week</p>
+        <div class="tag-row" id="festivalTags"></div>
+      </div>
+    </section>
+
+    <!-- Production log -->
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Today</div><div class="section-title">Log Your Weaving</div></div></div>
+      <div class="log-card" id="logCard"></div>
+    </section>
+
+    <section>
+      <div class="section-head"><div><div class="eyebrow">This Week's Action</div><div class="section-title">What to Weave</div></div></div>
+      <div class="card">
+        <div class="action-item">
+          <div class="action-icon" style="background:var(--madder)">🥻</div>
+          <div><div class="action-title">Weave 12 more sarees</div><div class="action-sub">Temple border, red &amp; gold — trending +24%</div></div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon" style="background:var(--marigold)">🎨</div>
+          <div><div class="action-title">Reduce plain zari stoles</div><div class="action-sub">Demand slowing −8% this month</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Buyer Trends</div><div class="section-title">What's Selling Now</div></div></div>
+      <div class="card tight" id="trendingList"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div><div class="eyebrow">Plan Ahead</div><div class="section-title">Raw Materials</div></div>
+        <span class="link-btn">Tap to mark ordered</span>
+      </div>
+      <div id="materialsList"></div>
+    </section>
+
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Money Coming In</div><div class="section-title">Payments &amp; Cash Flow</div></div></div>
+      <div class="cash-card">
+        <div class="cash-top">
+          <div>
+            <div class="cash-label">Pending to receive</div>
+            <div class="cash-amount" id="totalDue">₹0</div>
+          </div>
+          <div class="overdue-chip" id="overdueChip"></div>
+        </div>
+        <div class="cash-bars" id="cashBars"></div>
+        <div class="cash-note">* forecasted</div>
+      </div>
+      <div class="card tight" id="paymentsList"></div>
+    </section>
+
+    <div class="footer-note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="min-width:20px"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+      <p>This forecast was also sent to your WhatsApp and by SMS in your language.</p>
+    </div>
+
+  </div>
+
+  <!-- ===== FORECAST ===== -->
+  <div class="view" id="view-forecast">
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Detailed</div><div class="section-title">Full Forecast</div></div></div>
+      <div class="card">
+        <div class="tabs" id="productTabs2"></div>
+        <div class="chart-row" id="chartRow2"></div>
+        <p class="chart-note">Bundle height = pieces expected to sell that week</p>
+        <div class="tag-row" id="festivalTags2"></div>
+      </div>
+    </section>
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Buyer Trends</div><div class="section-title">Trending Designs</div></div></div>
+      <div class="card tight" id="trendingList2"></div>
+    </section>
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Today</div><div class="section-title">Log Your Weaving</div></div></div>
+      <div class="log-card" id="logCard2"></div>
+    </section>
+  </div>
+
+  <!-- ===== PAYMENTS ===== -->
+  <div class="view" id="view-payments">
+    <section>
+      <div class="section-head">
+        <div><div class="eyebrow">Money Coming In</div><div class="section-title">All Payments</div></div>
+        <span class="link-btn">Tap a row</span>
+      </div>
+      <div class="cash-card">
+        <div class="cash-top">
+          <div>
+            <div class="cash-label">Pending to receive</div>
+            <div class="cash-amount" id="totalDue2">₹0</div>
+          </div>
+          <div class="overdue-chip" id="overdueChip2"></div>
+        </div>
+        <div class="cash-bars" id="cashBars2"></div>
+        <div class="cash-note">* forecasted</div>
+      </div>
+      <div class="card tight" id="paymentsList2"></div>
+    </section>
+  </div>
+
+  <!-- ===== STOCK ===== -->
+  <div class="view" id="view-stock">
+    <section>
+      <div class="section-head">
+        <div><div class="eyebrow">Plan Ahead</div><div class="section-title">Raw Material Stock</div></div>
+        <span class="link-btn">Tap to mark ordered</span>
+      </div>
+      <div id="materialsList2"></div>
+    </section>
+  </div>
+
+  <!-- ===== PROFILE ===== -->
+  <div class="view" id="view-profile">
+    <section>
+      <div class="profile-card">
+        <div class="avatar">🧑‍🌾</div>
+        <div class="profile-name">Lakshmi Devi</div>
+        <div class="profile-sub">Kanchipuram Weavers Cooperative<br/>Member since 2014</div>
+        <div class="stat-row">
+          <div class="stat-box"><div class="stat-num" id="statWeeks">18</div><div class="stat-label">Weeks tracked</div></div>
+          <div class="stat-box"><div class="stat-num" id="statOrders">47</div><div class="stat-label">Orders fulfilled</div></div>
+          <div class="stat-box"><div class="stat-num" id="statStreak">6</div><div class="stat-label">Week streak</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Preferences</div><div class="section-title">Alerts &amp; Language</div></div></div>
+
+      <div class="setting-row" id="settingLang">
+        <div class="setting-left">
+          <div class="setting-icon">🌐</div>
+          <div><div class="setting-name">App Language</div><div class="setting-sub" id="langSubtext">English</div></div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-faint)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-icon">🔊</div>
+          <div><div class="setting-name">Voice Alerts</div><div class="setting-sub">Hear forecasts spoken aloud</div></div>
+        </div>
+        <div class="switch on" id="switchVoice"><div class="switch-knob"></div></div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-icon">💬</div>
+          <div><div class="setting-name">WhatsApp Alerts</div><div class="setting-sub">Weekly forecast on WhatsApp</div></div>
+        </div>
+        <div class="switch on" id="switchWhatsapp"><div class="switch-knob"></div></div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-left">
+          <div class="setting-icon">✉️</div>
+          <div><div class="setting-name">SMS Alerts</div><div class="setting-sub">For areas with low internet</div></div>
+        </div>
+        <div class="switch" id="switchSms"><div class="switch-knob"></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head"><div><div class="eyebrow">Group</div><div class="section-title">Cooperative</div></div></div>
+      <div class="card tight">
+        <div class="list-row">
+          <div class="row-left">
+            <span style="font-size:20px">🏛️</span>
+            <div><div class="row-name">Kanchipuram Weavers Cooperative</div><div class="row-sub">142 members · Tamil Nadu</div></div>
+          </div>
+          <span class="pill pill-good">Active</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  </main>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <div class="nav-wrap">
+    <div class="temple-strip"></div>
+    <nav class="bottom-nav" id="bottomNav"></nav>
+  </div>
+
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<!-- ============ LANGUAGE SHEET ============ -->
+<div class="overlay" id="langOverlay">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title">Choose language</div>
+      <button class="close-btn" id="langClose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div id="langList"></div>
+  </div>
+</div>
+
+<!-- ============ VOICE MODAL ============ -->
+<div class="overlay center" id="voiceOverlay">
+  <div class="voice-card">
+    <div class="voice-pulse">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+    </div>
+    <div class="voice-title">Playing forecast in <span id="voiceLang">English</span></div>
+    <p class="voice-text" id="voiceScript">"Government demand window is open. Onam festival and National Handloom Day demand is rising. Accept your festival orders now."</p>
+    <button class="voice-done" id="voiceClose">Done</button>
+  </div>
+</div>
+
+<!-- ============ PAYMENT ACTION SHEET ============ -->
+<div class="overlay" id="paymentOverlay">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title" id="paymentSheetTitle">Buyer</div>
+      <button class="close-btn" id="paymentClose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div class="sheet-summary" id="paymentSummary"></div>
+    <div id="paymentActions"></div>
+  </div>
+</div>
+
+<!-- ============ NOTIFICATIONS SHEET ============ -->
+<div class="overlay" id="notifOverlay">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div class="sheet-title">Notifications</div>
+      <button class="close-btn" id="notifClose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <div id="notifList"></div>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const LANGS = ["English", "தமிழ்", "తెలుగు", "हिंदी", "ಕನ್ನಡ", "বাংলা"];
+
+const allWeavings = [
+  { name: "Kanchipuram Silk", region: "South", demand: "High", festival: "Onam / Weddings", status: "Accepting Orders" },
+  { name: "Banarasi Silk", region: "North", demand: "Very High", festival: "Festive Season", status: "Accepting Orders" },
+  { name: "Sambalpuri Ikat", region: "East", demand: "High", festival: "Rath Yatra / Puja", status: "Accepting Orders" },
+  { name: "Paithani", region: "West", demand: "Moderate", festival: "Ganesh Chaturthi", status: "Window Closing Soon" },
+  { name: "Jamdani", region: "East", demand: "High", festival: "Durga Puja", status: "Accepting Orders" },
+  { name: "Ilkal", region: "South", demand: "Stable", festival: "Regional Festivals", status: "Open" },
+  { name: "Kani Pashmina", region: "North", demand: "High", festival: "Winter / Wedding", status: "Accepting Orders" },
+  { name: "Bawan Buti", region: "East", demand: "Moderate", festival: "Local Festivities", status: "Open" }
+];
+
+const forecastWeeks = [
+  { week:"This Week", short:"W1", saree:62, stole:30, home:18, festival:null },
+  { week:"Next Week", short:"W2", saree:78, stole:34, home:20, festival:"Onam prep" },
+  { week:"Week 3", short:"W3", saree:95, stole:41, home:24, festival:"Onam / National Handloom Day" },
+  { week:"Week 4", short:"W4", saree:70, stole:28, home:22, festival:null },
+  { week:"Week 5", short:"W5", saree:55, stole:25, home:19, festival:null },
+  { week:"Week 6", short:"W6", saree:88, stole:38, home:21, festival:"Wedding season begins" },
+];
+
+const products = [
+  { key:"saree", label:"Sarees", color:"#9C3B28", icon:"🥻", target:6 },
+  { key:"stole", label:"Stoles", color:"#E0982E", icon:"🧣", target:4 },
+  { key:"home", label:"Home Textiles", color:"#223A63", icon:"🏠", target:3 },
+];
+
+const trending = [
+  { design:"Temple border, red & gold", change:24, dir:"up" },
+  { design:"Pastel checks", change:12, dir:"up" },
+  { design:"Plain zari stole", change:-8, dir:"down" },
+];
+
+let payments = [
+  { id:1, buyer:"Kanchi Cooperative", amount:8400, status:"due", dueIn:"3 days" },
+  { id:2, buyer:"Meera Textiles", amount:12500, status:"paid", dueIn:null },
+  { id:3, buyer:"Village Haat Order", amount:3200, status:"overdue", dueIn:"6 days late" },
+];
+
+let rawMaterials = [
+  { id:1, name:"Cotton yarn (40s count)", need:"Stock up", reason:"Onam demand rising", urgency:"high", ordered:false },
+  { id:2, name:"Zari thread (gold)", need:"Stock up", reason:"Wedding season in 3 weeks", urgency:"med", ordered:false },
+  { id:3, name:"Natural dye — indigo", need:"Sufficient", reason:"Current stock covers 4 weeks", urgency:"low", ordered:false },
+];
+
+const monthCashflow = [
+  { month:"May", in:22000 },
+  { month:"Jun", in:18500 },
+  { month:"Jul", in:27000 },
+  { month:"Aug*", in:31000, forecast:true },
+];
+
+const notifications = [
+  { icon:"🪔", title:"Festival demand window open", sub:"Onam & National Handloom Day demand active", time:"1h ago" },
+  { icon:"💰", title:"Payment overdue", sub:"Village Haat Order — ₹3,200, 6 days late", time:"1d ago" },
+  { icon:"🧵", title:"Weekly forecast ready", sub:"Your 6-week demand forecast has been updated", time:"2d ago" },
+  { icon:"📈", title:"Trending design alert", sub:"Temple border designs up 24% this month", time:"3d ago" },
+];
+
+let state = {
+  lang:"English",
+  product:"saree",
+  tab:"home",
+  production:{ saree:0, stole:0, home:0 },
+  voiceOn:true, whatsappOn:true, smsOn:false,
+  searchQuery:"",
+  regionFilter:"all"
+};
+
+/* ================= ICONS ================= */
+const iconArrowUp = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>`;
+const iconArrowDown = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>`;
+const iconCheck = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+const iconCheckWhite = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+const iconAlert = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--madder)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+const iconCal = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--marigold)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+const iconMsg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>`;
+const iconRupee = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><path d="M6 15c0 3 3 5 6 5s6-2 6-5-3-3-6-3-6 0-6-3 3-5 6-5c2 0 4 1 5 2.5"/><line x1="3" y1="9" x2="9" y2="9"/><line x1="3" y1="12" x2="9" y2="12"/></svg>`;
+const iconPackage = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`;
+
+/* ================= TOAST ================= */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove("show"), 2200);
+}
+
+/* ================= RENDER: WEAVINGS DIRECTORY ================= */
+function renderWeavingsDirectory(){
+  const container = document.getElementById("weavesDirectoryList");
+  const filtered = allWavings.filter(w=>{
+    const matchText = w.name.toLowerCase().includes(state.searchQuery.toLowerCase()) || w.festival.toLowerCase().includes(state.searchQuery.toLowerCase());
+    const matchRegion = state.regionFilter === "all" || w.region === state.regionFilter;
+    return matchText && matchRegion;
+  });
+
+  if(filtered.length === 0){
+    container.innerHTML = `<div style="padding:16px; text-align:center; font-size:12px; color:var(--ink-faint);">No weavings found matching criteria.</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(w=>`
+    <div class="list-row" style="background:#fff; margin-bottom:6px; border-radius:12px; border:1px solid var(--cotton-dark);">
+      <div>
+        <div class="row-name">${w.name} <span style="font-weight:600; font-size:11px; color:var(--ink-faint);">(${w.region})</span></div>
+        <div class="row-sub">Demand: <b>${w.demand}</b> | Peak: ${w.festival}</div>
+      </div>
+      <button class="pill ${w.status==='Accepting Orders'?'pill-good':'pill-warn'} pill-btn" onclick="openDemandWindow('${w.name}')">
+        ${w.status}
+      </button>
+    </div>
+  `).join("");
+}
+
+function openDemandWindow(weaveName){
+  showToast(`Demand window open for ${weaveName}! Orders accepted.`);
+}
+
+/* ================= RENDER: FORECAST ================= */
+function renderTabs(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = products.map(p => `
+    <button class="tab ${state.product===p.key?'active':''}" data-key="${p.key}">
+      <span class="tab-emoji">${p.icon}</span>
+      <span class="tab-label">${p.label}</span>
+    </button>
+  `).join("");
+  el.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ state.product = btn.dataset.key; renderAll(); });
+  });
+}
+
+function renderChart(containerId, tagsId){
+  const el = document.getElementById(containerId);
+  const maxVal = Math.max(...forecastWeeks.map(w=>w[state.product]));
+  const color = products.find(p=>p.key===state.product).color;
+  el.innerHTML = forecastWeeks.map(w=>{
+    const val = w[state.product];
+    const pct = Math.max(6, Math.round((val/maxVal)*100));
+    return `
+      <div class="bar-col">
+        <div class="bar-track">
+          <div class="bar-fill" style="height:${pct}%; background:repeating-linear-gradient(180deg, ${color} 0px, ${color} 6px, ${color}cc 6px, ${color}cc 8px);"></div>
+        </div>
+        <div class="bar-label">${w.short}</div>
+      </div>`;
+  }).join("");
+
+  const tagsEl = document.getElementById(tagsId);
+  if(tagsEl){
+    tagsEl.innerHTML = forecastWeeks.filter(w=>w.festival).map(w=>`
+      <span class="pill pill-warn">${w.short}: ${w.festival}</span>
+    `).join("");
+  }
+}
+
+function renderTrending(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = trending.map((t,i)=>`
+    <div class="list-row" style="${i===trending.length-1?'border-bottom:none':''}">
+      <span class="row-name" style="font-weight:700; font-size:13.5px;">${t.design}</span>
+      <span class="trend-val ${t.dir==='up'?'trend-up':'trend-down'}">
+        ${t.dir==='up'?iconArrowUp:iconArrowDown} ${Math.abs(t.change)}%
+      </span>
+    </div>
+  `).join("");
+}
+
+/* ================= RENDER: PRODUCTION LOG (interactive) ================= */
+function renderLog(containerId){
+  const el = document.getElementById(containerId);
+  const totalDone = products.reduce((a,p)=>a+state.production[p.key],0);
+  const totalTarget = products.reduce((a,p)=>a+p.target,0);
+  const pct = Math.min(100, Math.round((totalDone/totalTarget)*100));
+
+  el.innerHTML = `
+    ${products.map(p=>`
+      <div class="log-row">
+        <div class="log-emoji">${p.icon}</div>
+        <div>
+          <div class="log-name">${p.label}</div>
+          <div class="log-target">Target: ${p.target} pieces/day</div>
+        </div>
+        <div class="stepper">
+          <button class="step-btn minus" data-key="${p.key}" data-dir="-1">−</button>
+          <span class="step-val" id="stepval-${containerId}-${p.key}">${state.production[p.key]}</span>
+          <button class="step-btn plus" data-key="${p.key}" data-dir="1">+</button>
+        </div>
+      </div>
+    `).join("")}
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Today's progress</span><span>${totalDone}/${totalTarget} pieces</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="streak-note">${iconCheck} 6-day logging streak — keep it up!</div>
+  `;
+
+  el.querySelectorAll(".step-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const key = btn.dataset.key;
+      const dir = parseInt(btn.dataset.dir);
+      state.production[key] = Math.max(0, state.production[key] + dir);
+      renderLog("logCard");
+      renderLog("logCard2");
+      if(dir>0) showToast(`Logged 1 more ${products.find(p=>p.key===key).label.toLowerCase()}`);
+    });
+  });
+}
+
+/* ================= RENDER: MATERIALS (interactive) ================= */
+function renderMaterials(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = rawMaterials.map(r=>{
+    const pillTone = r.ordered ? 'pill-good' : (r.urgency==='high'?'pill-bad':r.urgency==='med'?'pill-warn':'pill-good');
+    const pillText = r.ordered ? 'Ordered ✓' : r.need;
+    return `
+    <div class="material-row ${r.ordered?'ordered':''}" data-id="${r.id}">
+      <div class="urgency-dot urgency-${r.urgency}"></div>
+      <div style="flex:1">
+        <div class="row-name">${r.name}</div>
+        <div class="row-sub">${r.ordered ? 'Marked as ordered' : r.reason}</div>
+      </div>
+      <span class="pill ${pillTone}">${pillText}</span>
+    </div>`;
+  }).join("");
+
+  el.querySelectorAll(".material-row").forEach(row=>{
+    row.addEventListener("click", ()=>{
+      const id = parseInt(row.dataset.id);
+      const mat = rawMaterials.find(m=>m.id===id);
+      if(mat.urgency==='low' && !mat.ordered){ showToast(`${mat.name} — already sufficient, no order needed`); return; }
+      mat.ordered = !mat.ordered;
+      renderMaterials("materialsList");
+      renderMaterials("materialsList2");
+      showToast(mat.ordered ? `${mat.name} marked as ordered` : `${mat.name} order undone`);
+    });
+  });
+}
+
+/* ================= RENDER: PAYMENTS (interactive) ================= */
+function renderPayments(listId, totalId, chipId){
+  const list = document.getElementById(listId);
+  list.innerHTML = payments.map((p,i)=>{
+    let icon = p.status==='paid'?iconCheck:p.status==='overdue'?iconAlert:iconCal;
+    let subtext = p.status==='paid'?'Paid':p.status==='overdue'?p.dueIn:`Due in ${p.dueIn}`;
+    return `
+    <div class="list-row clickable" data-id="${p.id}" style="${i===payments.length-1?'border-bottom:none':''}">
+      <div class="row-left">
+        ${icon}
+        <div><div class="row-name">${p.buyer}</div><div class="row-sub">${subtext}</div></div>
+      </div>
+      <span class="row-name">₹${p.amount.toLocaleString('en-IN')}</span>
+    </div>`;
+  }).join("");
+
+  list.querySelectorAll(".list-row").forEach(row=>{
+    row.addEventListener("click", ()=> openPaymentSheet(parseInt(row.dataset.id)));
+  });
+
+  const totalDue = payments.filter(p=>p.status!=='paid').reduce((a,p)=>a+p.amount,0);
+  document.getElementById(totalId).innerHTML = `${iconRupee} ${totalDue.toLocaleString('en-IN')}`;
+
+  const overdueCount = payments.filter(p=>p.status==='overdue').length;
+  const chip = document.getElementById(chipId);
+  if(overdueCount>0){
+    chip.style.display='flex';
+    chip.innerHTML = `${iconAlert.replace('var(--madder)','white')} ${overdueCount} overdue`;
+  } else {
+    chip.style.display='none';
+  }
+}
+
+function openPaymentSheet(id){
+  const p = payments.find(x=>x.id===id);
+  document.getElementById("paymentSheetTitle").textContent = p.buyer;
+  document.getElementById("paymentSummary").innerHTML = `
+    <div class="sheet-summary-row"><span>Amount</span><span>₹${p.amount.toLocaleString('en-IN')}</span></div>
+    <div class="sheet-summary-row"><span>Status</span><span style="text-transform:capitalize">${p.status}</span></div>
+    <div class="sheet-summary-row total"><span>${p.status==='paid'?'Received on':'Expected'}</span><span>${p.status==='paid'?'This month':p.dueIn||'—'}</span></div>
+  `;
+  const actionsEl = document.getElementById("paymentActions");
+  if(p.status==='paid'){
+    actionsEl.innerHTML = `
+      <button class="sheet-action" id="closePaymentSheet2">
+        <span class="sa-icon" style="background:var(--green-bg)">${iconCheck}</span>
+        Already received — no action needed
+      </button>`;
+    document.getElementById("closePaymentSheet2").addEventListener("click", closePaymentSheet);
+  } else {
+    actionsEl.innerHTML = `
+      <button class="sheet-action primary" id="markReceivedBtn">
+        <span class="sa-icon">${iconCheckWhite}</span>
+        Mark as received
+      </button>
+      <button class="sheet-action" id="sendReminderBtn">
+        <span class="sa-icon" style="background:var(--green-bg); color:var(--green)">${iconMsg}</span>
+        Send payment reminder on WhatsApp
+      </button>
+    `;
+    document.getElementById("markReceivedBtn").addEventListener("click", ()=>{
+      p.status = 'paid'; p.dueIn = null;
+      renderPayments("paymentsList","totalDue","overdueChip");
+      renderPayments("paymentsList2","totalDue2","overdueChip2");
+      showToast(`₹${p.amount.toLocaleString('en-IN')} from ${p.buyer} marked received`);
+      closePaymentSheet();
+    });
+    document.getElementById("sendReminderBtn").addEventListener("click", ()=>{
+      showToast(`Reminder sent to ${p.buyer} on WhatsApp`);
+      closePaymentSheet();
+    });
+  }
+  document.getElementById("paymentOverlay").classList.add("open");
+}
+function closePaymentSheet(){ document.getElementById("paymentOverlay").classList.remove("open"); }
+
+function renderCashBars(containerId){
+  const el = document.getElementById(containerId);
+  const max = Math.max(...monthCashflow.map(m=>m.in));
+  el.innerHTML = monthCashflow.map(m=>{
+    const h = Math.round((m.in/max)*100);
+    return `
+    <div class="cash-bar-col">
+      <div class="cash-bar ${m.forecast?'forecast':''}" style="height:${h}%"></div>
+      <div class="cash-bar-label">${m.month}</div>
+    </div>`;
+  }).join("");
+}
+
+/* ================= LANGUAGE ================= */
+function renderLangList(){
+  const el = document.getElementById("langList");
+  el.innerHTML = LANGS.map(l=>`
+    <button class="lang-option ${state.lang===l?'selected':''}" data-lang="${l}">
+      ${l} ${state.lang===l? iconCheckWhite : ''}
+    </button>
+  `).join("");
+  el.querySelectorAll(".lang-option").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.lang = btn.dataset.lang;
+      renderLangList();
+      document.getElementById("langSubtext").textContent = state.lang;
+      document.getElementById("langOverlay").classList.remove("open");
+      showToast(`Language set to ${state.lang}`);
+    });
+  });
+}
+
+/* ================= NOTIFICATIONS ================= */
+function renderNotifs(){
+  const el = document.getElementById("notifList");
+  el.innerHTML = notifications.map(n=>`
+    <div class="sheet-action" style="cursor:default; align-items:flex-start;">
+      <span class="sa-icon" style="background:var(--cotton); font-size:16px;">${n.icon}</span>
+      <div style="flex:1">
+        <div style="font-weight:800; font-size:13.5px;">${n.title}</div>
+        <div style="font-size:12px; color:var(--ink-faint); font-weight:600; margin-top:2px;">${n.sub}</div>
+        <div style="font-size:10.5px; color:var(--zari-deep,var(--ink-faint)); font-weight:700; margin-top:4px;">${n.time}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+/* ================= NAV ================= */
+const NAV_ITEMS = [
+  { id:"home", label:"Home", icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>` },
+  { id:"forecast", label:"Forecast", icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>` },
+  { id:"payments", label:"Payments", icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`, badge:true },
+  { id:"stock", label:"Stock", icon:iconPackage },
+  { id:"profile", label:"Profile", icon:`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>` },
+];
+
+function renderNav(){
+  const el = document.getElementById("bottomNav");
+  const hasOverdue = payments.some(p=>p.status==='overdue');
+  el.innerHTML = NAV_ITEMS.map(item=>`
+    <button class="nav-btn ${state.tab===item.id?'active':''}" data-tab="${item.id}">
+      ${item.icon}
+      ${item.badge && hasOverdue ? '<span class="nav-badge"></span>' : ''}
+      <span class="nav-label">${item.label}</span>
+    </button>
+  `).join("");
+  el.querySelectorAll(".nav-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.tab = btn.dataset.tab;
+      document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+      document.getElementById("view-"+state.tab).classList.add("active");
+      renderNav();
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+}
+
+/* ================= SETTINGS SWITCHES ================= */
+function wireSwitch(elId, stateKey, labelOn, labelOff){
+  const el = document.getElementById(elId);
+  const paint = ()=> el.classList.toggle("on", state[stateKey]);
+  paint();
+  el.addEventListener("click", ()=>{
+    state[stateKey] = !state[stateKey];
+    paint();
+    showToast(state[stateKey] ? labelOn : labelOff);
+  });
+}
+
+/* ================= EVENT LISTENERS & BINDINGS ================= */
+document.getElementById("weaveSearch").addEventListener("input", (e)=>{
+  state.searchQuery = e.target.value;
+  renderWeavingsDirectory();
+});
+
+document.getElementById("regionFilter").addEventListener("change", (e)=>{
+  state.regionFilter = e.target.value;
+  renderWeavingsDirectory();
+});
+
+/* ================= MASTER RENDER ================= */
+function renderAll(){
+  renderWeavingsDirectory();
+  renderTabs("productTabs");
+  renderTabs("productTabs2");
+  renderChart("chartRow", "festivalTags");
+  renderChart("chartRow2", "festivalTags2");
+  renderTrending("trendingList");
+  renderTrending("trendingList2");
+  renderLog("logCard");
+  renderLog("logCard2");
+  renderMaterials("materialsList");
+  renderMaterials("materialsList2");
+  renderPayments("paymentsList", "totalDue", "overdueChip");
+  renderPayments("paymentsList2", "totalDue2", "overdueChip2");
+  renderCashBars("cashBars");
+  renderCashBars("cashBars2");
+  renderLangList();
+  renderNotifs();
+  renderNav();
+}
+
+/* ================= MODAL WIRING ================= */
+document.getElementById("langBtn").addEventListener("click", ()=> document.getElementById("langOverlay").classList.add("open"));
+document.getElementById("langClose").addEventListener("click", ()=> document.getElementById("langOverlay").classList.remove("open"));
+document.getElementById("langOverlay").addEventListener("click", (e)=>{ if(e.target.id==="langOverlay") document.getElementById("langOverlay").classList.remove("open"); });
+
+document.getElementById("voiceBtn").addEventListener("click", ()=>{
+  document.getElementById("voiceLang").textContent = state.lang;
+  document.getElementById("voiceOverlay").classList.add("open");
+});
+document.getElementById("voiceClose").addEventListener("click", ()=> document.getElementById("voiceOverlay").classList.remove("open"));
+document.getElementById("voiceOverlay").addEventListener("click", (e)=>{ if(e.target.id==="voiceOverlay") document.getElementById("voiceOverlay").classList.remove("open"); });
+
+document.getElementById("paymentClose").addEventListener("click", closePaymentSheet);
+document.getElementById("paymentOverlay").addEventListener("click", (e)=>{ if(e.target.id==="paymentOverlay") closePaymentSheet(); });
+
+document.getElementById("notifBtn").addEventListener("click", ()=> document.getElementById("notifOverlay").classList.add("open"));
+document.getElementById("notifClose").addEventListener("click", ()=> document.getElementById("notifOverlay").classList.remove("open"));
+document.getElementById("notifOverlay").classList.add("open"); // or standard close wire
+document.getElementById("notifOverlay").addEventListener("click", (e)=>{ if(e.target.id==="notifOverlay") document.getElementById("notifOverlay").classList.remove("open"); });
+
+document.getElementById("settingLang").addEventListener("click", ()=> document.getElementById("langOverlay").classList.add("open"));
+
+/* ================= INIT ================= */
+renderAll();
+wireSwitch("switchVoice", "voiceOn", "Voice alerts turned on", "Voice alerts turned off");
+wireSwitch("switchWhatsapp", "whatsappOn", "WhatsApp alerts turned on", "WhatsApp alerts turned off");
+wireSwitch("switchSms", "smsOn", "SMS alerts turned on", "SMS alerts turned off");
+</script>
+</body>
+</html>
+
+```
