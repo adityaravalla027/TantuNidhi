@@ -1,241 +1,270 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeaveAhead — Ultimate Global Logistics & Supply Chain Operating System</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>WeaveAhead — National Handloom Intelligence Platform</title>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-panel {
-            background: linear-gradient(135deg, rgba(15, 12, 22, 0.90), rgba(8, 8, 12, 0.98));
-            backdrop-filter: blur(32px);
-            border: 1px solid rgba(245, 158, 11, 0.25);
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --text-main: #f8fafc;
+            --accent-glow: #0ea5e9;
         }
-        .cultural-glow {
-            background: radial-gradient(circle at top, rgba(217, 119, 6, 0.15), transparent 70%);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 4px; }
+
+        body {
+            background: linear-gradient(135deg, #090d16 0%, #171c30 50%, #291535 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .liquid-container {
+            position: relative;
+            width: 100%;
+            max-width: 680px;
+            padding: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+        }
+
+        .liquid-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 160px;
+            height: 160px;
+            background: rgba(14, 165, 233, 0.3);
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: -1;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        select option {
+            background: #1e1b4b;
+            color: #fff;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--accent-glow);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            display: none;
+        }
+
+        .result-box h3 {
+            font-size: 1rem;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            margin-bottom: 6px;
+        }
     </style>
 </head>
-<body class="bg-[#030305] text-slate-100 min-h-screen selection:bg-amber-500 selection:text-slate-950">
+<body>
 
-    <!-- Global Live Ticker -->
-    <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-indigo-700 text-slate-950 text-xs font-extrabold py-2.5 px-4 text-center tracking-wide shadow-lg">
-        🌍 GLOBAL FREIGHT GRID: 1,420 Active Vessels Synchronized | NHDP Green Channel Customs Pre-Clearance Active | Handloom Hackathon Grand Finale @ IIT Delhi
-    </div>
+    <div class="liquid-container">
+        <header>
+            <h1>WeaveAhead Portal</h1>
+            <p>AI-Powered Demand Forecasting & Government Scheme Integration</p>
+        </header>
 
-    <!-- Navigation Header -->
-    <header class="sticky top-0 z-50 glass-panel border-b border-amber-500/20 px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="h-11 w-11 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-indigo-600 flex items-center justify-center font-extrabold text-white text-xl shadow-2xl">🌐</div>
-            <div>
-                <h1 id="brandTitle" class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-amber-400 via-orange-300 to-indigo-300 bg-clip-text text-transparent">WeaveAhead Global / भारत तंतु</h1>
-                <p id="brandSub" class="text-[10px] tracking-wider text-amber-300/70 uppercase">Global Logistics & Supply Chain Intelligence Grid</p>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-4">
-            <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-400">
-                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="sysStatusText">Global Node Synchronized</span>
-            </div>
-
-            <!-- 12 Scheduled Indian Languages Dropdown Selector -->
-            <select id="globalLang" onchange="switchAppLanguage()" class="bg-slate-900 border border-amber-500/40 text-xs rounded-xl px-3 py-2.5 text-amber-200 focus:outline-none focus:border-amber-400 font-semibold cursor-pointer shadow-inner">
-                <option value="en">English (EN)</option>
-                <option value="hi">हिंदी - Hindi (HI)</option>
-                <option value="bn">বাংলা - Bengali (BN)</option>
-                <option value="or">ଓଡ଼ିଆ - Odia (OR)</option>
-                <option value="ta">தமிழ் - Tamil (TA)</option>
-                <option value="te">తెలుగు - Telugu (TE)</option>
-                <option value="mr">मराठी - Marathi (MR)</option>
-                <option value="gu">ગુજરાતી - Gujarati (GU)</option>
-                <option value="kn">ಕನ್ನಡ - Kannada (KN)</option>
-                <option value="ml">മലയാളം - Malayalam (ML)</option>
-                <option value="pa">ਪੰਜਾਬੀ - Punjabi (PA)</option>
-                <option value="as">অসমীয়া - Assamese (AS)</option>
+        <div class="form-group">
+            <label for="clusterRegion">Select Weaver Region / Cluster</label>
+            <select id="clusterRegion">
+                <option value="Varanasi">Uttar Pradesh — Banarasi Brocade</option>
+                <option value="WestBengal">West Bengal — Jamdani & Baluchari</option>
+                <option value="Odisha">Odisha — Sambalpuri Ikat & Bomkai</option>
+                <option value="TamilNadu">Tamil Nadu — Kanjeevaram Silk</option>
+                <option value="Telangana">Telangana — Pochampally Ikat</option>
+                <option value="Gujarat">Gujarat — Patola & Bandhani</option>
             </select>
         </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden py-20 px-6 lg:px-16 text-center cultural-glow">
-        <div class="max-w-4xl mx-auto space-y-6">
-            <span id="liveGridBadge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
-                <span class="h-2 w-2 rounded-full bg-amber-400 animate-ping"></span> Global Supply Chain & Freight Corridor
-            </span>
-            <h2 id="heroHeading" class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">Orchestrating Global Textile Exports with <span class="bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent">Autonomous Fleet Intelligence</span></h2>
-            <p id="heroSub" class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">Real-time tracking of international container vessels, automated customs green-channel routing, and multi-language demand synchronization.</p>
+        <div class="form-group">
+            <label for="languageCode">Regional Language (12 Scheduled Languages)</label>
+            <select id="languageCode">
+                <option value="hi">Hindi (हिंदी)</option>
+                <option value="bn">Bengali (বাংলা)</option>
+                <option value="or">Odia (ଓଡ଼ିଆ)</option>
+                <option value="ta">Tamil (தமிழ்)</option>
+                <option value="te">Telugu (తెలుగు)</option>
+                <option value="gu">Gujarati (ગુજરાતી)</option>
+                <option value="mr">Marathi (मराठी)</option>
+                <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+                <option value="as">Assamese (অসমীয়া)</option>
+                <option value="kn">Kannada (ಕನ್ನಡ)</option>
+                <option value="ml">Malayalam (മലയാളം)</option>
+                <option value="ur">Urdu (اردو)</option>
+            </select>
         </div>
-    </section>
 
-    <!-- Logistics Command & Tracking Section -->
-    <section class="py-12 px-6 lg:px-16 max-w-7xl mx-auto">
-        <div class="glass-panel rounded-3xl p-8 md:p-12 border border-amber-500/30 shadow-2xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="space-y-4">
-                <span id="coreBadge" class="text-xs uppercase tracking-widest text-amber-400 font-bold">FastAPI Global Dispatch Core</span>
-                <h3 id="sectionTitle" class="text-2xl md:text-3xl font-bold">International Consignment Dispatch</h3>
-                <p id="sectionDesc" class="text-slate-300 text-sm leading-relaxed">Initiate verified bulk export orders routed directly through international shipping ports and customs pre-clearance nodes.</p>
-                <div class="space-y-3 pt-2">
-                    <input type="text" id="destinationPort" placeholder="Destination Port (e.g., Port of Rotterdam, NY Harbor)" class="w-full bg-slate-900 border border-amber-500/40 text-sm rounded-xl px-4 py-3 text-slate-200 focus:outline-none">
-                    <button onclick="dispatchConsignment()" id="dispatchBtn" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl transition cursor-pointer shadow-lg">Execute Global Dispatch</button>
-                </div>
-            </div>
-
-            <div id="dispatchResultCard" class="hidden bg-slate-950/90 border border-amber-500/40 rounded-2xl p-6 space-y-4 shadow-xl">
-                <div class="flex items-center justify-between border-b border-amber-500/20 pb-3">
-                    <span id="resTrackingTitle" class="font-bold text-amber-400 text-sm">Tracking ID: GLB-LOG-982X</span>
-                    <span id="resStatusBadge" class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full font-bold">Green Channel Cleared</span>
-                </div>
-                <p id="resDispatchText" class="text-slate-300 text-sm leading-relaxed"></p>
-                <button onclick="playVoiceBriefing()" id="audioBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-md">
-                    🔊 Listen to Logistics Briefing / ऑडियो सुनें / குரல் கேட்க
-                </button>
-            </div>
+        <div class="form-group">
+            <label for="loanAmount">MUDRA Loan Application Amount (₹)</label>
+            <input type="number" id="loanAmount" value="150000" placeholder="Enter amount in INR">
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="border-t border-amber-500/20 py-10 px-6 text-center text-xs text-amber-300/60">
-        <p id="footerText">&copy; 2026 WeaveAhead Global Logistics Platform. Powered by FastAPI, International Maritime Corridors & Full-Stack Architecture.</p>
-    </footer>
+        <div class="action-row">
+            <button onclick="fetchForecast()">📊 Get Weekly Forecast</button>
+            <button onclick="fetchGovtCredit()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);">🏛️ Check MUDRA Subsidy</button>
+        </div>
+
+        <div id="resultOutput" class="result-box">
+            <h3 id="resultTitle">Output Data</h3>
+            <div id="resultContent"></div>
+        </div>
+    </div>
 
     <script>
         const API_BASE = "http://localhost:8000";
 
-        const languageLocaleMap = {
-            'en': 'en-US', 'hi': 'hi-IN', 'bn': 'bn-IN', 'or': 'or-IN',
-            'ta': 'ta-IN', 'te': 'te-IN', 'mr': 'mr-IN', 'gu': 'gu-IN',
-            'kn': 'kn-IN', 'ml': 'ml-IN', 'pa': 'pa-IN', 'as': 'as-IN'
-        };
+        async function fetchForecast() {
+            const region = document.getElementById('clusterRegion').value;
+            const lang = document.getElementById('languageCode').value;
 
-        const translations = {
-            en: {
-                brandSub: "Global Logistics & Supply Chain Intelligence Grid",
-                liveGridBadge: "Global Supply Chain & Freight Corridor",
-                heroHeading: "Orchestrating Global Textile Exports with <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">Autonomous Fleet Intelligence</span>",
-                heroSub: "Real-time tracking of international container vessels, automated customs green-channel routing, and multi-language demand synchronization.",
-                coreBadge: "FastAPI Global Dispatch Core",
-                sectionTitle: "International Consignment Dispatch",
-                sectionDesc: "Initiate verified bulk export orders routed directly through international shipping ports and customs pre-clearance nodes.",
-                dispatchBtn: "Execute Global Dispatch",
-                audioBtn: "🔊 Listen to Logistics Briefing",
-                footerText: "&copy; 2026 WeaveAhead Global Logistics Platform. Powered by FastAPI, International Maritime Corridors & Full-Stack Architecture.",
-                sysStatus: "Global Node Synchronized"
-            },
-            hi: {
-                brandSub: "वैश्विक लॉजिस्टिक्स और आपूर्ति श्रृंखला इंटेलिजेंस ग्रिड",
-                liveGridBadge: "वैश्विक आपूर्ति श्रृंखला और माल ढुलाई गलियारा",
-                heroHeading: "स्वायत्त बेड़े की बुद्धिमत्ता के साथ <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">वैश्विक कपड़ा निर्यात का समन्वय</span>",
-                heroSub: "अंतर्राष्ट्रीय कंटेनर जहाजों की वास्तविक समय पर नज़र, स्वचालित कस्टम ग्रीन-चैनल रूटिंग और बहुभाषी मांग सिंक।",
-                coreBadge: "फास्टएपीआई ग्लोबल डिस्पैच कोर",
-                sectionTitle: "अंतर्राष्ट्रीय खेप प्रेषण",
-                sectionDesc: "अंतर्राष्ट्रीय शिपिंग बंदरगाहों और कस्टम प्री-क्लीयरेंस नोड्स के माध्यम से सीधे रूट किए गए सत्यापित थोक निर्यात आदेश शुरू करें।",
-                dispatchBtn: "वैश्विक प्रेषण निष्पादित करें",
-                audioBtn: "🔊 लॉजिस्टिक्स ब्रीफिंग सुनें",
-                footerText: "&copy; 2026 वीवअहेड ग्लोबल लॉजिस्टिक्स प्लेटफॉर्म। FastAPI और अंतर्राष्ट्रीय समुद्री गलियारों द्वारा संचालित。",
-                sysStatus: "वैश्विक नोड सिंक्रनाइज़"
-            },
-            bn: {
-                brandSub: "গ্লোবাল লজিস্টিকস ও সাপ্লাই চেইন ইন্টেলিজেন্স গ্রিড",
-                liveGridBadge: "গ্লোবাল সাপ্লাই চেইন ও ফ্রেইট করিডর",
-                heroHeading: "স্বায়ত্তশাসিত ফ্লিট ইন্টেলিজেন্সের সাথে <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">বৈশ্বিক টেক্সটাইল রপ্তানির সমন্বয়</span>",
-                heroSub: "আন্তর্জাতিক কন্টেইনার জাহাজের রিয়েল-টাইম ট্র্যাকিং, স্বয়ংক্রিয় কাস্টম সবুজ-চ্যানেল রুটিং এবং বহুভাষিক চাহিদা সিঙ্ক।",
-                coreBadge: "ফাস্টএপিআই গ্লোবাল ডিসপ্যাচ কোর",
-                sectionTitle: "আন্তর্জাতিক চালান প্রেরণ",
-                sectionDesc: "আন্তর্জাতিক শিপিং পোর্ট এবং কাস্টম প্রি-ক্লিয়ারেন্স নোডের মাধ্যমে সরাসরি রুট করা যাচাইকৃত পাইকারি রপ্তানি আদেশ শুরু করুন।",
-                dispatchBtn: "গ্লোবাল ডিসপ্যাচ কার্যকর করুন",
-                audioBtn: "🔊 লজিস্টিকস ব্রিফিং শুনুন",
-                footerText: "&copy; 2026 উইভএহেড গ্লোবাল লজিস্টিকস প্ল্যাটফর্ম। FastAPI এবং আন্তর্জাতিক মেরিটাইম করিডর দ্বারা চালিত।",
-                sysStatus: "গ্লোবাল নোড সিঙ্ক হয়েছে"
-            },
-            or: {
-                brandSub: "ଗ୍ଲୋବାଲ୍ ଲଜିଷ୍ଟିକ୍ସ ଏବଂ ଯୋଗାଣ ଶୃଙ୍ଖଳା ଗ୍ରିଡ୍",
-                liveGridBadge: "ଗ୍ଲୋବାଲ୍ ସପ୍ଲାଏ ଚେନ୍ ଏବଂ ଫ୍ରେଟ୍ କରିଡର",
-                heroHeading: "ସ୍ୱାୟତ୍ତ ଜାହାଜ ଏବଂ ପରିବହନ ବୁଦ୍ଧିମତ୍ତା ସହିତ <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">ବୈଶ୍ୱିକ ବୟନ ରପ୍ତାନିର ପରିଚାଳନା</span>",
-                heroSub: "ଆନ୍ତର୍ଜାତୀୟ କଣ୍ଟେନର ଜାହାଜଗୁଡ଼ିକର ଲାଇଭ୍ ଟ୍ରାକିଂ ଏବଂ ସ୍ୱୟଂଚାଳିତ କଷ୍ଟମ୍ସ କ୍ଲିୟରାନ୍ସ।",
-                coreBadge: "FastAPI ଗ୍ଲୋବାଲ୍ ଡିସ୍ପାଚ୍ କୋର୍",
-                sectionTitle: "ଆନ୍ତର୍ଜାତୀୟ ପଠନ ପ୍ରେଷଣ",
-                sectionDesc: "ଆନ୍ତର୍ଜାତୀୟ ବନ୍ଦର ଏବଂ କଷ୍ଟମ୍ସ ନୋଡ଼ ମାଧ୍ୟମରେ ସତ୍ୟାପିତ ବଲ୍କ ରପ୍ତାନି ଅର୍ଡର ଆରମ୍ଭ କରନ୍ତୁ।",
-                dispatchBtn: "ଗ୍ଲୋବାଲ୍ ଡିସ୍ପାଚ୍ କାର୍ଯ୍ୟକାରୀ କରନ୍ତୁ",
-                audioBtn: "🔊 ଲଜିଷ୍ଟିକ୍ସ ବ୍ରିଫିଙ୍ଗ୍ ଶୁଣନ୍ତୁ",
-                footerText: "&copy; 2026 ୱିଭ୍‌ଏହେଡ୍ ଗ୍ଲୋବାଲ୍ ଲଜିଷ୍ଟିକ୍ସ ପ୍ଲାଟଫର୍ମ। FastAPI ଦ୍ୱାରା ପରିଚାଳିତ।",
-                sysStatus: "ଗ୍ଲୋବାଲ୍ ନୋଡ୍ ସିଙ୍କ୍ ହୋଇଛି"
-            },
-            ta: {
-                brandSub: "உலகளாவிய லாஜிஸ்டிக்ஸ் மற்றும் விநியோக சங்கிலி நுண்ணறிவு",
-                liveGridBadge: "உலகளாவிய விநியோக சங்கிலி மற்றும் சரக்கு தாاழ்வாரம்",
-                heroHeading: "தன்னாட்சி கடற்படை நுண்ணறிவுடன் <span class=\"bg-gradient-to-r from-amber-400 via-orange-400 to-indigo-400 bg-clip-text text-transparent\">உலகளாவிய ஜவுளி ஏற்றுமதிகளை ஒருங்கிணைத்தல்</span>",
-                heroSub: "சர்வதேச கன்டெய்னர் கப்பல்களின் நிகழ்நேர கண்காணிப்பு, தானியங்கி சுங்க பசுமை-சேனல் ரூட்டிங்.",
-                coreBadge: "FastAPI உலகளாவிய அனுப்புதல் மையம்",
-                sectionTitle: "சர்வதேச சரக்கு அனுப்புதல்",
-                sectionDesc: "சர்வதேச கப்பல் துறைமுகங்கள் மற்றும் சுங்க முன்-ஒப்புதல் முனைகள் வழியாக நேரடியாக அனுப்பப்படும் மொத்த ஏற்றுமதி ஆர்டர்களைத் தொடங்குக.",
-                dispatchBtn: "உலகளாவிய அனுப்புதலை இயக்கு",
-                audioBtn: "🔊 லாஜிஸ்டிக்ஸ் விளக்கத்தைக் கேட்க",
-                footerText: "&copy; 2026 WeaveAhead உலகளாவிய லாஜிஸ்டிக்ஸ் தளம். FastAPI மற்றும் சர்வதேச கடல் வழிகளால் இயக்கப்படுகிறது.",
-                sysStatus: "உலகளாவிய முனைய ஒத்திசைவு"
-            }
-        };
-
-        async function dispatchConsignment() {
-            const port = document.getElementById('destinationPort').value || "Port of Rotterdam, Netherlands";
-            const lang = document.getElementById('globalLang').value;
             try {
-                const res = await fetch(`${API_BASE}/api/corporate/global-dispatch`, {
+                const response = await fetch(`${API_BASE}/api/v1/forecast/generate`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer enterprise-secure-token-2026'
-                    },
-                    body: JSON.stringify({
-                        buyer_name: "Global Import Guild",
-                        organization: "European Textile Importers Ltd",
-                        craft_type: "Sambalpuri Silk & Cotton",
-                        quantity: 5000,
-                        region: "Odisha",
-                        contact_phone: "+919876543210",
-                        shipping_destination_port: port,
-                        priority_dispatch: true
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cluster_region: region, language_code: lang, craft_type: "Traditional Handloom" })
                 });
-                const json = await res.json();
-                document.getElementById('resTrackingTitle').innerText = `Tracking ID: ${json.tracking_id}`;
-                document.getElementById('resDispatchText').innerText = `Consignment successfully secured and routed to ${port}. NHDP Green Channel Customs Pre-Clearance active with estimated delivery in 3 business days.`;
-                document.getElementById('dispatchResultCard').classList.remove('hidden');
-            } catch(e) {
-                document.getElementById('resTrackingTitle').innerText = "Tracking ID: GLB-LOG-884P";
-                document.getElementById('resDispatchText').innerText = `Consignment successfully secured and routed to ${port}. NHDP Green Channel Customs Pre-Clearance active with IoT biometric container locks engaged.`;
-                document.getElementById('dispatchResultCard').classList.remove('hidden');
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    const data = result.data;
+                    document.getElementById('resultTitle').innerText = "📈 Weekly AI Demand Forecast";
+                    document.getElementById('resultContent').innerHTML = `
+                        <div class="result-item"><strong>Region:</strong> ${data.region}</div>
+                        <div class="result-item"><strong>Language Profile:</strong> ${data.language.toUpperCase()}</div>
+                        <div class="result-item"><strong>Trending Products:</strong> ${data.trending_products.join(', ')}</div>
+                        <div class="result-item"><strong>Color Alert:</strong> ${data.color_palette_alert}</div>
+                        <div class="result-item"><strong>Advisory:</strong> ${data.raw_material_advisory}</div>
+                    `;
+                    document.getElementById('resultOutput').style.display = "block";
+                }
+            } catch (err) {
+                alert("Could not connect to FastAPI backend. Ensure main.py is running locally on port 8000.");
             }
         }
 
-        function playVoiceBriefing() {
-            const text = document.getElementById('resDispatchText').innerText;
-            const utterance = new SpeechSynthesisUtterance(text);
-            const lang = document.getElementById('globalLang').value;
-            utterance.lang = languageLocaleMap[lang] || 'en-US';
-            window.speechSynthesis.speak(utterance);
-        }
+        async function fetchGovtCredit() {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
 
-        function switchAppLanguage() {
-            const lang = document.getElementById('globalLang').value;
-            const t = translations[lang] || translations['en'];
-
-            document.getElementById('brandSub').innerText = t.brandSub;
-            document.getElementById('liveGridBadge').innerHTML = `<span class="h-2 w-2 rounded-full bg-amber-400 animate-ping"></span> ${t.liveGridBadge}`;
-            document.getElementById('heroHeading').innerHTML = t.heroHeading;
-            document.getElementById('heroSub').innerText = t.heroSub;
-            document.getElementById('coreBadge').innerText = t.coreBadge;
-            document.getElementById('sectionTitle').innerText = t.sectionTitle;
-            document.getElementById('sectionDesc').innerText = t.sectionDesc;
-            document.getElementById('destinationPort').placeholder = lang === 'hi' ? "गंतव्य बंदरगाह (जैसे, रॉटरडैम बंदरगाह)" : (lang === 'bn' ? "গন্তব্য বন্দর (যেমন, রটারডাম বন্দর)" : "Destination Port (e.g., Port of Rotterdam, NY Harbor)");
-            document.getElementById('dispatchBtn').innerText = t.dispatchBtn;
-            document.getElementById('audioBtn').innerText = t.audioBtn;
-            document.getElementById('footerText').innerHTML = t.footerText;
-            document.getElementById('sysStatusText').innerText = t.sysStatus;
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/govt/credit-integration`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ applicant_id: "WVR-9921", applicant_type: "individual", loan_amount: amount, forecasted_stability_score: 8.9 })
+                });
+                const result = await response.json();
+                
+                if(result.status === "success") {
+                    const data = result.data;
+                    document.getElementById('resultTitle').innerText = "🏛️ Weavers MUDRA Scheme (WMS) Status";
+                    document.getElementById('resultContent').innerHTML = `
+                        <div class="result-item"><strong>Scheme:</strong> ${data.Scheme}</div>
+                        <div class="result-item"><strong>Loan Tier:</strong> ${data["Loan Tier"]}</div>
+                        <div class="result-item"><strong>Margin Money Grant:</strong> ${data["Calculated Margin Money Assistance"]}</div>
+                        <div class="result-item"><strong>Interest Subvention:</strong> ${data["Interest Subvention"]}</div>
+                        <div class="result-item"><strong>Status:</strong> ${data["Credit Status"]}</div>
+                    `;
+                    document.getElementById('resultOutput').style.display = "block";
+                }
+            } catch (err) {
+                alert("Could not connect to FastAPI backend. Ensure main.py is running locally on port 8000.");
+            }
         }
     </script>
 </body>
